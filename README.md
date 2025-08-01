@@ -36,7 +36,7 @@ Pode usar tsc-watch para compilar automaticamente
 "scripts": {
 	"start": "tsc-watch --onSuccess \"node build/server.js\""
 },
-# npm start
+// npm start
 ```
 
 ### [TsConfig Reference](https://www.typescriptlang.org/tsconfig/)
@@ -79,13 +79,13 @@ let frutas: string[] = ["maçã", "banana", "laranja"];
 const valorGrande: bigint = 9007199254740991999999n; # excede o limite de number
 ```
 
-`any` - desabilita a verificação de tipos estáticos para essa variável.
+`any`: desabilita a verificação de tipos estáticos para essa variável.
 ```typescript
 let variavelQualquer: any = "Isso pode ser qualquer coisa";
 ```
 
-`unknown`: semelhante ao `any` porém não desabilita a verificação estática.\
-No entanto, o `unknown` é mais seguro do que o `any`, pois **não é possível realizar operações arbitrárias sobre ele sem primeiro fazer uma verificação de tipo ou conversão explícita**.\
+`unknown`: semelhante ao `any` porém **não desabilita a verificação estática**.\
+No entanto, o `unknown` é mais seguro do que o `any`, pois não é possível realizar operações arbitrárias sobre ele **sem primeiro fazer uma verificação de tipo** ou conversão explícita.\
 É útil quando você recebe valores de origens externas ou quando não tem certeza sobre o tipo de dado que será manipulado, mas deseja garantir a segurança de tipos em seu código.
 ```typescript
 let valorDesconhecido: unknown = 10;
@@ -97,8 +97,8 @@ if (typeof valorDesconhecido === "number") {
 }
 ```
 
-`never`: representa um valor que nunca ocorre.\
-É usado principalmente em situações em que uma função nunca retorna (lança uma exceção ou entra em um loop infinito) ou em que uma variável nunca pode ter um valor válido. É útil para indicar situações impossíveis.
+`never`: indica situações que impossíveis ou que um valor nunca ocorre, incorreto.\
+É usado principalmente em situações em que uma função nunca retorna (lança uma exceção ou entra em um loop infinito) ou em que uma variável nunca pode ter um valor válido.
 ```typescript
 function lancaErro(mensagem: string): never {
     throw new Error(mensagem);
@@ -110,15 +110,16 @@ function loopInfinito(): never {
 ```
 
 `symbol`\
-o tipo `symbol` representa um tipo primitivo único e imutável frequentemente usado para criar identificadores únicos em objetos. Cada valor `symbol` é exclusivo e não pode ser igual a outro `symbol`, tornando-o ideal para chaves de propriedades de objetos.
+o tipo `symbol` representa um tipo **primitivo único e imutável** frequentemente usado para criar identificadores únicos em objetos. Cada valor `symbol` é exclusivo e não pode ser igual a outro `symbol`, tornando-o ideal para chaves de propriedades de objetos.
 ```typescript
 const chave1: symbol = Symbol("chave-única");
 const chave2: symbol = Symbol("chave-única"); // Chaves diferentes
 let objeto: { [chave1]: string } = {};
 objeto[chave1] = "Valor associado à chave1";
 ```
+
 `undefined`\
-Uma variável foi declarada, mas **não recebeu valor**. Também é o valor de retorno **padrão** de funções que não retornam nada.
+Uma variável foi declarada, mas **não recebeu valor**. Também é o valor de retorno padrão de **funções que não retornam nada**.
 ```typescript
 let nome: string | undefined;
 console.log(nome); // undefined
@@ -126,6 +127,7 @@ console.log(nome); // undefined
 function teste() {}
 console.log(teste()); // undefined
 ```
+
 `null`\
 Um valor foi **explicitamente definido como vazio ou nulo**.
 ```typescript
