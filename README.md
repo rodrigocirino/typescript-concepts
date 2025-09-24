@@ -421,7 +421,8 @@ const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
 
 <br>
 
-`?` torna o campo opcional para o TypeScript/
+`?` torna o campo opcional para o TypeScript
+
 `nullable` torna o campo opcional para o TypeORM.
 ```typescript
 @Column({ nullable: true })
