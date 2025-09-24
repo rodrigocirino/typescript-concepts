@@ -347,7 +347,7 @@ listaPets(): PetEntity[] | Promise<PetEntity[]>;
 // O operador | é usado para criar uma UNIÃO de tipos no TypeScript, permitindo que um valor seja de MAIS DE UM ÚNICO TIPO.
 ```
 
-**`Partial<Type>` vs. Campos Opcionais**
+**`Partial<Type> vs. Campos Opcionais`**
 ```typescript
 interface Pessoa {
   nome: string;
@@ -370,7 +370,7 @@ interface Pessoa {
 const pessoa: Pessoa = { nome: "Alice" }; // Uso de campo opcional
 ```
 
-**Pick<Type, Keys> vs. Omissão de Propriedades**
+**`Pick<Type, Keys> vs. Omissão de Propriedades`**
 ```typescript
 interface Pessoa {
   nome: string;
@@ -395,7 +395,7 @@ const info: InfoPessoal = { nome: "Bob", idade: 30 };
    const info: InfoPessoal = { nome: "Bob", idade: 30 };
 ```
 
-**Exclude<Type, ExcludedUnion> vs. Exclusão de Valores**
+**`Exclude<Type, ExcludedUnion> vs. Exclusão de Valores`**
 ```typescript
 type Cor = "vermelho" | "verde" | "azul";
 type CoresExcluidas = Exclude<Cor, "vermelho" | "verde">;
@@ -410,11 +410,11 @@ type CoresExcluidas = "azul"; // Exclusão direta de valores
 const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
 ```
 
-– **`Partial<Type>` vs. Campos opcionais**: Um `Partial` aplica **opcionalidade a todos os campos** de um tipo automaticamente. Campos opcionais, por outro lado, são declarados individualmente, então você tem controle seletivo sobre quais propriedades podem ou não estar presentes. Basicamente, `Partial` é uma forma rápida de dizer “tudo pode faltar”, enquanto campos opcionais são mais precisos e explícitos.
+**`Partial<Type> vs. Campos opcionais`**: Um `Partial` aplica **opcionalidade a todos os campos** de um tipo automaticamente. Campos opcionais, por outro lado, são declarados individualmente, então você tem controle seletivo sobre quais propriedades podem ou não estar presentes. Basicamente, `Partial` é uma forma rápida de dizer “tudo pode faltar”, enquanto campos opcionais são mais precisos e explícitos.
 
-– **`Pick<Type, Keys>` vs. Omissão de propriedades**: `Pick` permite **extrair um subconjunto de chaves** de um tipo, criando um novo tipo só com o que você escolheu manter. Omissão (via `Omit`) faz o oposto: você **remove certas chaves** e mantém o restante. É uma questão de perspectiva: “pegue só isso” versus “tire isso”.
+**`Pick<Type, Keys> vs. Omissão de propriedades`**: `Pick` permite **extrair um subconjunto de chaves** de um tipo, criando um novo tipo só com o que você escolheu manter. Omissão (via `Omit`) faz o oposto: você **remove certas chaves** e mantém o restante. É uma questão de perspectiva: “pegue só isso” versus “tire isso”.
 
-– **`Exclude<Type, ExcludedUnion>` vs. Exclusão de valores**: `Exclude` é uma operação **estática de tipos** que remove membros de uma união, alterando como o Typescript valida o código. Excluir valores em runtime é apenas lógica de programa; `Exclude` muda a forma como o tipo se comporta durante a compilação, garantindo que certos valores não sejam aceitos.
+**`Exclude<Type, ExcludedUnion> vs. Exclusão de valores`**: `Exclude` é uma operação **estática de tipos** que remove membros de uma união, alterando como o Typescript valida o código. Excluir valores em runtime é apenas lógica de programa; `Exclude` muda a forma como o tipo se comporta durante a compilação, garantindo que certos valores não sejam aceitos.
 
 <br />
 
