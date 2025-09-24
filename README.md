@@ -170,7 +170,7 @@ let idade: number = 30;
 let preco: number = 9.99;
 ```
 
-**`enum`**\
+**`enum`**
 ```ts
 type TipoPet = {
 	especie: EnumEspecie;//not string
@@ -186,6 +186,8 @@ export default EnumEspecie;
 
 if(Object.values(EnumEspecie).includes(especie)){ OK EXISTS }
 ```
+
+<br>
 
 **`TypeORM`**\
 Incluindo banco de dados numa aplicação.
@@ -337,6 +339,7 @@ Então:
 – Função normal → `this` depende de quem chama.  
 – Arrow function → `this` fixo ao escopo léxico onde foi criada.
 
+<br>
 
 Operador `Or`,  `|` no Typescript
 
@@ -416,9 +419,8 @@ const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
 
 **`Exclude<Type, ExcludedUnion> vs. Exclusão de valores`**: `Exclude` é uma operação **estática de tipos** que remove membros de uma união, alterando como o Typescript valida o código. Excluir valores em runtime é apenas lógica de programa; `Exclude` muda a forma como o tipo se comporta durante a compilação, garantindo que certos valores não sejam aceitos.
 
-<br />
+<br>
 
-Esta é a solução correta./
 `?` torna o campo opcional para o TypeScript/
 `nullable` torna o campo opcional para o TypeORM.
 ```typescript
