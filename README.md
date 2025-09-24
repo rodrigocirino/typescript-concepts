@@ -6,7 +6,7 @@ Basics to advanced concepts.
 
 Altere a extensão de todos os arquivo de JS para TS.
 
-Exportando os arquivo js para uma pasta `build`
+Exportando os arquivo js **para uma pasta** `build`
 
 ```json
 "compilerOptions": {
@@ -14,7 +14,7 @@ Exportando os arquivo js para uma pasta `build`
 },
 ```
 
-Compile e instale dependências
+Compile e **instale dependências**
 ```bash
 
 
@@ -31,7 +31,7 @@ npx tsc
 npm i --save-dev @types/express
 ```
 
-Pode usar tsc-watch para compilar automaticamente
+Pode usar **tsc-watch** para compilar automaticamente
 ```json
 "scripts": {
 	"start": "tsc-watch --onSuccess \"node build/server.js\""
@@ -79,12 +79,12 @@ let frutas: string[] = ["maçã", "banana", "laranja"];
 const valorGrande: bigint = 9007199254740991999999n; # excede o limite de number
 ```
 
-`any`: desabilita a verificação de tipos estáticos para essa variável.
+**`any`**: desabilita a verificação de tipos estáticos para essa variável.
 ```typescript
 let variavelQualquer: any = "Isso pode ser qualquer coisa";
 ```
 
-`unknown`: semelhante ao `any` porém **não desabilita a verificação estática**.\
+**`unknown`**: semelhante ao `any` porém **não desabilita a verificação estática**.\
 No entanto, o `unknown` é mais seguro do que o `any`, pois não é possível realizar operações arbitrárias sobre ele **sem primeiro fazer uma verificação de tipo** ou conversão explícita.\
 É útil quando você recebe valores de origens externas ou quando não tem certeza sobre o tipo de dado que será manipulado, mas deseja garantir a segurança de tipos em seu código.
 ```typescript
@@ -97,7 +97,7 @@ if (typeof valorDesconhecido === "number") {
 }
 ```
 
-`never`: indica situações que impossíveis ou que um valor nunca ocorre, incorreto.\
+**`never`**: indica situações que impossíveis ou que um valor nunca ocorre, incorreto.\
 É usado principalmente em situações em que uma função nunca retorna (lança uma exceção ou entra em um loop infinito) ou em que uma variável nunca pode ter um valor válido.
 ```typescript
 function lancaErro(mensagem: string): never {
@@ -109,7 +109,7 @@ function loopInfinito(): never {
 }
 ```
 
-`symbol`\
+**`symbol`**\
 o tipo `symbol` representa um tipo **primitivo único e imutável** frequentemente usado para criar identificadores únicos em objetos. Cada valor `symbol` é exclusivo e não pode ser igual a outro `symbol`, tornando-o ideal para chaves de propriedades de objetos.
 ```typescript
 const chave1: symbol = Symbol("chave-única");
@@ -118,7 +118,7 @@ let objeto: { [chave1]: string } = {};
 objeto[chave1] = "Valor associado à chave1";
 ```
 
-`undefined`\
+**`undefined`**\
 Uma variável foi declarada, mas **não recebeu valor**. Também é o valor de retorno padrão de **funções que não retornam nada**.
 ```typescript
 let nome: string | undefined;
@@ -128,13 +128,13 @@ function teste() {}
 console.log(teste()); // undefined
 ```
 
-`null`\
+**`null`**\
 Um valor foi **explicitamente definido como vazio ou nulo**.
 ```typescript
 let idade: number | null = null;
 ```
 
-```ts
+```typescript
 undefined == null     // true (comparação solta)
 undefined === null    // false (comparação estrita)
 
@@ -142,3 +142,288 @@ let nome: string | undefined; // aceita string ou undefined
 let idade: number | null;     // aceita number ou null
 ```
 Se usar `strictNullChecks` (ativado por padrão em projetos modernos), o compilador vai forçar você a tratar esses casos corretamente.
+
+**`Number ou number?`**\
+"Number" (objeto/classe com métodos em Javascript)\
+"number" (tipo primitivo do Typescript)
+```typescript
+// Number classe do Javascript para realizar operações aritméticas
+const num = new Number(42);
+console.log(num.toFixed(2)); // Saída: "42.00"
+
+//Exemplo prático
+const entradaUsuario = prompt("Digite um número:");
+const numeroEsperado = 42;
+const numeroUsuario = Number(entradaUsuario);
+
+// Verifica se o número do usuário é estritamente igual ao número esperado
+// operador de igualdade estrita (===)
+if (numeroUsuario === numeroEsperado) {
+  console.log("Parabéns! Você acertou o número 42!");
+} else {
+  console.log("Desculpe, você não acertou o número 42. Tente novamente.");
+}
+```
+Em Typescript, `number` é um tipo primitivo que representa valores numéricos, incluindo números inteiros e de ponto flutuante. É usado para declarar variáveis que armazenam valores numéricos.
+```typescript
+let idade: number = 30;
+let preco: number = 9.99;
+```
+
+**`enum`**\
+```ts
+type TipoPet = {
+	especie: EnumEspecie;//not string
+}
+export default TipoPet
+
+const {especie} = <TipoPet>req.body;
+
+enum EnumEspecie {
+	CAT="cat";
+}
+export default EnumEspecie;
+
+if(Object.values(EnumEspecie).includes(especie)){ OK EXISTS }
+```
+
+**`TypeORM`**\
+Incluindo banco de dados numa aplicação.
+```bash
+# https://typeorm.io/docs/getting-started#installation
+npm install typeorm
+npm install reflect-metadata
+npm install @types/node --save-dev
+npm install sqlite3 --save
+
+# app.ts
+import "reflect-metadata"
+# on tsconfig.json
+"emitDecoratorMetadata": true,
+"experimentalDecorators": true,
+
+# create a new project using CLI
+# npx typeorm init --name MyProject --database postgres
+# data-source.ts has the credentials to access your database
+
+# if you use entities on Nest.js...
+# import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+# no app.ts inicializamos o banco
+AppDataSource.initialize()
+  .then(() => {
+    console.log("DataSouce inicializado com sucesso!");
+  }).catch((error: Error) => console.log(error));
+```
+
+**`npm install save or save-dev?`**
+`--save` instala dependências **para produção** (vão em `dependencies`).  
+`--save-dev` instala dependências **só para desenvolvimento** (vão em `devDependencies`).
+Obs: Em produção normalmente se usa `npm ci --only=production` ou `npm install --production` para instalar só as `dependencies`.
+
+Relembrando:
+O código configura um datasource para o TypeORM em uma aplicação Node.js. Aqui está o que faz em relação  a `entities`, `type` e `database`:
+
+- **`entities`**: define as entidades que serão mapeadas para tabelas no banco de dados. No exemplo, apenas a entidade `PetEntity` está definida para ser usada.    
+- `type`: define o tipo de banco de dados, que é "sqlite" neste caso, indicando que um banco de dados SQLite será usado.    
+- `database`: especifica o caminho para o arquivo do banco de dados SQLite que será criado/usado, localizado em "./src/config/database.sqlite".    
+- **`synchronize`**: quando definido como `true`, permite que o TypeORM crie automaticamente as tabelas do banco de dados com base nas entidades definidas. É útil durante o desenvolvimento, mas deve ser desativado em produção para evitar perda de dados acidentais.    
+- `logging`: quando definido como `false`, desativa a saída de log do TypeORM, impedindo que mensagens de log sejam impressas no console, o que serve para manter o ambiente de produção mais limpo e seguro.
+
+Comum criarmos um arquitetura de repositório, onde uma interface define os dados e separa o acesso do banco de dados que podem ser alterados on premisse, da lógica de negócios
+```typescript
+interface RepositorioDeUsuarios {
+    adicionarUsuario(usuario: Usuario): void;
+    obterUsuarioPorId(id: number): Usuario | undefined;
+    atualizarUsuario(usuario: Usuario): void;
+    excluirUsuario(id: number): void;
+}
+// classe concreta que implementa obrigatoriamente todos os métodos da interface acima.
+class RepositorioDeUsuarios implements RepositorioDeUsuarios{
+    private usuarios: Usuario[] = [];
+
+    adicionarUsuario(usuario: Usuario): void {
+        this.usuarios.push(usuario);
+    } .......
+```
+
+
+**`promises`**
+Antes das **Promises** usava-se callbacks:
+```javascript
+// Sem Promise
+function pegarDados(callback) {
+  setTimeout(() => {
+    callback("dados recebidos");
+  }, 1000);
+}
+
+pegarDados((resultado) => console.log(resultado));
+```
+Com **Promise**:
+```javascript
+// Com Promise
+function pegarDados() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("dados recebidos");
+    }, 1000);
+  });
+}
+
+pegarDados().then((resultado) => console.log(resultado));
+```
+Resumo: callback é passado como argumento; Promise retorna um objeto que você encadeia com `.then()` (ou usa `async/await`).  
+
+Complementando com **async/await** o mesmo exemplo fica assim:
+```javascript
+// Com async/await
+function pegarDados() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("dados recebidos");
+    }, 1000);
+  });
+}
+
+async function executar() {
+  const resultado = await pegarDados();
+  console.log(resultado);
+}
+
+executar();
+```
+Agora o código parece síncrono, mas continua assíncrono por baixo. Ou seja vemos sequencial mas não bloqueia a thread, ele pausa no async até a promise ser resolvida, e continua quando o resultado chega.
+
+**`arrow functions`**\
+Lembrando que arrow function `() = > {} ` não tem relação direta com Promise, mas é muito usada junto porque deixa o código assíncrono mais limpo.
+
+Funções **normais** têm seu próprio `this`, definido pelo **modo como são chamadas**. Arrow functions **não criam** um `this` próprio; elas “herdam” o `this` do escopo onde foram definidas (lexical `this`).
+
+Exemplo prático:
+```javascript
+const obj = {
+  nome: "Rodrigo",
+  normal: function() {
+    console.log(this.nome); // "Rodrigo"
+  },
+  arrow: () => {
+    console.log(this.nome); // undefined (this é do escopo externo, não do obj)
+  }
+};
+
+obj.normal(); // Rodrigo
+obj.arrow();  // undefined
+```
+
+Já dentro de classes ou métodos assíncronos, as arrow functions são úteis para **não perder o `this`**:
+```javascript
+class Pessoa {
+  nome = "Rodrigo";
+  
+  falarDepois() {
+    setTimeout(() => {
+      console.log(this.nome); // Arrow herda o this da instância
+    }, 1000);
+  }
+}
+
+const p = new Pessoa();
+p.falarDepois(); // Rodrigo depois de 1s
+```
+Se tivesse usado `function()` normal no `setTimeout`, teria perdido o `this` e dado `undefined`.
+
+Então:  
+– Função normal → `this` depende de quem chama.  
+– Arrow function → `this` fixo ao escopo léxico onde foi criada.
+
+
+Operador `Or`,  `|` no Typescript
+
+```typescript
+// tanto vetor quanto uma promise, ou um ou outro.
+listaPets(): PetEntity[] | Promise<PetEntity[]>;
+
+// O operador | é usado para criar uma UNIÃO de tipos no TypeScript, permitindo que um valor seja de MAIS DE UM ÚNICO TIPO.
+```
+
+**`Partial<Type>` vs. Campos Opcionais**
+```typescript
+interface Pessoa {
+  nome: string;
+  idade: number;
+  email?: string;
+}
+
+type PessoaOpcional = Partial<Pessoa>;
+
+const pessoa: PessoaOpcional = { nome: "Alice" }; // Todos os campos são opcionais
+```
+
+```typescript
+interface Pessoa {
+  nome: string;
+  idade?: number; // Tornando a idade opcional
+  email?: string; // Uso de campo opcional
+}
+
+const pessoa: Pessoa = { nome: "Alice" }; // Uso de campo opcional
+```
+
+**Pick<Type, Keys> vs. Omissão de Propriedades**
+```typescript
+interface Pessoa {
+  nome: string;
+  idade: number;
+  email: string;
+}
+
+type InfoPessoal = Pick<Pessoa, "nome" | "idade">;
+
+const info: InfoPessoal = { nome: "Bob", idade: 30 };
+```
+
+```typescript
+   interface Pessoa {
+     nome: string;
+     idade: number;
+     email: string;
+   }
+
+   type InfoPessoal = { nome: string; idade: number }; // Escolhendo propriedades diretamente
+
+   const info: InfoPessoal = { nome: "Bob", idade: 30 };
+```
+
+**Exclude<Type, ExcludedUnion> vs. Exclusão de Valores**
+```typescript
+type Cor = "vermelho" | "verde" | "azul";
+type CoresExcluidas = Exclude<Cor, "vermelho" | "verde">;
+
+const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
+```
+
+```typescript
+type Cor = "vermelho" | "verde" | "azul";
+type CoresExcluidas = "azul"; // Exclusão direta de valores
+
+const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
+```
+
+– **`Partial<Type>` vs. Campos opcionais**: Um `Partial` aplica **opcionalidade a todos os campos** de um tipo automaticamente. Campos opcionais, por outro lado, são declarados individualmente, então você tem controle seletivo sobre quais propriedades podem ou não estar presentes. Basicamente, `Partial` é uma forma rápida de dizer “tudo pode faltar”, enquanto campos opcionais são mais precisos e explícitos.
+
+– **`Pick<Type, Keys>` vs. Omissão de propriedades**: `Pick` permite **extrair um subconjunto de chaves** de um tipo, criando um novo tipo só com o que você escolheu manter. Omissão (via `Omit`) faz o oposto: você **remove certas chaves** e mantém o restante. É uma questão de perspectiva: “pegue só isso” versus “tire isso”.
+
+– **`Exclude<Type, ExcludedUnion>` vs. Exclusão de valores**: `Exclude` é uma operação **estática de tipos** que remove membros de uma união, alterando como o Typescript valida o código. Excluir valores em runtime é apenas lógica de programa; `Exclude` muda a forma como o tipo se comporta durante a compilação, garantindo que certos valores não sejam aceitos.
+
+<br />
+
+Esta é a solução correta./
+`?` torna o campo opcional para o TypeScript/
+`nullable` torna o campo opcional para o TypeORM.
+```typescript
+@Column({ nullable: true })
+foto?: string; 
+@Column({ nullable: true })
+endereco?: string; 
+```
