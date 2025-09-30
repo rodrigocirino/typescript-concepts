@@ -18,6 +18,8 @@ TypeScript is transpiled into JavaScript using a compiler.
 
 Installing the compiler\
 `npm install typescript --save-dev`
+Access the compiler
+`npx tsc`
 
 
 
