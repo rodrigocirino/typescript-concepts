@@ -1,8 +1,10 @@
 # typescript-concepts
-Basics to advanced concepts.
 
+## Typescript: construção de uma API com tipagem segura
 
-### Converter JS para TS.
+> [Source Code](https://github.com/alura-cursos/typescript-para-backend/tree/aula-5)
+
+#### Converter JS para TS.
 
 Altere a extensão de todos os arquivo de JS para TS.
 
@@ -428,5 +430,90 @@ const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
 @Column({ nullable: true })
 foto?: string; 
 @Column({ nullable: true })
-endereco?: string; 
+endereco?: string; // ? indique opcional
+//campos obrigatórios devem ficar antes de opcionais (com e sem ?)
 ```
+
+
+[Eager](https://typeorm.io/docs/relations/eager-and-lazy-relations) and [Relations options](https://typeorm.io/docs/relations/relations/#relation-options)
+
+`eager=true` eager relations são carregadas automaticamente toda vez que carrega suas entidades, ou seja permite declarar que sempre que um entidade ser carregada retorne também junto outra entidade.
+
+`eager: boolean` (default: `false`) - If set to true, the relation will always be loaded with the main entity when using `find*` methods or `QueryBuilder` on this entity
+
+```ts
+@ManyToMany((type) => Category, (category) => category.questions, {  
+	eager: true,  // <-------EAGER
+})  
+@JoinTable()  
+categories: Category[]  // Category é outra tabela complexa.
+
+const questionRepository = cdataSource.getRepository(Question)  
+  
+// FIND RETORNA AUTOMATICAMENTE QUESTIONS JUNTAMENTE COM CATEGORIES, OU SEJA INCLUI SEM ESPECIFICAR.
+const questions = await questionRepository.find()
+```
+
+
+`in` verificando se o atribute existe no objeto enum.
+```javascript
+if (!(porte in EnumPorte)) {
+      return res.status(400).json({ erro: "Porte inválido." });
+    }
+```
+
+
+
+Typescript com **generics**:
+
+Os "generics" permitem criar funções e classes que podem trabalhar com vários tipos de dados sem especificar um tipo específico antecipadamente.
+
+No entanto, ao usar **`any`**, perdemos informações sobre o tipo que está sendo retornado. Em vez disso, podemos usar um **tipo genérico (generics)** para capturar o do argumento e usá-lo como tipo de retorno:
+
+```typescript
+function identidade(arg: any): any {
+  return arg;
+}
+```
+```typescript
+interface ComTamanho {
+  length: number;
+}
+
+function logarTamanho<Tipo extends ComTamanho>(arg: Tipo): Tipo {
+  console.log(arg.length); // Agora o TypeScript sabe que 'arg' tem uma propriedade 'length'.
+  return arg;
+}
+
+```
+```typescript
+class Caixa<T> {
+  private conteudo: T | null = null;
+
+  guardar(item: T): void {
+    this.conteudo = item;
+  }
+
+  retirar(): T | null {
+    const item = this.conteudo;
+    this.conteudo = null;
+    return item;
+  }
+}
+
+// Exemplo de uso da classe Caixa com diferentes tipos
+const caixaDeFrutas = new Caixa<string>();
+caixaDeFrutas.guardar("Maçã");
+console.log(caixaDeFrutas.retirar()); // "Maçã"
+
+const caixaDeLivros = new Caixa<number>();
+caixaDeLivros.guardar(5);
+console.log(caixaDeLivros.retirar()); // 5
+```
+Quando você começa a usar generics, o compilador TypeScript garante que você use corretamente os parâmetros genéricos dentro da função. Por exemplo, se deseja acessar a propriedade `.length` de um argumento genérico, é necessário garantir que todos os tipos que serão usados com essa função tenham essa propriedade. Caso contrário, o compilador gerará um erro.
+
+
+
+
+
+
