@@ -68,7 +68,7 @@ http :3000
 ```
 
 Inferência de tipos, permite ao incluir `TipoPet` o IDE indicar quais campos estão disponíveis.
-```ts
+```typescript
 # tipos compostos
 const { adotado, especie, dataDeNascimento, nome } = <TipoPet>req.body;
 let listaDePets: Array<TipoPet> = [];
@@ -173,7 +173,7 @@ let preco: number = 9.99;
 ```
 
 **`enum`**
-```ts
+```typescript
 type TipoPet = {
 	especie: EnumEspecie;//not string
 }
@@ -441,7 +441,7 @@ endereco?: string; // ? indique opcional
 
 `eager: boolean` (default: `false`) - If set to true, the relation will always be loaded with the main entity when using `find*` methods or `QueryBuilder` on this entity
 
-```ts
+```typescript
 @ManyToMany((type) => Category, (category) => category.questions, {  
 	eager: true,  // <-------EAGER
 })  
@@ -454,6 +454,7 @@ const questionRepository = cdataSource.getRepository(Question)
 const questions = await questionRepository.find()
 ```
 
+<br>
 
 `in` verificando se o atribute existe no objeto enum.
 ```javascript
@@ -463,6 +464,42 @@ if (!(porte in EnumPorte)) {
 ```
 
 
+<br>
+
+`keyof` [type operator](https://www.w3schools.com/typescript/typescript_keyof.php)
+
+`keyof` cria uma **união** entre suas chaves.\
+
+`keyof` se tornam especialmente úteis quando combinados com tipos mapeados, como interfaces.
+
+```typescript
+interface Person {  
+  name: string;  
+  age: number;  
+}  
+// `keyof Person` cria uma união das chaves.
+function printPersonProperty(person: Person, property: keyof Person) {  
+  console.log(`Printing person property ${property}: "${person[property]}"`);  
+}  
+let person = {  
+  name: "Max",  
+  age: 27  
+};  
+printPersonProperty(person, "name"); // Busca a chave `name` e retorna o valor correspondente.
+// Veja que é muito útil ao criar funções genéricas
+```
+
+```typescript
+type StringMap = { [key: string]: unknown };  
+// `keyof StringMap` resolves to `string` here  
+function createStringPair(property: keyof StringMap, value: string): StringMap {  
+  return { [property]: value };  
+}
+```
+
+
+
+<br>
 
 Typescript com **generics**:
 
