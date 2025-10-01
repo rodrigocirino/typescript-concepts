@@ -274,10 +274,33 @@ let head: number = numbers[0]; // no error
 
 #### TypeScript Tuples
 
+`tuple` - é uma matriz com comprimento e tipo pré-definidos.
 
+Se inicializar em linha é permitido usar `readonly` igual uma matriz comum.
+```ts
+// define our tuple  
+let ourTuple: [number, boolean, string];  
+  
+// initialize correctly  
+ourTuple = [5, false, 'Coding God was here'];
 
+// se tentar inicializar com um tipo diferente, 0 por false
+prog.ts(5,16): error TS2322: Type 'number' is not assignable to type 'boolean'.
+// logicamente o mesmo erro se alterarmos a ordem ou adicionarmos mais itens que o especificado.
+prog.ts(5,1): error TS2322: Type '[number, false, string, number]' is not assignable to type '[number, boolean, string]'.
+  Source has 4 element(s) but target allows only 3.
+```
+Tuplas nomeadas
+```ts
+const graph: [x: number, y: number] = [55.2, 41.3];
+```
+Tuplas desestruturantes
+```ts
+const graph: [number, number] = [55.2, 41.3];  
+const [x, y] = graph;
+```
 
-
+**PS: JavaScript Destructuring** [w3](https://www.w3schools.com/js/js_destructuring.asp)
 
 
 
