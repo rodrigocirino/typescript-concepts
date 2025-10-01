@@ -1,10 +1,8 @@
-# w3schools.com Typescript Tutorial
+# w3schools.com: Typescript Tutorial
 
-Revisão baseada na documentações do site W3Schools.com
+Revisão baseada na documentações do site [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
-[w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
-
-
+---
 ### Typescript Introduction 
 
 What is TypeScript?\
@@ -29,7 +27,7 @@ this creates a `tsconfig.json` file\
 `npx tsc --init`
 
 Simple example of config
-```json
+```js
 {  
   "include": ["src"],  
   "compilerOptions": {  
@@ -47,7 +45,7 @@ function greet(name: string): string {
 const message: string = greet("World");  
 console.log(message);
 ```
-```bash
+```sh
 # compile
 npx tsc hello.ts
 # generates a hello.js
@@ -197,7 +195,7 @@ prog.ts(2,1): error TS2322: Type 'string' is not assignable to type 'number'.
 prog.ts(4,1): error TS2322: Type '{ runANonExistentMethod: () => void; }' is not assignable to type 'number'.
 ```
 
-Quando usar unknown:
+Quando usar `unknown`:
 - Ao trabalhar com dados de fontes externas (APIs, entrada do usuário, etc.)
 - Quando você deseja garantir a segurança do tipo e ainda permitir flexibilidade
 - Ao migrar de JavaScript para TypeScript de forma segura
@@ -247,7 +245,7 @@ const value = input ?? 'default';
 const street = user?.address?.street
 ```
 Deve habilitar no tsconfig.json
-```json
+```js
 {  
   "compilerOptions": {  
     "strictNullChecks": true  
@@ -344,7 +342,7 @@ let name = "W3Schools";
 let [a1, a2, a3, a4, a5] = name;
 ```
 
-**`Rest Property (...newVar)` **
+#### `Rest Property (...newVar)` 
 
 Você pode encerrar uma sintaxe de desestruturação com uma propriedade rest. Esta sintaxe armazenará todos os valores restantes em um novo array
 ```typescript
