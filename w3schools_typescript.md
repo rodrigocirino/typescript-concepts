@@ -5,6 +5,8 @@ Revisão baseada na documentações do site W3Schools.com
 [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
 
+### Typescript Introduction 
+
 What is TypeScript?\
 TypeScript is a syntactic superset of JavaScript which adds **static typing**.
 
@@ -53,7 +55,7 @@ npx tsc hello.ts
 node hello.js
 ```
 
-#### TS Simple Types
+### TS Simple Types
 ```ts
 // boolean
 let isActive: boolean = true;  
@@ -92,7 +94,7 @@ const obj = {
 console.log(obj[uniqueKey]); // "This is a unique property"
 ```
 
-#### TypeScript Explicit Types and Inference
+### TypeScript Explicit Types and Inference
 
 Function with **Explicit Types**
 ```ts
@@ -146,7 +148,7 @@ return a + b;
 console.log(add("5", 3)); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
 ```
 
-#### TypeScript Special Types
+### TypeScript Special Types
 
 **`any`** - diz ao compilar para pular a verificação de tipo de uma variável. Evite pois ignora alguns recursos de segurança de tipo do Typescript.
 
@@ -253,7 +255,7 @@ Deve habilitar no tsconfig.json
 }
 ```
 
-#### TypeScript Arrays
+### TypeScript Arrays
 
 The **`readonly`** keyword can prevent arrays from being changed.
 ```typescript
@@ -272,7 +274,7 @@ numbers.push("2"); // Error: Argument of type 'string' is not assignable to par
 let head: number = numbers[0]; // no error
 ```
 
-#### TypeScript Tuples
+### TypeScript Tuples
 
 `tuple` - é uma matriz com comprimento e tipo pré-definidos.
 
@@ -300,7 +302,7 @@ const graph: [number, number] = [55.2, 41.3];
 const [x, y] = graph;
 ```
 
-#### ⛓️‍💥 JavaScript Destructuring [w3](https://www.w3schools.com/js/js_destructuring.asp)
+### ⛓️‍💥 JavaScript Destructuring [w3](https://www.w3schools.com/js/js_destructuring.asp)
 
 Destructuring Assignment Syntax on **objects**
 
@@ -378,7 +380,7 @@ let lastName = "Doe";
 [firstName, lastName] = [lastName, firstName];
 ```
 
-#### TypeScript Object Types
+### TypeScript Object Types
 
 
 
