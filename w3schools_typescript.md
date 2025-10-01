@@ -300,7 +300,89 @@ const graph: [number, number] = [55.2, 41.3];
 const [x, y] = graph;
 ```
 
-**PS: JavaScript Destructuring** [w3](https://www.w3schools.com/js/js_destructuring.asp)
+#### ⛓️‍💥 JavaScript Destructuring [w3](https://www.w3schools.com/js/js_destructuring.asp)
+
+Destructuring Assignment Syntax on **objects**
+
+```typescript
+// Create an Object
+// A ordem das propriedades não importa  
+const person = {  
+  firstName: "John",  
+  lastName: "Doe",  
+  age: 50  
+};  
+  
+// Destructuring
+let {firstName, lastName : name} = person;
+// Add default values
+let {firstName, lastName, country = "US"} = person;
+// With property alias
+let {firstName, lastName : name} = person;
+```
+
+It can also unpack **arrays** and any other iterables:
+
+```typescript
+// Create an Array  
+const fruits = ["Bananas", "Oranges", "Apples", "Mangos"];  
+// Destructuring into variables 
+let [var_banana, var_orange] = fruits;
+// Skipping array values
+let [var_banana,,,var_mangos] = fruits;
+// Destructuring  
+let {[0]:var_bananas ,[2]:var_apples} = fruits;
+```
+
+Strings and chars
+```ts
+// Create a String  
+let name = "W3Schools";  
+// Destructuring into chars
+let [a1, a2, a3, a4, a5] = name;
+```
+
+**`Rest Property (...newVar)` **
+
+Você pode encerrar uma sintaxe de desestruturação com uma propriedade rest. Esta sintaxe armazenará todos os valores restantes em um novo array
+```typescript
+// Create an Array  
+const numbers = [10, 20, 30, 40, 50, 60, 70];  
+  
+// Destructuring  
+const [a,b, ...o_restante] = numbers
+```
+
+Map (key, value)
+```ts
+// Create a Map  
+const fruits = new Map([  
+  ["apples", 500],  
+  ["bananas", 300],  
+  ["oranges", 200]  
+]);  
+  
+// Destructuring  
+let text = "";  
+for (const [key, value] of fruits) {  
+  text += key + " is " + value;  
+}
+```
+
+Swapping Javascript Variables
+```ts
+let firstName = "John";  
+let lastName = "Doe";  
+  
+// Destructuring  
+[firstName, lastName] = [lastName, firstName];
+```
+
+#### TypeScript Object Types
+
+
+
+
 
 
 
