@@ -380,17 +380,75 @@ let lastName = "Doe";
 
 ### TypeScript Object Types
 
+#### ⛓️‍💥 Javascript Object Types
 
+Objects are collections of **key-value pairs**, where each key (known as **property names**) has a value, inside curly braces { }:
 
+You should declare objects with the `const` keyword.\
+Isso não torna o objeto imutável. `const` ainda permite que modifique  suas propriedades e valores.
 
+Pode usar `Object()`, mas não é necessário explicita-lo.
+```ts
+// Create an Object  
+const person = new Object({  
+  firstName: "John",  
+  lastName : "Doe",  
+  id       : 5566,  
+  fullName : function() {
+    //`this` refers to the **person object**:
+    return this.firstName + " " + this.lastName;  
+  }
+});
 
+// Create an Object  
+const person = {};
+```
+You can access object properties in two ways:
+```ts
+objectName.propertyName
+objectName["propertyName"]
+```
+ Constructor functions
+```ts
+ function Person(first, last, age, eye) {  
+  this.firstName = first;  
+  this.lastName = last;  
+  this.age = age;  
+  this.eyeColor = eye;  
+}
+//In the constructor function, `this` has no value, but will become when object is created.
+//Não incluir o this gera um `undefined`, ele é obrig.
+```
 
+#### Typescript Object Types
 
+```ts
+const car: { type: string, mileage?: number } = {
+  type: "Toyota",  
+};  
+car.mileage = 2000;
 
+// Error Se não colocar o `?` que indica opcional.
+// Error: Property 'mileage' is missing in type '{ type: string; }' but required in type '{ type: string; mileage: number; }'.  
+```
 
+**Index Signatures**
 
+Assinaturas de índice podem ser usadas para objetos sem uma lista definida de propriedades.
 
+Index signatures like this one can also be expressed with utility types like **`Record<string, number>`**.
+```ts
+const nameAgeMap: { [index: string]: number } = {};
 
+nameAgeMap.Jack = 25; // ok
+nameAgeMap.Doe = 50; // ok
 
+//prog.ts(6,1): error TS2322: Type 'string' is not assignable to type 'number'.
+//nameAgeMap.Mark = "Hundred";
+
+console.log(nameAgeMap); //{ Jack: 25, Doe: 50 }
+```
+
+### TypeScript Enums
 
 
