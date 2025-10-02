@@ -595,8 +595,318 @@ Este código não compila, o compilador vai relatar um erro se tentar acessar na
 function printStatusCode(code: string | number) {
   console.log(`My status code is ${code.toUpperCase()}.`) 
 }
-// prog.ts(2,51): error TS2339: Property 'toUpperCase' does not exist on type 'string | number'. Property 'toUpperCase' does not exist on type 'number'.
+
+prog.ts(2,51): error TS2339: Property 'toUpperCase' does not exist on type 'string | number'. Property 'toUpperCase' does not exist on type 'number'.
 ```
+
+### Typescript Functions
+```ts
+function printHello(): void {
+  console.log('Hello!');
+  return true; // error return with void!
+}
+// prog.ts(3,3): error TS2322: Type 'boolean' is not assignable to type 'void'.
+```
+Neste caso se omitir `|| 0`, o código compila ok, porém o resultado será `Nan`
+```ts
+// the `?` operator here marks parameter `c` as optional  
+function add(a: number, b: number, c?: number) {  
+  return a + b + (c || 0);   
+}
+```
+Default parameters
+```ts
+function pow(value: number, exponent: number = 10) {  
+  return value ** exponent;  
+}
+```
+Named parameters `{name:value}`
+```ts
+function divide(
+	{ dividend, divisor }: { dividend: number, divisor: number } // {name:value}
+) {
+  return dividend / divisor;
+}
+console.log(divide({dividend: 10, divisor: 2})); // 5
+```
+Rest parameters: "O restante dos valores"
+```ts
+function add(a: number, b: number, ...rest: number[]) {
+  return a + b + rest.reduce((p, c) => p + c, 0);
+}
+console.log(add(10,10,10,10,10)); // 50
+```
+Functions with arrow functions and type alias
+```ts
+type Negativar = (positivo: number) => number;
+
+// type virou um tipo para uma arrow functions
+const NegaFuncao: Negativar = (positivo) => positivo * -1;
+
+console.log(NegaFuncao(10)); // -10
+```
+
+### Typescript Casting
+#### Casting with `as`
+`as` permite mudar o tipo da variável ao usá-la.
+```ts
+let x: unknown = 'hello'; // unknown type
+console.log((x as string).length); // redefine para string antes de usar!
+
+let x: unknown = 'hello';
+console.log(x as number); // estranho mas printa 'hello' ignorando 'as number'
+
+// 'as' não converte o valor de fato, por isso 4 não se torna "4"!
+let x: unknown = 4;  
+console.log((x as string).length); // prints undefined since numbers don't have a length
+```
+**Que inteligente !**
+Compilar sabe que 4 convertido em string não é apenas "4" e sim deveria **"quatro"**, não realizando a conversão. 🥳
+```ts
+console.log(4 as string);
+
+prog.ts(1,13): error TS2352: Conversion of type 'number' to type 'string' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+```
+
+
+### Typescript Classes
+#### Members visibility
+There are three main visibility modifiers in TypeScript.
+- `public` - (default) allows access to the class member from anywhere
+- `private` - only allows access to the class member from within the class
+- `protected` - allows access to the class member from itself and any classes that inherit it, which is covered in the inheritance section below
+
+#### `this` refers to what? [js this](https://www.w3schools.com/js/js_this.asp)
+Perguntinha de entrevista mal intencionada ou de teste de quadro negro.
+
+The `this` keyword refers to **different objects** depending on how it is used:
+
+|                                                                                          |
+| ---------------------------------------------------------------------------------------- |
+| **Alone**, `this` refers to the **global object**.                                       |
+| In a **function**, `this` refers to the **global object**.                               |
+| In a function, in **strict mode**, `this` is `undefined`.                                |
+| In an **object method**, `this` refers to the **object**.                                |
+| In **an event**, `this` refers to the **element** that received the event.               |
+| Methods like ***`call()`, `apply()`, and `bind()`*** can refer `this` to **any object**. |
+```js
+// Create an object:
+const person = {
+  firstName  : "John",
+  lastName   : "Doe",
+  id     : 5566,
+  myFunction : function() {
+    return this;
+  }
+};
+// Display data from the object:
+document.getElementById("demo").innerHTML = person.myFunction().id; // 5566
+```
+
+#### Inheritance (implements)
+```typescript
+interface Shape {  
+  getArea: () => number;  
+}  
+  
+class Rectangle implements Shape {  // can implements multiple interfaces
+  public constructor(protected readonly width: number, protected readonly height: number) {}  
+  
+  public getArea(): number {  
+    return this.width * this.height;  
+  }  
+}
+```
+
+#### Inheritance (extends)
+```typescript
+interface Shape {  
+  getArea: () => number;  
+}  
+  
+class Rectangle implements Shape {  
+  public constructor(protected readonly width: number, protected readonly height: number) {}  
+  
+  public getArea(): number {  
+    return this.width * this.height;  
+  }  
+}  
+  
+class Square extends Rectangle {  
+  public constructor(width: number) {  
+    super(width, width);  
+  }    
+  // getArea gets inherited from Rectangle  
+}
+```
+
+#### Override keyword
+
+By default the `override` keyword is **optional** when overriding a method, and only helps to prevent accidentally overriding a method that does not exist.
+
+Use the setting `noImplicitOverride` to force it to be used when overriding.
+
+```typescript
+class Rectangle implements Shape {  
+  public toString(): string {  
+    return `Rectangle[width=${this.width}, height=${this.height}]`;  
+  }  
+}  
+// ...  ommit lines
+class Square extends Rectangle {  
+  
+  // this toString replaces the toString from Rectangle  
+  public override toString(): string {  
+    return `Square[width=${this.width}]`;  
+  }  
+}
+```
+
+#### Abstract classes (extends)
+Classes servem de base e não obrigam a implementar todos os métodos assim como interfaces.
+
+Classes abstratas não podem ser instanciadas diretamente, pois não têm todos os seus membros implementados.
+
+```typescript
+abstract class Polygon {  
+  public abstract getArea(): number;  
+  
+  public toString(): string {  
+    return `Polygon[area=${this.getArea()}]`;  
+  }  
+}  
+  
+class Rectangle extends Polygon {  
+  public constructor(protected readonly width: number, protected readonly height: number) {  
+    super();  
+  }  
+  
+  public getArea(): number {  
+    return this.width * this.height;  
+  }  
+}
+```
+
+<br>
+### Javascript métodos pré-definidos [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
+##### call (invoke a method)
+call permite usar um objeto que pertence a outro objeto
+```ts
+const person = {
+  namedFunction: function() {
+    return this.firstName + " " + this.lastName;
+  }
+}
+const televisao = {
+  firstName:"Silvio",
+  lastName: "Santos"
+}
+
+// passa o objeto `televisao`, para a funcao dentro de person.
+person.namedFunction.call(televisao); // Silvio Santos
+```
+With parameters
+```javascript
+const person = {
+  fullName: function(city, country) {
+    return this.firstName + " " + this.lastName + " from " + city + " in " + country + ".";
+  }
+}
+const person1 = {
+  firstName:"John",
+  lastName: "Doe"
+}
+
+person.fullName.call(person1, "Oslo", "Norway"); // John Doe from Oslo in Norway.
+```
+
+##### apply (array parameters)
+O método apply() é muito útil se você quiser usar um array em vez de uma lista de argumentos.
+
+Difference between call and apply.\
+O método `call()` recebe argumentos **separadamente**.\
+O método `apply()` recebe argumentos **como um array**.
+```javascript
+// Mesmo código de call porém com array.
+person.fullName.call(person1, "Oslo", "Norway"); // John Doe from Oslo in Norway.
+```
+
+Muito útil também quando precisa realizar alguma operação com arrays que não contém um método específico como max()
+```javascript
+// using lists
+Math.max(1,2,3);  // Will return 3
+
+// Using arrays
+Math.max.apply(null, [1,2,3]); // Will also return 3
+// null poderia ser qualquer coisa, 0, Math, "", etc...
+```
+No modo estrito do JavaScript, se o primeiro argumento do método `apply()` "null" não for um objeto, ele se torna o proprietário (objeto) da função invocada. No modo "não estrito", ele se torna o objeto global.
+
+##### bind (pegar emprestado)
+
+```javascript
+const person = {  
+  firstName:"John",  
+  lastName: "Doe",  
+  fullName: function () {  
+    return this.firstName + " " + this.lastName;  
+  }  
+}  
+  
+const member = {  
+  firstName:"Hege",  
+  lastName: "Nilsen",  
+}  
+
+// call and apply return value, bind return a function.
+let fullName = person.fullName.bind(member); // return a function!
+console.log(fullName());
+```
+
+Remember:\
+In an event, `this` refers to the element that received the event.
+
+Quando a função é usada como `callback` o  `this` perde sua referência.
+```javascript
+const person = {  
+  firstName:"John",  
+  lastName: "Doe",  
+  display: function () {  
+    let x = document.getElementById("demo");  
+    x.innerHTML = this.firstName + " " + this.lastName;  
+  }  
+}  
+  
+let display = person.display.bind(person); // sem bind retorna undefined undefined  
+// display é usada como callback para o evento e não acesso direto a função.
+setTimeout(display, 3000);
+```
+
+#### JavaScript Closures
+function returns a function
+
+Uma `closure` é uma função que tem acesso ao escopo pai, depois que a função pai foi fechada (protegida pelo escopo).
+```javascript
+function myCounter() {
+  let counter = 0; // private variables
+  return function() {
+	counter++;  // protected by the scope of myCounter function.
+    return counter;
+  };
+}
+
+const add = myCounter();
+
+function myFunction(){
+  document.getElementById("demo").innerHTML = add();
+}
+```
+Old JavaScript code will often contain closures, but modern JavaScript will not use closures as frequently as before. Old JS use to simulate block-scoping before let and const existed.
+
+### Typescript Basic Generics
+
+
+
 
 
 
