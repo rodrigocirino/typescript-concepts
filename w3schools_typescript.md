@@ -787,9 +787,10 @@ class Rectangle extends Polygon {
 }
 ```
 
-<br>
+<br />
 ### Javascript métodos pré-definidos [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
-##### call (invoke a method)
+
+#### call (invoke a method)
 call permite usar um objeto que pertence a outro objeto
 ```ts
 const person = {
