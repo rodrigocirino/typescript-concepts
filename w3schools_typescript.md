@@ -788,6 +788,8 @@ class Rectangle extends Polygon {
 ```
 
 <br />
+
+
 ### Javascript métodos pré-definidos [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
 
 #### call (invoke a method)
