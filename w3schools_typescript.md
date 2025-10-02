@@ -300,7 +300,7 @@ const graph: [number, number] = [55.2, 41.3];
 const [x, y] = graph;
 ```
 
-### ⛓️‍💥 JavaScript Destructuring [w3](https://www.w3schools.com/js/js_destructuring.asp)
+### 🪓 JavaScript Destructuring [w3](https://www.w3schools.com/js/js_destructuring.asp)
 
 Destructuring Assignment Syntax on **objects**
 
@@ -380,7 +380,7 @@ let lastName = "Doe";
 
 ### TypeScript Object Types
 
-#### ⛓️‍💥 Javascript Object Types
+#### 🪓 Javascript Object Types
 
 Objects are collections of **key-value pairs**, where each key (known as **property names**) has a value, inside curly braces { }:
 
@@ -790,7 +790,7 @@ class Rectangle extends Polygon {
 <br />
 
 
-### Javascript métodos pré-definidos [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
+### 🪓 Javascript métodos pré-definidos [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
 
 #### call (invoke a method)
 call permite usar um objeto que pertence a outro objeto
@@ -885,7 +885,8 @@ let display = person.display.bind(person); // sem bind retorna undefined undefi
 setTimeout(display, 3000);
 ```
 
-#### JavaScript Closures
+
+##### JavaScript Closures
 function returns a function
 
 Uma `closure` é uma função que tem acesso ao escopo pai, depois que a função pai foi fechada (protegida pelo escopo).
