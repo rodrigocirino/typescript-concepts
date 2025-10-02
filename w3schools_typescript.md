@@ -451,4 +451,152 @@ console.log(nameAgeMap); //{ Jack: 25, Doe: 50 }
 
 ### TypeScript Enums
 
+Enums come in two flavors string and numeric.
+Technically, you can mix and match string and numeric enum values, but it is recommended not to do so.
+
+**Numeric Enums - Default**\
+Por padrão, as enumerações inicializarão o primeiro valor como 0 e adicionarão 1 a cada valor adicional:
+```ts
+enum CardinalDirections {
+  North = 1, //initialized!
+  East,
+  South,
+  West
+};
+            
+let currentDirection = CardinalDirections.North;
+console.log(currentDirection); // ok show number 1
+
+currentDirection = 2;
+console.log(currentDirection); // ok show number 2
+
+// currentDirection = 0; // error, enum initate on 1 not zero
+// prog.ts(11,1): error TS2322: Type '0' is not assignable to type 'CardinalDirections'.
+```
+
+Good Example
+```ts
+enum StatusCodes {  
+  NotFound = 404,  
+  Success = 200,  
+  Accepted = 202,  
+  BadRequest = 400  
+}  
+// logs 404  
+console.log(StatusCodes.NotFound);  
+// logs 200  
+console.log(StatusCodes.Success);
+
+
+enum CardinalDirections {  
+  North = 'North',  
+  East = "East",  
+  South = "South",  
+  West = "West"  
+};
+// logs "North"  
+console.log(CardinalDirections.North);
+```
+
+### TypeScript Type Aliases and Interfaces
+
+#### Type Aliases
+Assim como temos number, float, podemos **criar um tipo customizado com type**, útil para objetos estruturados em OO.
+- Use `type` for unions, intersections, and primitives.
+```ts
+type CarYear = number  
+type CarType = string  
+type CarModel = string  
+type Car = {  
+  year: CarYear,  
+  type: CarType,  
+  model: CarModel  
+}  
+  
+const carYear: CarYear = 2001  
+const carType: CarType = "Toyota"  
+const carModel: CarModel = "Corolla"  
+const car: Car = {  
+  year: carYear,  
+  type: carType,  
+  model: carModel  
+};
+
+console.log(car); // { year: 2001, type: 'Toyota', model: 'Corolla' }
+```
+
+##### Union com interseção de Tipos
+Limita o tipo a configuração específica declarada.
+```ts
+type Animal = { name: string }; // { name: "galinha"}
+type Bear = Animal & { honey: boolean };
+const bear: Bear = { name: "Puffy", honey: false };  
+   
+type Status = "success" | "error";  
+let response: Status = "success";
+```
+
+#### Interfaces
+Idem type, except, interfaces **only** apply to `objects` types!
+```ts
+// Try creating a new interface using it below
+interface Rectangle {
+  height: number,
+  width: number
+};
+const rectangle: Rectangle = {
+  height: 20,
+  width: 10
+};
+console.log(rectangle); // { height: 20, width: 10 }
+
+// error string is not object types
+// interface Status = "success" | "error";
+// prog.ts(16,18): error TS1005: '{' expected.
+```
+
+##### Merging interfaces, **adding new atributes**.
+```ts
+interface Animal { name: string; } // ok
+interface Animal { age: number; } // ok other line
+const dog: Animal = { name: "Fido", age: 5 }; // using
+console.log(dog) // { name: 'Fido', age: 5 }
+```
+
+#### Extending Interfaces
+
+Estender uma interface significa criar uma nova interface com as **mesmas propriedades da original, além de algo novo**.
+
+**Types and Interface, both can be extended!**, but interfaces support declaration merging.
+- **Recommendation:** Use `interface` for objects, `type` for everything else.
+```ts
+interface Rectangle {
+  height: number,
+  width: number
+}
+
+interface ColoredRectangle extends Rectangle { // extends, get other props
+  color: string
+}
+
+const coloredRectangle: ColoredRectangle = {
+  height: 20,
+  width: 10,
+  color: "red"
+};
+```
+
+### TypeScript Union Types
+#### Union | Or
+
+**Necessário checar o tipo antecipadamente ao usar `|`**.\
+Este código não compila, o compilador vai relatar um erro se tentar acessar na marra sem verificar o tipo antecipadamente.
+```ts
+function printStatusCode(code: string | number) {
+  console.log(`My status code is ${code.toUpperCase()}.`) 
+}
+// prog.ts(2,51): error TS2339: Property 'toUpperCase' does not exist on type 'string | number'. Property 'toUpperCase' does not exist on type 'number'.
+```
+
+
 
