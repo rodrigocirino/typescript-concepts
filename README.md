@@ -470,7 +470,7 @@ if (!(porte in EnumPorte)) {
 
 `keyof` cria uma **união** entre suas chaves.\
 
-`keyof` se tornam especialmente úteis quando combinados com tipos mapeados, como interfaces.
+`keyof` retorne as chaves de um objeto, útil quando quer acessar de forma dinâmica através de suas chaves o objeto.
 
 ```typescript
 interface Person {  
@@ -497,9 +497,6 @@ function createStringPair(property: keyof StringMap, value: string): StringMap 
 }
 ```
 
-
-
-<br>
 
 Typescript com **generics**:
 

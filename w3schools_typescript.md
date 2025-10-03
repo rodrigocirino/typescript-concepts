@@ -1260,26 +1260,479 @@ Atualmente a versão mais utilizada é a **4.x**, tenho instalado a **5.7**
 
 #### Template Literal Types
 ```ts
+type Color = "red" | "green" | "blue"; 
+type HexColor<T extends Color> = `#${string}`;
 
+// Usage
+let myColor: HexColor<"blue"> = "#0000FF";
+
+console.log(myColor)
 ```
-
-### x
-#### x
+#### Index Signature Labels
 ```ts
+type DynamicObject = { [key: `dynamic_${string}`]: string };
 
+// Usage: 
+let obj: DynamicObject = { dynamic_key: "value" };
+
+console.log(obj);
 ```
 
-### x
-#### x
+
+### TypeScript with Node.js
+#### Simple
 ```ts
-
+{
+    "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src", //keeps source (`src`) separate from build output (`dist`).
+    "strict": true, //enables the safest type checking.
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true //generate maps for debugging compiled code.
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
 ```
-
-### x
-#### x
+**Warning:** Use `ts-node` and `nodemon` only for development.\
+For production, compile with `tsc` and run Node on the JS output.
+#### Node.js Project Structure
 ```ts
+my-ts-node-app/  
+  src/  
+    server.ts  
+    middleware/  
+      auth.ts  
+    entity/  
+      User.ts  
+    config/  
+      database.ts  
+  dist/  
+  node_modules/  
+  package.json  
+  tsconfig.json
+```
+
+#### Express server
+```ts
+import express, { Request, Response, NextFunction } from 'express';  
+import { json } from 'body-parser';  
+  
+interface User {  
+  id: number;  
+  username: string;  
+  email: string;  
+}  
+  
+// Initialize Express app  
+const app = express();  
+const PORT = process.env.PORT || 3000;  
+  
+// Middleware  
+app.use(json());  
+  
+// In-memory database  
+const users: User[] = [  
+  { id: 1, username: 'user1', email: 'user1@example.com' },  
+  { id: 2, username: 'user2', email: 'user2@example.com' }  
+];  
+  
+// Routes  
+app.get('/api/users', (req: Request, res: Response) => {  
+  res.json(users);  
+});  
+  
+app.get('/api/users/:id', (req: Request, res: Response) => {  
+  const user = users.find(u => u.id === parseInt(req.params.id));  
+  if (!user) return res.status(404).json({ message: 'User not found' });  
+  res.json(user);  
+});  
+  
+app.post('/api/users', (req: Request, res: Response) => {  
+  const { username, email } = req.body;  
+   
+  if (!username || !email) {  
+    return res.status(400).json({ message: 'Username and email are required' });  
+  }  
+   
+  const newUser: User = {  
+    id: users.length + 1,  
+    username,  
+    email  
+  };  
+   
+  users.push(newUser);  
+  res.status(201).json(newUser);  
+});  
+  
+// Error handling middleware  
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {  
+  console.error(err.stack);  
+  res.status(500).json({ message: 'Something went wrong!' });  
+});  
+  
+// Start server  
+app.listen(PORT, () => {  
+  console.log(`Server is running on http://localhost:${PORT}`);  
+});
+```
+#### Development workflow
+```ts
+{  
+  "scripts": {  
+    "build": "tsc",  
+    "start": "node dist/server.js",  
+    "dev": "nodemon --exec ts-node src/server.ts",  
+    "watch": "tsc -w",  
+    "test": "jest --config jest.config.js"  
+  }  
+}
+```
+#### Debugging with Source Maps
+With `sourceMap` enabled in `tsconfig.json`, you can debug compiled code and map back to your `.ts` files.
+```bash
+node --enable-source-maps dist/server.js
+```
+
+#### Best Practices
+- Always define types for function parameters and return values
+- Use interfaces for object shapes
+- Enable strict mode in tsconfig.json
+- Use type guards for runtime type checking
+- Leverage TypeScript's utility types (Partial, Pick, Omit, etc.)
+- Keep your type definitions in .d.ts files
+- Use enums or const assertions for fixed sets of values
+- Document complex types with JSDoc comments
+- Prefer environment variables for secrets and config; validate them at startup.
+- Use `ts-node`/`nodemon` only in dev; compile for prod.
+- Consider ESLint + Prettier with `@typescript-eslint` for consistent code quality.
+
+
+
+### Typescript Tools
+#### ESLint
+```bash
+# Install ESLint with TypeScript support  
+npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+```
+Configuration
+```ts
+// .eslintrc.json  
+{  
+  "root": true,  
+  "parser": "@typescript-eslint/parser",  
+  "plugins": ["@typescript-eslint"],  
+  "extends": [  
+    "eslint:recommended",  
+    "plugin:@typescript-eslint/recommended",  
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"  
+  ],  
+  "parserOptions": {  
+    "project": "./tsconfig.json",  
+    "ecmaVersion": 2020,  
+    "sourceType": "module"  
+  },  
+  "rules": {  
+    "@typescript-eslint/explicit-function-return-type": "warn",  
+    "@typescript-eslint/no-explicit-any": "warn",  
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]  
+  }  
+}
+```
+
+**NPM Scripts** - Add scripts to run linting and a type-only check.\
+Use `lint:fix` to auto-fix simple issues.
+```ts
+// package.json  
+{  
+  "scripts": {  
+    "lint": "eslint . --ext .ts,.tsx",  
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",  
+    "type-check": "tsc --noEmit"  
+  }  
+}
+```
+#### Prettier
+```bash
+# Install Prettier and related packages  
+npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
+```
+```bash
+// .prettierrc  
+{  
+  "semi": true,  
+  "singleQuote": true,  
+  "tabWidth": 2,  
+  "printWidth": 100,  
+  "trailingComma": "es5",  
+  "bracketSpacing": true,  
+  "arrowParens": "avoid"  
+}  
+  
+// .prettierignore  
+node_modules  
+build  
+dist  
+.next  
+.vscode
+```
+
+**Integrate with ESLint**\
+Extend `plugin:prettier/recommended` so formatting problems are reported as ESLint issues.
+```ts
+npm install --save-dev eslint-config-prettier eslint-plugin-prettier  
+// In your .eslintrc.js or .eslintrc.json, add:  
+{  
+  "extends": ["plugin:prettier/recommended"]  
+}
+```
+
+The optional `baseUrl` and `paths` help with absolute imports like `@/components/Button`.
+```ts
+// tsconfig.json  
+{  
+  "compilerOptions": {  
+    "paths": {  
+      "@/*": ["src/*"]  
+    }  
+  },
+}
+```
+
+#### VSCode Debugging
+```ts
+// .vscode/launch.json  
+{  
+  "version": "0.2.0",  
+  "configurations": [  
+    {  
+      "type": "chrome",  
+      "request": "launch",  
+      "name": "Launch Chrome against localhost",  
+      "url": "http://localhost:3000",  
+      "webRoot": "${workspaceFolder}",  
+      "sourceMaps": true,  
+      "sourceMapPathOverrides": {  
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",  
+        "webpack:///./*": "${workspaceFolder}/src/*"  
+      }  
+    },  
+    {  
+      "type": "node",  
+      "request": "launch",  
+      "name": "Debug Tests",  
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/jest",  
+      "args": ["--runInBand", "--watchAll=false"],  
+      "console": "integratedTerminal",  
+      "internalConsoleOptions": "neverOpen",  
+      "sourceMaps": true  
+    }  
+  ]  
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Typescript Advanced Types
+#### **Mapped Types**
+Transform properties of existing types\
+Transforme cada propriedade de um tipo de objeto em um novo tipo usando um único modelo.
+```ts
+// Convert all properties to boolean  
+type Flags<T> = {  
+  [K in keyof T]: boolean; // K tem as chaves de T, logo K é T
+};  
+  
+interface User {  
+  id: number;  
+  name: string;  
+  email: string;  
+}  
+  
+type UserFlags = Flags<User>;  
+// Equivalent to:  
+// {  
+//   id: boolean;  
+//   name: boolean;  
+//   email: boolean;  
+// }
+```
+#### Mapped Type Modifiers (tipos mapeados `+` e `-`)
+
+Sinais **`+`** e **`-`** são chamados de **modificadores de mapeamento** no TypeScript.
+
+Servem para **adicionar ou remover modificadores** (`readonly` e `?`) das propriedades de um tipo.
+
+#### Explicação:
+- `-?` → remove o modificador **opcional** `?`.    
+- `+?` → adiciona o modificador **opcional** `?`.  
+    (mas o `+?` quase nunca é usado, porque o default da linguagem, basta adicionar `?` sem o positivo.
+- `-readonly` → remove o modificador **readonly**.    
+- `+readonly` → adiciona o modificador **readonly** (default tb).
+
+Exemplo:
+
+`type Concrete<T> = {   -readonly [K in keyof T]-?: T[K]; };`
+
+Isso significa: para cada chave `K` em `T`, pegue o tipo da propriedade `T[K]`, **removendo `readonly` e removendo `?`** → ou seja, todas as propriedades ficam **obrigatórias e mutáveis**.
+
+`type ReadonlyRequired<T> = {  +readonly [K in keyof T]-?: T[K]; };`
+
+Isso significa: para cada chave `K` em `T`, pegue o tipo da propriedade `T[K]`, **adicionando `readonly` e removendo `?`** → todas as propriedades ficam **obrigatórias e somente leitura**.
+
+Detalhe: O `+` na frente (`+readonly` ou `+?`) é **opcional**, porque adicionar é o comportamento padrão da linguagem.
+
+#### Key Remapping
+
+Renomeie ou filtre chaves durante o mapeamento usando `as`, auxiliares de string e verificações condicionais
+
+```ts
+// Get será criado dinamicamente
+type User = { id: number; name: string; email: string };
+
+function makeGetters<T extends Record<string, any>>(obj: T) {
+  const out: any = {};
+  for (const k of Object.keys(obj)) {
+    const cap = k.charAt(0).toUpperCase() + k.slice(1);
+    out["get" + cap] = () => obj[k];
+  }
+  return out as {
+    [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+  };
+}
+
+const u: User = { id: 7, name: "Bob", email: "bob@example.com" };
+const g = makeGetters(u);
+console.log(g.getId());
+console.log(g.getName());
+console.log(g.getEmail());
+```
+
+#### Conditional Types
+Tipos condicionais permitem que você defina tipos que dependem de uma condição.
+
+```ts
+// Conditional types (runtime illustration)
+type IsString<T> = T extends string ? true : false;
+type ArrayElement<T> = T extends (infer U)[] ? U : never;
+
+const arr = [1, 2, 3];
+console.log(typeof arr[0]); // 'number'
+
+function isString(x: unknown): boolean {
+  return typeof x === "string";
+}
+console.log(isString("hello")); // true
+console.log(isString(42));      // false
+```
+#### infer keyword (inferir, deduzir,  induzir, concluir que)
+Captura uma parte de um tipo dentro de um tipo condicional introduzindo uma nova variável de tipo com `infer`.
+
+Muito comum vir numa expressão coalescence do tipo `x ? true : false`
+
+Ou seja, **`infer` é um jeito de declarar uma "variável temporária de tipo" dentro de um `extends` condicional.**
+
+`T` sendo uma função, guarde em `R` o tipo de retorno dela, caso contrário use `never`
+```ts
+// Utilitário que extrai o tipo de retorno de uma função
+type Retorno<T> = T extends (...rest: any[]) => infer R ? R : never;
+
+// Exemplo de função
+function soma(a: number, b: number) {
+  return a + b;
+}
+
+// Retorno<typeof soma> é "number"
+type TipoRetorno = Retorno<typeof soma>;
 
 ```
+
+Exemplo 2: Extrair o tipo dos elementos de um array
+```ts
+type Elemento<T> = T extends (infer U)[] ? U : never;
+
+type A = Elemento<string[]>;  // string
+type B = Elemento<number[]>;  // number
+type C = Elemento<boolean>;   // never (não é array)
+```
+Explicação:
+- Se `T` for um array (`(infer U)[]`), então guarde o tipo dos elementos em `U`.    
+- Caso contrário, dá `never`.
+
+#### Distributed Conditional Types
+```ts
+// Without distribution  
+type ToArrayNonDist<T> = T extends any ? T[] : never;  
+type StrOrNumArr = ToArrayNonDist<string | number>; // (string | number)[]  
+  
+// With distribution  
+type ToArray<T> = [T] extends [any] ? T[] : never;  
+type StrOrNumArr2 = ToArray<string | number>; // string[] | number[]  
+  
+// Filter out non-string types  
+type FilterStrings<T> = T extends string ? T : never;  
+type Letters = FilterStrings<'a' | 'b' | 1 | 2 | 'c'>; // 'a' | 'b' | 'c'
+```
+
+#### Template Literal Types
+
+Basic templates **`${}`**
+```ts
+// Template literal types
+type Greeting = `Hello, ${string}`;
+const validGreeting: Greeting = "Hello, World!";
+console.log(validGreeting);
+
+// Style pattern with unions
+type Color = "red" | "green" | "blue";
+type Size = "small" | "medium" | "large";
+type Style = `${Color}-${Size}`;
+
+const examples: Style[] = ["red-small", "green-medium", "blue-large"];
+console.log(JSON.stringify(examples));
+```
+ Custom Types
+```ts
+ // Built-in string manipulation types  
+type T1 = Uppercase<'hello'>;  // 'HELLO'  
+type T2 = Lowercase<'WORLD'>;  // 'world'  
+type T3 = Capitalize<'typescript'>;  // 'Typescript'  
+type T4 = Uncapitalize<'TypeScript'>;  // 'typeScript'  
+  
+// Create an event handler type  
+type EventType = 'click' | 'change' | 'keydown';  
+type EventHandler = `on${Capitalize<EventType>}`;  
+// 'onClick' | 'onChange' | 'onKeydown'
+```
+
+#### **Utility Types**: Built-in type helpers for common transformations
+
+
+
+
+
+
+#### **Recursive Types**: Self-referential types for tree-like structures
+#### **Type Guards & Type Predicates**: Runtime type checking
+#### **Type Inference**: Advanced pattern matching with `infer`
+
+
 
 ### x
 #### x
