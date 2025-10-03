@@ -2512,8 +2512,221 @@ const userService = new UserService();
 
 #### Index vs Records
 TypeScript has a [utility type](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type) `Record<Keys, Values>` to annotate records, similar to the index signature.
+
+Use an index signature for **flexible/dynamic keys** and when mixing with other properties.\
+Use `Record<K, T>` for **concise simple** mappings.\
+
+Combine with explicit properties where possible, and see Mapped Types and Utility Types for advanced transformations.
+
+Use assinaturas de índice quando as chaves forem dinâmicas, mas as formas de valor forem consistentes.
+
 ```ts
 // Both are the same
 const object1: Record<string, string> = { prop: 'Value' }; // OK  
 const object2: { [key: string]: string } = { prop: 'Value' }; // OK
+
+// Index signature  
+interface StringMap {  
+  [key: string]: string;  
+}  
+  
+// Record  
+type StringRecord = Record<string, string>;
 ```
+
+Observação: em JavaScript, todas as chaves de objeto são armazenadas como strings, mesmo as numéricas.\
+No entanto, o TypeScript faz uma distinção para ajudar a detectar erros lógicos ao usar matrizes em vez de objetos.
+```ts
+// Object with number indexes  
+interface NumberDictionary {  
+  [index: number]: any;  
+}  
+  
+const scores: NumberDictionary = {  
+  0: "Zero",  
+  1: 100,  
+  2: true  
+};  
+  
+console.log(scores[0]); // "Zero"  
+console.log(scores[1]); // 100  
+console.log(scores[2]); // true  
+  
+// Adding a complex object  
+scores[3] = { passed: true };
+```
+
+`readonly` with index signatures
+```ts
+// Use `readonly` when mutation isn't needed
+interface ReadOnlyStringArray {  
+  readonly [index: number]: string;  
+}  
+  
+const names: ReadOnlyStringArray = ["Alice", "Bob", "Charlie"];  
+  
+console.log(names[0]); // "Alice"  // ok acess, but error on change
+  
+// This would cause an error  
+// names[0] = "Andrew"; // Error: Index signature in type 'ReadOnlyStringArray' only permits reading
+```
+
+#### commom pitfalls
+```ts
+interface ConflictingTypes {  
+  [key: string]: number;  
+  name: string; // Error: not assignable to string index type 'number'  
+}  
+  
+interface FixedTypes {  
+  [key: string]: number | string;  
+  name: string;  // OK  
+  age: number;   // OK  
+}
+```
+
+
+### Typescript Merging
+
+Em typescript para unir basta usar o mesmo nome e mesma categoria.
+Podem ser usados em `class` and `interface`,  `enum`,  `functions`, `namespace`, `declare namespace`.
+
+#### interfaces
+```ts
+// First declaration
+interface Person {
+  name: string;
+  age: number;
+}
+
+// Second declaration with the same name
+interface Person {
+  address: string;
+  email: string;
+}
+
+// TypeScript merges them into:
+// interface Person {
+// name: string;
+// age: number;
+// address: string;
+// email: string;
+// }
+```
+
+#### functions
+```ts
+// Function overloads
+function processValue(value: string): string;
+function processValue(value: number): number;
+function processValue(value: boolean): boolean;
+
+// Implementation that handles all overloads
+function processValue(value: string | number | boolean): string | number | boolean {
+  if (typeof value === "string") {
+    return value.toUpperCase();
+  } else if (typeof value === "number") {
+    return value * 2;
+  } else {
+    return !value;
+  }
+}
+
+// Using the function with different types
+console.log(processValue("hello")); // "HELLO"
+console.log(processValue(10)); // 20
+console.log(processValue(true)); // false
+```
+
+#### class and interfaces
+```ts
+// Interface declaration  
+interface Cart {  
+  calculateTotal(): number;  
+}  
+  
+// Class declaration with same name  
+class Cart {  
+  items: { name: string; price: number }[] = [];  
+  
+  addItem(name: string, price: number): void {  
+    this.items.push({ name, price });  
+  }  
+  
+   // Must implement the interface method  
+   calculateTotal(): number {  
+    return this.items.reduce((sum, item) => sum + item.price, 0);  
+  }  
+}  
+  
+// Using the merged class and interface  
+const cart = new Cart();  
+cart.addItem("Book", 15.99);  
+cart.addItem("Coffee Mug", 8.99);  
+  
+console.log(`Total: $${cart.calculateTotal().toFixed(2)}`);
+```
+
+
+### Typescript Async
+
+**Promise Combination Methods**
+- `Promise.all()` - Waits for all promises to resolve
+- `Promise.race()` - Returns the first settled promise (primeira resposta bem sucedida)
+- `Promise.allSettled()` - Waits for all to settle (todas as respostas com sucesso ou erro)
+- `Promise.any()` - Returns the first fulfilled promise (primeira resposta com erro ou sucesso)
+
+**Error Handling Strategies**
+- **Try/Catch Blocks**: For handling errors in async/await
+- **Error Boundaries**: For React components
+- **Result Types**: Functional approach with success/failure
+- **Error Subclassing**: For domain-specific errors
+
+#### Generator  `function*`
+Esse `*` logo após o `function` indica que a função é um **generator function**.  \
+Quando você combina com `async`, vira um **async generator function**.
+
+**Diferença principal:**
+- Uma função normal retorna um valor único.    
+- Uma função `function*` (generator) retorna um **iterator**, que pode ir entregando valores aos poucos, usando a palavra-chave **`yield`**.    
+- Uma função `async function*` retorna um **async iterator**, que pode entregar valores de forma assíncrona (útil quando os valores vêm de uma API, stream, ou precisam de `await`).
+
+```ts
+// Async generator function  
+async function* generateNumbers(): AsyncGenerator<number, void, unknown> {  
+  let i = 0;  
+  while (i < 5) {  
+    // Simulate async operation  
+    await new Promise(resolve => setTimeout(resolve, 1000));  
+    yield i++;  // entrega o número atual e pausa a execução.
+  }  
+}  
+  
+// Using the async generator  
+async function consumeNumbers() {  
+  for await (const num of generateNumbers()) {  // loop esperando cada um com `await`.
+    // TypeScript knows num is a number  
+    console.log(num * 2);  
+  }  
+}
+```
+
+#### `yield`
+`yield` é como um `return`, mas **parcial**: ele pausa a execução da função, devolve um valor, e mantém o estado interno. Na próxima iteração, a função continua do ponto onde parou.
+```ts
+// Aqui, cada chamada ao `yield` “entrega” um valor, e a função pausa até a próxima iteração.
+function* contador() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+for (const valor of contador()) {
+  console.log(valor);
+}
+// Saída: 1, 2, 3
+```
+
+### Typescript Decorators
+
+#### h4
