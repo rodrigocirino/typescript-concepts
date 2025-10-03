@@ -2002,11 +2002,6 @@ Basic Conditional Type Syntax
 Conditional types use the form `T extends U ? X : Y`, which means:\
 "if type `T` extends (or is assignable to) type `U`, use type `X`, otherwise use type `Y`".
 
-#### x
-```ts
-
-```
-
 ### ....
 #### ....
 ```ts
