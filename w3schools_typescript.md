@@ -1,4 +1,4 @@
-# w3schools.com: Typescript Tutorial
+**w3schools.com: Typescript Tutorial**
 
 Revisão baseada na documentações do site [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
@@ -436,7 +436,7 @@ car.mileage = 2000;
 
 Assinaturas de índice podem ser usadas para objetos sem uma lista definida de propriedades.
 
-Index signatures like this one can also be expressed with utility types like **`Record<string, number>`**.
+Index signatures like this one can also be expressed with utility types like **`Record<string, number>`**. [🔗 See below](#)
 ```ts
 const nameAgeMap: { [index: string]: number } = {};
 
@@ -909,8 +909,381 @@ Old JavaScript code will often contain closures, but modern JavaScript will not 
 
 ### Typescript Basic Generics
 
+Os genéricos permitem a criação de 'variáveis ​​de tipo' que podem ser usadas para criar classes, funções e aliases de tipo que não precisam definir explicitamente os tipos que usam.\
+Os genéricos facilitam a escrita de código reutilizável.
 
+Functions
+```typescript
+function createPair<S, T>(v1: S, v2: T): [S, T] | void {
+  return [v1, v2];
+}
 
+console.log(createPair<string, number>('hello', 42)); // ['hello', 42]
+```
+Classes
+```ts
+// tipo T será definido em tempo de execução.
+// opcionalmente atribui = string como valor padrão
+class NamedValue<T = string> {
+  private _value: T | undefined;
 
+  constructor(private name: string) {}
 
+  public setValue(value: T) {
+    this._value = value;
+  }
+
+  public getValue(): T | undefined {
+    return this._value;
+  }
+
+  public toString(): string {
+    return `${this.name}: ${this._value}`;
+  }
+}
+      
+const value = new NamedValue<number>('myNumber');
+
+value.setValue(10);
+
+console.log(value.toString()); // myNumber: 10
+```
+Type Aliases
+```ts
+// tipo indefinido na declaração
+type Wrapped<T> = { value: T };  
+
+// Obrigatório dizer o tipo na implementação.
+const wrappedValue: Wrapped<number> = { value: 10 };
+```
+Extends (permit multiple types)
+```ts
+function createLoggedPair<S extends string | number, T extends string | number>(v1: S, v2: T): [S, T] {
+  console.log(`creating pair: v1='${v1}', v2='${v2}'`);
+  return [v1, v2];
+}
+
+console.log(createLoggedPair("one", 1)) // ok ['one', 1]
+console.log(createLoggedPair("one", "one")) // ok ['one', 'one']
+console.log(createLoggedPair(1, 1)) // ok [1, 1]
+// console.log(createLoggedPair(1, true)) // error: 'boolean' is not assignable to parameter of type 'string | number'.
+```
+
+### Typescript Utility Types
+
+Tipos utilitários servem para alterar o retorno de um objeto, acessibilidade ou estrutura.
+
+#### Partial
+`Parcial` altera **todas as propriedades** de um objeto para que **sejam opcionais**.
+```ts
+interface Point {
+  x: number;
+  y: number;
+}
+            
+let pointPart: Partial<Point> = {}; // `Partial` allows x and y to be optional
+pointPart.x = 10;
+
+console.log(pointPart);
+
+```
+#### Required
+**Oposto de** `Partial`.\
+Torna obrigatório até os atributos marcados com `?`
+```ts
+interface Car {
+  make: string;
+  model: string;
+  mileage?: number;
+}
+            
+let myCar: Required<Car> = {
+  make: 'Ford',
+  model: 'Focus',
+  mileage: 12000 // `Required` forces mileage to be defined
+};
+
+console.log(myCar);
+
+// Error if not defined !
+prog.ts(7,5): error TS2741: Property 'mileage' is missing in type '{ make: string; model: string; }' but required in type 'Required<Car>'.
+```
+#### Record
+`Record` ou Registro é um atalho para definir **um tipo de objeto com um tipo de chave e um tipo de valor específicos**.
+
+`Record<string, number>` is equivalent to `{ [key: string]: number }`
+```ts
+const nameAgeMap: Record<string, number> = {
+  'Alice': 21, 'Bob': 25
+};
+// o mesmo que !
+const nameAgeMap: {[key:string]: number} = {
+  'Alice': 21, 'Bob': 25
+};
+
+console.log(nameAgeMap); // { Alice: 21, Bob: 25 }
+```
+
+#### Omit (omita campos)
+`Omit` remove chaves de um objeto
+```ts
+interface Person {
+  name: string;
+  age: number;
+  location?: string;
+}
+    
+const bob: Omit<Person, 'age' | 'location'> = {
+  name: 'Bob'
+  // age: 21 // prog.ts(9,3): error TS2353: Object literal may only specify known properties, and 'age' does not exist in type 'Omit<Person, "age" | "location">'.
+};
+
+console.log(bob); // { name: 'Bob' }
+```
+
+#### Pick (pegue apenas este campos)
+`Pick` remove todas as chaves, exceto as especificadas, de um tipo de objeto.
+```ts
+interface Person {
+  name: string;
+  age: number;
+  location?: string;
+}
+            
+const bob: Pick<Person, 'name'> = {
+  name: 'Bob'
+  // age: 21 // error prog.ts(9,3): error TS2353: Object literal may only specify known properties, and 'age' does not exist in type 'Pick<Person, "name">'.
+};
+
+console.log(bob); // { name: 'Bob' } 
+```
+
+#### Exclude
+`Exclude` removes types from a union.
+```ts
+
+type Primitive = string | number | boolean;
+
+const value: Exclude<Primitive, string> = true;
+// a string cannot be used here since Exclude removed it from the type.
+
+console.log(typeof value); // boolean
+```
+
+#### ReturnType
+`ReturnType` extracts the return type of a function type.
+```ts
+type PointGenerator = () => { x: number; y: number; };
+
+// tipo de retorno ex: void aqui será a função number, number.
+const point: ReturnType<PointGenerator> = {
+  x: 10,
+  y: 20
+};
+
+console.log(point) // { x: 10, y: 20 }
+```
+
+#### Parameters
+`Parameters` extrai os tipos de parâmetros de um tipo de função como uma matriz.
+```ts
+// entre parenteses são parametros
+type PointPrinter = (p: { x: number; y: number; }) => void;
+// parametros serão do tipo PointPrinter, acesse o primeiro elemento.
+// [p: { x: number; y: number; }]
+const point: Parameters<PointPrinter>[0] = {
+  x: 10,
+  y: 20
+};
+
+console.log(point); // { x: 10, y: 20 }
+```
+#### Readonly
+significa que não podem ser modificadas depois que um valor é atribuído.
+
+Tenha em mente que o TypeScript evitará isso em tempo de compilação, mas, em teoria, como ele é compilado para JavaScript, você ainda pode substituir uma propriedade somente leitura.
+
+```ts
+interface Person {
+    name: string;
+    age: number;
+}
+
+const person: Readonly<Person> = {
+    name: "Dylan",
+    age: 35,
+};
+
+person.name = 'Israel'; // prog.ts(11,8): error TS2540: Cannot assign to 'name' because it is a read-only property.
+```
+
+### Typescript Keyof
+
+Usada para **extrair o tipo de chave** de um tipo de objeto.
+#### keyof with explicit keys
+Quando usado em um tipo de objeto com chaves explícitas (quase sempre é o caso)\
+`keyof` cria um tipo de união com essas chaves.
+
+`keyof` - retorne as chaves deste objeto ou classe
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+// `keyof Person` here creates a union type of "name" and "age", other strings will not be allowed
+function printPersonProperty(person: Person, property: keyof Person) {
+  console.log(`${property}: "${person[property]}"`);
+}
+
+let person = {
+  name: "Max",
+  age: 27
+};
+
+printPersonProperty(person, "name"); // name: "Max"
+```
+Veja que é extremamente útil quando queremos criar algo genérico exemplo
+```ts
+let output = {
+  error: 402,
+  message: "....."
+};
+
+// printa o retorno de loggs que pode ser uma analise profunda do error do output.
+loggs(output, "error"); 
+// ou seja acesse a função loggs (tem tratativas do erro)
+// passe o objeto com erros do output
+// retorne o campo erro deste objeto imenso.
+
+```
+
+#### `keyof` with index signatures
+Aqui a chave não é explícita, vai existir somente na inicialização, diferente de "name" e "age" que foram definidos anteriormente e foram unidas por `union` usando `keyof`.
+```ts
+type JsonMap = { [key: string]: unknown };
+
+// value: string, aceita apenas string no Json! troque por unknown se quiser generico.
+function createStringPair(
+	property: keyof JsonMap, value: unknown
+  ): JsonMap {
+  return { [property]: value };
+}
+
+console.log(JSON.stringify(createStringPair('greeting', 100))); //{"greeting":100}
+```
+
+### Typescript Null or Undefined
+
+By default null and undefined handling is disabled, and can be enabled by setting `strictNullChecks` to true.
+
+The rest of this page applies for when `strictNullChecks` is enabled.
+
+#### Optional chaining
+```ts
+interface House {
+  sqft: number;
+  yard?: {
+    sqft: number;
+  };
+}
+            
+function printYardSize(house: House) {
+  //Withoud ? implies error: Cannot read properties of undefined, because yard is not initialized
+  const yardSize = house.yard?.sqft;
+
+  if (yardSize === undefined) {
+    console.log('No yard');
+  } else {
+    console.log(`Yard is ${yardSize} sqft`);
+  }
+}
+            
+let home: House = {
+  sqft: 500
+};
+            
+printYardSize(home); // Prints 'No yard'
+```
+
+#### Nulish Coalescing
+```ts
+function printMileage(mileage: number | null | undefined) {
+  console.log(`Mileage: ${mileage ?? 'Not Available'}`);
+}
+            
+printMileage(null); // Prints 'Mileage: Not Available'
+printMileage(undefined); // Prints 'Mileage: Not Available'
+printMileage(0); // Prints 'Mileage: 0'
+```
+
+#### Null Assertion
+O sistema de inferência do TypeScript não é perfeito. Há momentos em que faz sentido **ignorar a possibilidade** de um valor ser nulo ou indefinido.
+
+```ts
+function getValue(): string | undefined | null {
+  if (Math.random() > 0.5) return "hello";
+  if (Math.random() > 0.5) return null;
+  return undefined;
+}
+
+let value = getValue();
+console.log(value!.length); // compila, mas random pode gerar um valor maior que 0.5 e dar erro.
+
+// Se remover totalmente '!', vemos o erro ao compilar.
+// Cannot read properties of null (reading 'length')
+```
+
+[Doc Oficial - Non-null assertion operator !](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html#non-null-assertion-operator)
+
+*pode ser usado para afirmar que seu operando **não é nulo e não é indefinido** em contextos onde o verificador de tipo não consegue concluir esse fato.*
+```typescript
+// Compiled with --strictNullChecks
+function validateEntity(e?: Entity) {
+	// Throw exception if e is null or invalid entity
+}
+
+function processEntity(e?: Entity) {
+	validateEntity(e);
+	let s = e!.name; // Assert that e is non-null and access name
+}
+```
+**Obs:**  Tive bastante dificuldade em testar localmente, porque para compilar necessário iniciar com valores válidos e inválidos ao mesmo tempo.
+
+### TypeScript 5.x Updates
+
+O **TypeScript 5.0** foi lançado oficialmente em **16 de março de 2023**.
+
+1 de agosto de 2025 foi lançada a versão estável do [5.9](https://devblogs.microsoft.com/typescript/announcing-typescript-5-9).
+
+Atualmente a versão mais utilizada é a **4.x**, tenho instalado a **5.7**
+
+#### Template Literal Types
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
 
