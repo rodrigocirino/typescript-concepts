@@ -1,6 +1,8 @@
-# **w3schools.com: Typescript Tutorial**
+# Typescript Docs
 
-Revisão baseada na documentações do site [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
+Revisão baseada na documentações do site:
+- [Handbook do site oficial](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
 ---
 ### Typescript Introduction 
@@ -2164,4 +2166,307 @@ T extends (any[]) => infer R ? R : never;
 type A<T> = T extends Promise<infer U> ? A<U> : T; // return A<T> without promise
 ```
 
+### Typescript Literal Types
 
+Ao criar uma variável com union operator, typescript espera que o tipo seja apenas os valores presentes nesta união.
+
+> **Aqui o tipo não é string e sim o valor literal indicado, exemplo: "north" diferente de "northeast".**
+#### String
+```ts
+// A variable with a string literal type  
+let direction: "north" | "south" | "east" | "west";  
+  
+// Valid assignments  
+direction = "north";  
+direction = "south";  
+  
+// Invalid assignments would cause errors  
+// direction = "northeast"; // Error: Type '"northeast"' is not assignable to type '"north" | "south" | "east" | "west"'  
+// direction = "up"; // Error: Type '"up"' is not assignable to type '"north" | "south" | "east" | "west"'  
+  
+// Using string literal types in functions  
+function move(direction: "north" | "south" | "east" | "west") {  
+  console.log(`Moving ${direction}`);  
+}  
+  
+move("east"); // Valid  
+// move("up"); // Error: Argument of type '"up"' is not assignable to parameter of type...
+```
+
+#### Numeric
+Mesmo vale para outros tipos como numéricos.
+```ts
+// A variable with a numeric literal type  
+let diceRoll: 1 | 2 | 3 | 4 | 5 | 6;  
+  
+// Valid assignments  
+diceRoll = 1;  
+diceRoll = 6;  
+  
+// Invalid assignments would cause errors  
+// diceRoll = 0; // Error: Type '0' is not assignable to type '1 | 2 | 3 | 4 | 5 | 6'  
+// diceRoll = 7; // Error: Type '7' is not assignable to type '1 | 2 | 3 | 4 | 5 | 6'  
+// diceRoll = 2.5; // Error: Type '2.5' is not assignable to type '1 | 2 | 3 | 4 | 5 | 6'  
+  
+// Using numeric literal types in functions  
+function rollDice(): 1 | 2 | 3 | 4 | 5 | 6 {  
+  return Math.floor(Math.random() * 6) + 1 as 1 | 2 | 3 | 4 | 5 | 6;  
+}  
+  
+const result = rollDice();  
+console.log(`You rolled a ${result}`);
+```
+
+#### Boolean
+Exemplo interessante, abordando `boolean` com 0 e 1
+```ts
+// Boolean literal combined with other types  
+type SuccessFlag = true | "success" | 1;  
+type FailureFlag = false | "failure" | 0;  
+  
+function processResult(result: SuccessFlag | FailureFlag) {  
+  if (result === true || result === "success" || result === 1) {  
+    console.log("Operation succeeded");  
+  } else {  
+    console.log("Operation failed");  
+  }  
+}  
+  
+processResult(true); // "Operation succeeded"  
+processResult("success"); // "Operation succeeded"  
+processResult(1); // "Operation succeeded"  
+processResult(false); // "Operation failed"
+```
+
+#### Object
+```ts
+// Object with literal property values  
+type HTTPSuccess = {  
+  status: 200 | 201 | 204;  
+  statusText: "OK" | "Created" | "No Content";  
+  data: any;  
+};  
+  
+type HTTPError = {  
+  status: 400 | 401 | 403 | 404 | 500;  
+  statusText: "Bad Request" | "Unauthorized" | "Forbidden" | "Not Found" | "Internal Server Error";  
+  error: string;  
+};  
+  
+type HTTPResponse = HTTPSuccess | HTTPError;  
+  
+function handleResponse(response: HTTPResponse) {  
+  if (response.status >= 200 && response.status < 300) {  
+    console.log(`Success: ${response.statusText}`);  
+    console.log(response.data);  
+  } else {  
+    console.log(`Error ${response.status}: ${response.statusText}`);  
+    console.log(`Message: ${response.error}`);  
+  }  
+}
+```
+
+#### Templates `${}`
+O TypeScript 4.1+ introduziu tipos de literais de modelo, que permitem criar novos tipos de literais de string combinando os existentes usando a sintaxe de string de modelo
+```ts
+// Basic template literals  
+type Direction = "north" | "south" | "east" | "west";  
+type Distance = "1km" | "5km" | "10km";  
+  
+// Using template literals to combine them  
+type DirectionAndDistance = `${Direction}-${Distance}`;  
+// "north-1km" | "north-5km" | "north-10km" | "south-1km" | ...
+
+
+// Dynamic property access  
+type User = {  
+  id: number;  
+  name: string;  
+  email: string;  
+  createdAt: Date;  
+};  
+  
+type GetterName<T> = `get${Capitalize<string & keyof T>}`;  
+type UserGetters = {  
+[K in keyof User as GetterName<User>]: () => User[K];  
+};  
+// { getId: () => number; getName: () => string; ... }
+```
+
+
+### Typescript Namespaces
+
+Os namespaces TypeScript (anteriormente conhecidos como "módulos internos") fornecem uma maneira poderosa de **organizar código e evitar conflitos de nomenclatura** criando um contêiner para funcionalidades relacionadas.
+
+Key Concepts
+- **Logical Grouping**: Organize related code into named containers
+- **Scope Management**: Control the visibility of code elements
+- **Name Collision Prevention**: Avoid conflicts between similarly named components
+- **Code Organization**: Structure large applications in a hierarchical manner
+
+#### `namespace` keyword
+```ts
+namespace Validation {  
+  // Everything inside this block belongs to the Validation namespace  
+  
+  // Export things you want to make available outside the namespace  
+  export interface StringValidator {  
+    isValid(s: string): boolean;  
+  }  
+  
+  // This is private to the namespace (not exported)  
+  const lettersRegexp = /^[A-Za-z]+$/;  
+  
+  // Exported class - available outside the namespace  
+  export class LettersValidator implements StringValidator {  
+    isValid(s: string): boolean {  
+      return lettersRegexp.test(s);  
+    }  
+  }  
+  
+  // Another exported class  
+  export class ZipCodeValidator implements StringValidator {  
+    isValid(s: string): boolean {  
+      return /^[0-9]+$/.test(s) && s.length === 5;  
+    }  
+  }  
+}  
+  
+// Using the namespace members  
+let letterValidator = new Validation.LettersValidator();  
+let zipCodeValidator = new Validation.ZipCodeValidator();  
+  
+console.log(letterValidator.isValid("Hello")); // true  
+console.log(letterValidator.isValid("Hello123")); // false  
+  
+console.log(zipCodeValidator.isValid("12345")); // true  
+console.log(zipCodeValidator.isValid("1234")); // false - wrong length
+```
+
+#### Nested namespaces and using aliases
+
+Você pode criar aliases para namespaces ou seus membros para tornar nomes longos mais gerenciáveis.\
+Utilize `import` para sugerir outro nome de variável ao seu namespace.
+```ts
+namespace VeryLongNamespace {  
+  export namespace DeeplyNested {  
+    export namespace Components {  
+      export class Button {  
+        display(): void {  
+          console.log("Button displayed");  
+        }  
+      }  
+      export class TextField {  
+        display(): void {  
+          console.log("TextField displayed");  
+        }  
+      }  
+    }  
+  }  
+}  
+  
+// Without alias - very verbose  
+const button1 = new VeryLongNamespace.DeeplyNested.Components.Button();  
+button1.display();  
+  
+// With namespace alias  
+import Components = VeryLongNamespace.DeeplyNested.Components;  
+const button2 = new Components.Button();  
+button2.display();  
+  
+// With specific member alias  
+import Button = VeryLongNamespace.DeeplyNested.Components.Button;  
+const button3 = new Button();  
+button3.display();
+```
+
+
+#### Multi-file Namespaces
+Os namespaces TypeScript podem ser divididos em arquivos e combinados em tempo de compilação usando comentários de referência.
+```ts
+// ----- **validators.ts** ----- //
+namespace Validation {  
+  export interface StringValidator {  
+    isValid(s: string): boolean;  
+  }  
+}
+
+// ----- **letters-validator.ts** file (extends Validation namespace): ----- //
+/// <reference path="validators.ts" />     // COMENTÁRIO DE REFERÊNCIA
+namespace Validation {  
+  const lettersRegexp = /^[A-Za-z]+$/;  
+  
+  export class LettersValidator implements StringValidator {  // pode suar a interface importada
+    isValid(s: string): boolean {  
+      return lettersRegexp.test(s);  
+    }  
+  }  
+}
+
+// ----- **main.ts** file ----- //
+/// <reference path="validators.ts" />  
+/// <reference path="letters-validator.ts" />  
+/// <reference path="zipcode-validator.ts" />  
+  
+// Now you can use the validators from multiple files  
+let validators: { [s: string]: Validation.StringValidator } = {};  
+validators["letters"] = new Validation.LettersValidator();  
+validators["zipcode"] = new Validation.ZipCodeValidator();
+
+// compile with
+tsc --outFile sample.js main.ts
+```
+
+#### Modules vs Namespaces [doc oficial](https://www.typescriptlang.org/pt/docs/handbook/namespaces-and-modules.html#usando-namespaces)
+
+![[modules_vs_namespace.jpg]]
+
+**Resumo**:
+- módulos é preferido sobre namespaces
+- módulos carregado naturalmente entre arquivos, todos os arquivos são considerados módulos.
+- módulos são mais fáceis de manutenção (dead-code), namespaces são mais difíceis em pacotes.
+- namespace incentiva global, e módulo evita global, exceto com dependências explícitas.
+- namespaces melhor usado em bibliotecas legadas, scripts globais, tipos de ambiente.
+- módulos melhor usado em todos os novos desenvolvimentos, bibliotecas e aplicativos.
+
+#### `declare` `namespace`
+
+`declare` útil quando se quer adicionar mais detalhes ao mesmo namespace, porém em locais, arquivos diferentes.
+```ts
+// Original namespace  
+declare namespace Express {  
+  interface Request {  
+    user?: { id: number; name: string };  
+  }  
+  interface Response {  
+    json(data: any): void;  
+  }  
+}  
+  
+// Later in your application (e.g., in a .d.ts file)  
+declare namespace Express {  
+  // Augment the Request interface  
+  interface Request {  
+    // Add custom properties  
+    requestTime?: number;  
+    // Add methods  
+    log(message: string): void;  
+  }  
+  
+  // Add new types  
+  interface UserSession {  
+    userId: number;  
+    expires: Date;  
+  }  
+}  
+  
+// Usage in your application  
+const app = express();  
+  
+app.use((req: Express.Request, res: Express.Response, next) => {  
+  // Augmented properties and methods are available  
+  req.requestTime = Date.now();  
+  req.log('Request started');  
+  next();  
+});
+```
