@@ -1674,6 +1674,8 @@ type C = Elemento<boolean>;   // never (não é array)
 Explicação:
 - Se `T` for um array (`(infer U)[]`), então guarde o tipo dos elementos em `U`.    
 - Caso contrário, dá `never`.
+ 
+PS: Type inference with `infer` works differently in different contexts. Consider using type assertions or helper functions for very complex types
 
 #### Distributed Conditional Types
 ```ts
@@ -1723,16 +1725,308 @@ type EventHandler = `on${Capitalize<EventType>}`;
 
 #### **Utility Types**: Built-in type helpers for common transformations
 
+Use built-ins like `Partial`, `Pick`, and `Omit` for common transformations.
+```ts
+// Basic types  
+interface User {  
+  id: number;  
+  name: string;  
+  email: string;  
+  createdAt: Date;  
+}  
+  
+// Make all properties optional  
+type PartialUser = Partial<User>;  
+  
+// make all properties required  
+type RequiredUser = Required<PartialUser>;  
+  
+// make all properties read-only  
+type ReadonlyUser = Readonly<User>;  
+  
+// pick specific properties  
+type UserPreview = Pick<User, 'id' | 'name'>;  
+  
+// omit specific properties  
+type UserWithoutEmail = Omit<User, 'email'>;  
+  
+// extract property types  
+type UserId = User['id']; // number  
+type UserKeys = keyof User; // 'id' | 'name' | 'email' | 'createdAt'
+```
 
+`Exclude` or `extract` members from unions and create custom mapped helpers.
+```ts
+// Create a type that excludes null and undefined  
+type NonNullable<T> = T extends null | undefined ? never : T;  
+  
+// Exclude types from a union  
+type Numbers = 1 | 2 | 3 | 'a' | 'b';  
+type JustNumbers = Exclude<Numbers, string>; // 1 | 2 | 3  
+  
+// Extract types from a union  
+type JustStrings = Extract<Numbers, string>; // 'a' | 'b'  
+  
+// Get the type that is not in the second type  
+type A = { a: string; b: number; c: boolean };  
+type B = { a: string; b: number };  
+type C = Omit<A, keyof B>; // { c: boolean }  
+  
+// Create a type with all properties as mutable  
+type Mutable<T> = {  
+  -readonly [K in keyof T]: T[K];  
+};
+```
+#### Recursive Types
 
+Self-referential types for tree-like structures
 
+Tipos recursivos são úteis para modelar estruturas de dados semelhantes a árvores, onde um tipo pode referenciar a si mesmo.
+```ts
+// Create a custom type binary tree  
+type BinaryTree<T> = {  
+  value: T;  
+  left?: BinaryTree<T>; // recursive access, itself
+  right?: BinaryTree<T>;  
+};  
+  
+// JSON could be many types  
+type JSONValue =  
+  | string  
+  | number  
+  | boolean  
+  | null  
+  | JSONValue[]  
+  | { [key: string]: JSONValue }; // recursive access, itself  
+  
+// Nested comments  
+type Comment = {  
+  id: number;  
+  content: string;  
+  replies: Comment[]; // recursive access, itself  
+  createdAt: Date;  
+};
+```
 
+ Other examples
+```ts
+ // Type for a linked list  
+type LinkedList<T> = {  
+  value: T;  
+  next: LinkedList<T> | null;  
+};  
+  
+// Type for a directory structure  
+type File = {  
+  type: 'file';  
+  name: string;  
+  size: number;  
+};  
+  
+type Directory = {  
+  type: 'directory';  
+  name: string;  
+  children: (File | Directory)[];  
+};  
+  
+// Type for a state machine  
+type State = {  
+  value: string;  
+  transitions: {  
+    [event: string]: State;  
+  };  
+};  
+  
+// Type for a recursive function  
+type RecursiveFunction<T> = (x: T | RecursiveFunction<T>) => void;
+```
 
-#### **Recursive Types**: Self-referential types for tree-like structures
 #### **Type Guards & Type Predicates**: Runtime type checking
 #### **Type Inference**: Advanced pattern matching with `infer`
 
 
+
+### TypeScript Type Guards
+
+Os Type Guards do TypeScript são construções poderosas que permitem restringir o tipo de uma variável dentro de um escopo específico.
+
+Eles ajudam o TypeScript a entender e aplicar a segurança de tipos, fornecendo verificações explícitas que determinam o tipo específico de uma variável em tempo de execução.
+
+**Type Guards**
+- `typeof` type guards (check at runtime)
+- `instanceof` type guards
+- User-defined type guards with type predicates
+- Discriminated unions with literal types
+- `in` operator type guards
+- `asserts` keyword functions
+
+#### `typeof` 
+```ts
+function processValue(value) {
+  if (typeof value === "string") {
+    // TypeScript knows that value is a string here
+    return value.toUpperCase();
+  } else {
+    // TypeScript knows that value is a number here
+    return value.toFixed(2);
+  }
+}
+
+// Examples
+console.log(processValue("hello world")); // Outputs: HELLO WORLD
+console.log(processValue(123.456)); // Outputs: 123.46
+```
+
+#### `instanceof`
+O operador `instanceof` verifica se um objeto é uma instância de uma classe específica ou função construtora.
+```ts
+class Bird {  
+  fly() {  
+    console.log("Flying...");  
+   }  
+}  
+  
+class Fish {  
+  swim() {  
+    console.log("Swimming...");  
+   }  
+}  
+  
+function move(animal: Bird | Fish) {  
+  if (animal instanceof Bird) {  
+    // TypeScript knows animal is Bird here  
+    animal.fly();  
+  } else {  
+    // TypeScript knows animal is Fish here  
+    animal.swim();  
+  }  
+}
+```
+
+#### Custom type guard (parameter is Type)
+
+Return a predicate like `value is Type` so TypeScript narrows on the true branch.
+
+Type Predicate Functions
+```ts
+interface Car {  
+  make: string;  
+  model: string;  
+  year: number;  
+}  
+  
+interface Motorcycle {  
+  make: string;  
+  model: string;  
+  year: number;  
+  type: "sport" | "cruiser";  
+}  
+  
+// Type predicate function  
+function isCar(vehicle: Car | Motorcycle): vehicle is Car { // veiculo é carro
+  return (vehicle as Motorcycle).type === undefined;  
+}  
+  
+function displayVehicleInfo(vehicle: Car | Motorcycle) {  
+  console.log(`Make: ${vehicle.make}, Model: ${vehicle.model}, Year: ${vehicle.year}`);  
+  
+  if (isCar(vehicle)) {  
+    // TypeScript knows vehicle is Car here  
+    console.log("This is a car");  
+  } else {  
+    // TypeScript knows vehicle is Motorcycle here  
+    console.log(`This is a ${vehicle.type} motorcycle`);  
+  }  
+}
+```
+
+#### `in`
+
+Verifica se a propriedade pertence a um objeto.
+
+```ts
+interface Dog {  
+  bark(): void;  
+}  
+  
+interface Cat {  
+  meow(): void;  
+}  
+  
+function makeSound(animal: Dog | Cat) {  
+  if ("bark" in animal) {  
+    // TypeScript knows animal is Dog here  
+    animal.bark();  
+  } else {  
+    // TypeScript knows animal is Cat here  
+    animal.meow();  
+  }  
+}
+```
+
+#### `asserts`
+
+In TypeScript, the `asserts` keyword is used to define assertion functions.
+
+**asserções** (ou invariantes) e são pequenas funções que geram erros no início, quando suas variáveis não correspondem ao que você espera.
+
+ `asserts value is TypeB`: This is the key part. It tells TypeScript that if the function returns without throwing an error, then `value` can be treated as `TypeB` from that point onward in the code.
+```ts
+function functionName(value: TypeA): asserts value is TypeB {  
+	if (/* condition where value is NOT TypeB */) {  
+		throw new Error("Error message if condition is not met");  
+	}  
+}
+```
+
+```ts
+function assertIsString(value: unknown): asserts value is string {
+  if (typeof value !== "string") {
+    throw new Error("Value must be a string");
+  }
+}
+
+function processInput(input: unknown) {
+  assertIsString(input); // After this line, 'input' is guaranteed to be a string
+  console.log(input.toUpperCase()); // No type error here
+}
+
+processInput("hello");
+// processInput(123); // This would throw an error at runtime
+```
+
+As funções de asserção são irmãs das Type Guards `example:type-guards` com exceção de afetar o fluxo de controle quando ele continua através da função.
+
+#### TypeScript Conditional Types
+
+
+Basic Conditional Type Syntax
+
+Conditional types use the form `T extends U ? X : Y`, which means:\
+"if type `T` extends (or is assignable to) type `U`, use type `X`, otherwise use type `Y`".
+
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
+
+### x
+#### x
+```ts
+
+```
 
 ### x
 #### x
