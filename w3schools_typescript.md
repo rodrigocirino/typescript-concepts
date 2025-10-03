@@ -1,4 +1,4 @@
-**w3schools.com: Typescript Tutorial**
+# **w3schools.com: Typescript Tutorial**
 
 Revisão baseada na documentações do site [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
@@ -969,9 +969,20 @@ console.log(createLoggedPair(1, 1)) // ok [1, 1]
 // console.log(createLoggedPair(1, true)) // error: 'boolean' is not assignable to parameter of type 'string | number'.
 ```
 
-### Typescript Utility Types
+### Typescript Utility Types or Mapped Types
 
-Tipos utilitários servem para alterar o retorno de um objeto, acessibilidade ou estrutura.
+Tipos utilitários servem para alterar o retorno de um objeto.
+
+Alteram o retorno quando: 
+- `Partial`: Tornando todas opcionais `?`
+- `Required`: Tornando todas obrigatórios `ignorando ?`
+- `Record`: Retorna o tipo no formato `chave:valor` *(usado em objetos)*
+- `Omit`: Omite, remove **chaves**
+- `Exclude`: Omite, remove **tipos**
+- `Pick`: Omite chaves especificadas, retornando o restante que sobrou.
+- `ReturnType`: Retorna o **tipo de returno**
+- `Parameters`: Retorna o **tipo dos parâmetros**
+- `Readonly`: Evita que o tipo de retorno seja alterado.
 
 #### Partial
 `Parcial` altera **todas as propriedades** de um objeto para que **sejam opcionais**.
@@ -1024,7 +1035,7 @@ const nameAgeMap: {[key:string]: number} = {
 console.log(nameAgeMap); // { Alice: 21, Bob: 25 }
 ```
 
-#### Omit (omita campos)
+#### Omit (omite chaves)
 `Omit` remove chaves de um objeto
 ```ts
 interface Person {
@@ -1039,6 +1050,18 @@ const bob: Omit<Person, 'age' | 'location'> = {
 };
 
 console.log(bob); // { name: 'Bob' }
+```
+
+#### Exclude (omite tipos)
+`Exclude` removes types from a union.
+```ts
+
+type Primitive = string | number | boolean;
+
+const value: Exclude<Primitive, string> = true;
+// a string cannot be used here since Exclude removed it from the type.
+
+console.log(typeof value); // boolean
 ```
 
 #### Pick (pegue apenas este campos)
@@ -1056,18 +1079,6 @@ const bob: Pick<Person, 'name'> = {
 };
 
 console.log(bob); // { name: 'Bob' } 
-```
-
-#### Exclude
-`Exclude` removes types from a union.
-```ts
-
-type Primitive = string | number | boolean;
-
-const value: Exclude<Primitive, string> = true;
-// a string cannot be used here since Exclude removed it from the type.
-
-console.log(typeof value); // boolean
 ```
 
 #### ReturnType
@@ -1171,6 +1182,46 @@ function createStringPair(
 }
 
 console.log(JSON.stringify(createStringPair('greeting', 100))); //{"greeting":100}
+```
+
+Outro exemplo aqui removendo o atributo `-readonly` da interface. [mapped types](https://www.w3schools.com/typescript/typescript_mapped_types.php)
+```ts
+// Base interface with some readonly and optional properties  
+interface Configuration {  
+  readonly apiKey: string;  
+  readonly apiUrl: string;  
+  timeout?: number;  
+  retries?: number;  
+}  
+  
+// Remove readonly modifier from all properties  
+type Mutable<T> = {  
+  -readonly [P in keyof T]-?: T[P];  //return T[P] without -readonly and ?
+};
+  
+// Pass interface
+type MutableConfig = Mutable<Configuration>;
+// Equivalent to: { apiKey: string; apiUrl: string; timeout: number; retries: number; }
+```
+
+Conditional Types: converta um tipo number para string **sem alterar a interface**.
+```ts
+// Base interface  
+interface ApiResponse {  
+  data: unknown;  
+  status: number;  
+  message: string;  
+  timestamp: number;  
+}  
+  
+// Conditional mapped type: Converta number para string.
+type FormattedResponse<T> = {  
+  [P in keyof T]: T[P] extends number ? string : T[P];  
+};  
+  
+// Usage  
+type FormattedApiResponse = FormattedResponse<ApiResponse>;  
+// Equivalent to: { data: unknown; status: string; message: string; timestamp: string; }
 ```
 
 ### Typescript Null or Undefined
@@ -1996,15 +2047,121 @@ As funções de asserção são irmãs das Type Guards `example:type-guards` com
 
 ### TypeScript Conditional Types
 
-
-Basic Conditional Type Syntax
-
-Conditional types use the form `T extends U ? X : Y`, which means:\
-"if type `T` extends (or is assignable to) type `U`, use type `X`, otherwise use type `Y`".
-
-### ....
-#### ....
+Conditional types use the form `T extends U ? X : Y`.
 ```ts
-...
+// Quando passar o tipo string retorne true como valor.
+// Pode se usar tipo no lugar do valor declarado ex: boolean
+type IsString<T> = T extends string ? true : false;  
+  
+// Usage examples  
+type Result1 = IsString<string>; // true  
+type Result2 = IsString<number>; // false  
+type Result3 = IsString<"hello">; // true (literal types extend their base types)  
+  
+// We can use this with variables too  
+let a: IsString<string>; // a has type 'true'  
+let b: IsString<number>; // b has type 'false'
 ```
+
+Condicional retornando tipo e não valor
+```ts
+// se passar qualquer tipo retorne array, senão algo que nunca retorna
+type ToArray<T> = T extends any ? T[] : never;  
+  
+// Pode usar union operator, para que ambos sejam retornados
+// Retorna string[] | number[]
+type StringOrNumberArray = ToArray<string | number>;  
+// This becomes ToArray<string> | ToArray<number>  
+  
+// Neste caso never removeu tipos não especificados
+// "hello" foi aceito como string, retornando seu valor
+type ExtractString<T> = T extends string ? T : never;  
+type StringsOnly = ExtractString<string | number | boolean | "hello">;  
+// Result: string | "hello"
+```
+
+**`infer`**
+
+Lembrando `infer` permite em condicionais, onde o tipo de retorno que esta sendo passado, deve ser retornado novamente (alterado ou não).
+```ts
+// Extract the return type of a function type  
+type ReturnType<T> = T extends (...rest: any[]) => infer R ? R : never;  
+  
+// Examples  
+function greet() { return "Hello, world!"; }  
+function getNumber() { return 42; }  
+  
+type GreetReturnType = ReturnType<typeof greet>; // string  
+type NumberReturnType = ReturnType<typeof getNumber>; // number  
+  
+// Extract element type from array  
+type ElementType<T> = T extends (infer R)[] ? R : never;  // return without []
+type NumberArrayElement = ElementType<number[]>; // number  
+type StringArrayElement = ElementType<string[]>; // string
+```
+
+Relembrando funções built-in, condicionais embutidas na linguagens
+`Extract`, `Exclude`, `NonNullable`, `Parameters`, `ReturnType`.
+```ts
+// Extract<T, U> - Extracts types from T that are assignable to U  
+type OnlyStrings = Extract<string | number | boolean, string>; // string  
+  
+// Exclude<T, U> - Excludes types from T that are assignable to U  
+type NoStrings = Exclude<string | number | boolean, string>; // number | boolean 
+  
+// NonNullable<T> - Removes null and undefined from T  
+type NotNull = NonNullable<string | null | undefined>; // string  
+  
+// Parameters<T> - Extracts parameter types from a function type  
+type Params = Parameters<(a: string, b: number) => void>; // [string, number]  
+  
+// ReturnType<T> - Extracts the return type from a function type  
+type Return = ReturnType<() => string>; // string
+```
+Tipos condicionais podem ser usados ​​recursivamente para criar transformações de tipos complexas.
+
+Espera receber uma `Promise`, e descompacte ou seja retorne apenas o tipo padrão.
+```ts
+// Deeply unwrap Promise types  
+type UnwrapPromise<T> = T extends Promise<infer U> ? UnwrapPromise<U> : T;  
+  
+// Examples of returns
+type A = UnwrapPromise<Promise<string>>; // Promise<string> -> string  
+type B = UnwrapPromise<Promise<Promise<number>>>; // Promise<Promise<number>> -> number  
+type C = UnwrapPromise<boolean>; // T -> boolean
+```
+
+Type-Level If-Else Chains
+
+Multiple conditions together for a complex type logic.
+```ts
+type TypeName<T> =  
+  T extends string ? "string" :  
+  T extends number ? "number" :  
+  T extends boolean ? "boolean" :  
+  T extends undefined ? "undefined" :  
+  T extends Function ? "function" :  
+  "object";  
+  
+// Usage  
+type T0 = TypeName<string>; // "string"  
+type T1 = TypeName<42>; // "number"  
+type T2 = TypeName<true>; // "boolean"  
+type T3 = TypeName<() => void>; // "function"  
+type T4 = TypeName<Date[]>; // "object"
+```
+
+##### Resumo
+```ts
+// permite avaliar o tipo de retorno, e criar funções genéricas
+T extends string ? string : never
+
+// use infer quando quiser alterar o tipo de retorno genéricamente
+// infer é chamado de extração de tipo
+T extends (any[]) => infer R ? R : never;
+
+// use recursividade se necessário
+type A<T> = T extends Promise<infer U> ? A<U> : T; // return A<T> without promise
+```
+
 
