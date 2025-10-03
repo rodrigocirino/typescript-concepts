@@ -2419,6 +2419,7 @@ tsc --outFile sample.js main.ts
 
 #### Modules vs Namespaces [doc oficial](https://www.typescriptlang.org/pt/docs/handbook/namespaces-and-modules.html#usando-namespaces)
 
+Recomendo uma análise do capítulo de módulos extenso da documentação oficial.
 ![[modules_vs_namespace.jpg]]
 
 **Resumo**:
@@ -2469,4 +2470,50 @@ app.use((req: Express.Request, res: Express.Response, next) => {
   req.log('Request started');  
   next();  
 });
+```
+
+#### Migrating
+```ts
+// Before: Using namespaces  
+namespace MyApp {  
+  export namespace Services {  
+    export class UserService {  
+      getUser(id: number) { /* ... */ }  
+    }  
+  }  
+}  
+  
+// After: Using ES modules  
+// services/UserService.ts     // <------- use named files to organized.
+export class UserService {  
+  getUser(id: number) { /* ... */ }  
+}  
+  
+// app.ts  
+import { UserService } from './services/UserService';  
+const userService = new UserService();
+```
+
+**Migration Steps**
+1. Convert each namespace to a module file
+2. Replace `export` with ES module exports
+3. Update imports to use ES module syntax
+4. Configure your build system to handle modules
+5. Update tests to work with the new module structure
+6. Consider using a bundler like webpack or Rollup
+7. Update your `tsconfig.json` to use `"module": "ESNext"`
+
+**Migration Tools**
+- `ts-migrate` - Automated migration tool from Facebook
+- `tslint` with `no-namespace` rule to detect namespaces
+- TypeScript's built-in refactoring tools
+
+### Typescript Index Signatures
+
+#### Index vs Records
+TypeScript has a [utility type](https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeys-type) `Record<Keys, Values>` to annotate records, similar to the index signature.
+```ts
+// Both are the same
+const object1: Record<string, string> = { prop: 'Value' }; // OK  
+const object2: { [key: string]: string } = { prop: 'Value' }; // OK
 ```
