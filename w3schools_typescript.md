@@ -1841,11 +1841,6 @@ type State = {
 type RecursiveFunction<T> = (x: T | RecursiveFunction<T>) => void;
 ```
 
-#### **Type Guards & Type Predicates**: Runtime type checking
-#### **Type Inference**: Advanced pattern matching with `infer`
-
-
-
 ### TypeScript Type Guards
 
 Os Type Guards do TypeScript são construções poderosas que permitem restringir o tipo de uma variável dentro de um escopo específico.
@@ -1903,7 +1898,9 @@ function move(animal: Bird | Fish) {
 }
 ```
 
-#### Custom type guard (parameter is Type)
+#### `is`
+
+**Custom type guard (parameter is Type)**
 
 Return a predicate like `value is Type` so TypeScript narrows on the true branch.
 
@@ -1997,7 +1994,7 @@ processInput("hello");
 
 As funções de asserção são irmãs das Type Guards `example:type-guards` com exceção de afetar o fluxo de controle quando ele continua através da função.
 
-#### TypeScript Conditional Types
+### TypeScript Conditional Types
 
 
 Basic Conditional Type Syntax
@@ -2010,27 +2007,9 @@ Conditional types use the form `T extends U ? X : Y`, which means:\
 
 ```
 
-### x
-#### x
+### ....
+#### ....
 ```ts
-
-```
-
-### x
-#### x
-```ts
-
-```
-
-### x
-#### x
-```ts
-
-```
-
-### x
-#### x
-```ts
-
+...
 ```
 
