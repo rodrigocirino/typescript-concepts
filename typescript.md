@@ -2729,4 +2729,429 @@ for (const valor of contador()) {
 
 ### Typescript Decorators
 
-#### h4
+Decoradores são um recurso poderoso do TypeScript que permite adicionar metadados e modificar classes e seus membros em tempo de design.
+
+Pode-se criar decorators a partir de classes, funções, propriedades, parâmetros.
+
+**Browser compatibility**: Decoradores são uma proposta de estágio 3 e podem exigir `transpilação` para navegadores mais antigos.\
+**Performance overhead**: Tenha cuidado com decoradores que adicionam sobrecarga significativa de tempo de execução em código de desempenho crítico.
+#### Enabling decorators on config
+```ts
+{  
+  "compilerOptions": {  
+    "target": "ES2020",  
+    "module": "commonjs",  
+    "experimentalDecorators": true,  // enabled!
+    "emitDecoratorMetadata": true,  
+    "strictPropertyInitialization": false  
+  },  
+  "include": ["src/**/*.ts"]  
+}
+```
+
+#### Basic class decorator
+```ts
+class="code-comment">// A simple class decorator that logs class definition  
+function logClass(constructor: Function) {  
+  console.log(`Class ${constructor.name} was defined at ${new Date().toISOString()}`);  
+}  
+  
+class="code-comment">// Applying the decorator  
+@logClass  
+class UserService {  
+  getUsers() {  
+    return ['Alice', 'Bob', 'Charlie'];  
+  }  
+}  
+  
+class="code-comment">// Output when the file is loaded: "Class UserService was defined at [timestamp]"
+```
+
+#### Method decorator
+
+They receive three parameters:
+1. `target`: The prototype of the class (for instance methods) or the constructor function (for static methods)
+2. `propertyKey`: The name of the method
+3. `descriptor`: The property descriptor for the method
+```ts
+class="code-comment">// Method decorator to measure execution time  
+function measureTime(   target: any,   propertyKey: string,   descriptor: PropertyDescriptor ) {  
+  const originalMethod = descriptor.value;  
+  descriptor.value = function (...args: any[]) {  
+    const start = performance.now();  
+    const result = originalMethod.apply(this, args);  
+    const end = performance.now();  
+    console.log(`${propertyKey} executed in ${(end - start).toFixed(2)}ms`);  
+    return result;  
+  };  
+  return descriptor;  
+}  
+  
+class="code-comment">// Using the decorator  
+class DataProcessor {  
+  @measureTime  
+  processData(data: number[]): number[] {  
+    class="code-comment">// Simulate processing time  
+    for (let i = 0; i < 100000000; i++) { /* processing */ }  
+    return data.map(x => x * 2);  
+  }  
+}  
+  
+class="code-comment">// When called, it will log the execution time  
+const processor = new DataProcessor();  
+processor.processData([1, 2, 3, 4, 5]);
+```
+
+#### Real-World Example
+This example shows how decorators can be used to create a simple API controller similar to those in NestJS or Express.\
+Pode ser que precise criar decorator próprios ao usar estes frameworks.
+```ts
+class="code-comment">// Simple decorator implementations (simplified for example)  
+const ROUTES: any[] = [];  
+  
+function Controller(prefix: string = '') {  
+  return function (constructor: Function) {  
+    constructor.prototype.prefix = prefix;  
+  };  
+}  
+  
+function Get(path: string = '') {  
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {  
+    ROUTES.push({  
+      method: 'get',  
+      path,  
+      handler: descriptor.value,  
+      target: target.constructor  
+    });  
+  };  
+}  
+  
+class="code-comment">// Using the decorators  
+@Controller('/users')  
+class UserController {  
+  @Get('/')  
+  getAllUsers() {  
+    return { users: [{ id: 1, name: 'John' }] };  
+  }  
+  
+  @Get('/:id')  
+  getUserById(id: string) {  
+    return { id, name: 'John' };  
+  }  
+}  
+  
+class="code-comment">// Simulate route registration  
+function registerRoutes() {  
+  ROUTES.forEach(route => {  
+    const prefix = route.target.prototype.prefix || '';  
+    console.log(`Registered ${route.method.toUpperCase()} ${prefix}${route.path}`);  
+  });  
+}  
+  
+registerRoutes();  
+// Output:  
+// Registered GET /users  
+// Registered GET /users/:id
+```
+
+### Typescript JSDoc
+
+To enable TypeScript checking in JavaScript files, you need to:
+1. Create a `tsconfig.json` file.
+2. Enable `checkJs` or use `// @ts-check` in individual files
+
+```ts
+// @ts-check  
+  
+/**  
+* Adds two numbers.  
+* @param {number} a  
+* @param {number} b  
+* @returns {number}  
+*/  
+function add(a, b) {  
+  return a + b;  
+}
+```
+
+#### `@typedef` for complex types
+```ts
+// @ts-check  
+  
+/**  
+* @typedef {Object} User  
+* @property {number} id - The user ID  
+* @property {string} username - The username  
+* @property {string} [email] - Optional email address  
+* @property {('admin'|'user'|'guest')} role - User role  
+* @property {() => string} getFullName - Method that returns full name  
+*/  
+  
+/** @type {User} */  
+const currentUser = {  
+  id: 1,  
+  username: 'johndoe',  
+  role: 'admin',  
+  getFullName() {  
+    return 'John Doe';  
+  }  
+};  
+  
+// TypeScript will provide autocomplete for User properties  
+console.log(currentUser.role);
+```
+
+**Best Practices**
+
+Follow these best practices when using `JSDoc` with TypeScript:
+- Enable `// @ts-check` at the top of files where you want type checking
+- Use `@typedef` for complex types that are used in multiple places
+- Document all function parameters and return types
+- Use `@template` for generic functions and types
+- Create declaration files (`.d.ts`) for third-party libraries without types
+- Use `@ts-expect-error` instead of `@ts-ignore` when you expect an error
+
+
+### Typescript Error Handling
+
+
+#### Try/Catch blocks
+In TypeScript 4.0 and later, the `unknown` type is the default type for catch variables.
+```ts
+function divide(a: number, b: number): number {  
+  if (b === 0) {  
+    throw new Error('Division by zero');  
+  }  
+  return a / b;  
+}  
+  
+try {  
+  const result = divide(10, 0);  
+  console.log(result);  
+} catch (error) {  
+  console.error('An error occurred:', error.message);  
+}
+```
+
+#### Promise rejections
+```ts
+// Bad: Unhandled promise rejection  
+fetchData().then(data => console.log(data));  
+  
+// Good: Handle both success and error cases  
+fetchData()  
+  .then(data => console.log('Success:', data))  
+  .catch(error => console.error('Error:', error));  
+  
+// Or use void for intentionally ignored errors  
+void fetchData().catch(console.error);
+```
+
+#### Create custom error types
+```ts
+class NetworkError extends Error {  
+  constructor(public status: number, message: string) {  
+    super(message);  
+    this.name = 'NetworkError';  
+  }  
+}  
+  
+class ValidationError extends Error {  
+  constructor(public field: string, message: string) {  
+    super(message);  
+    this.name = 'ValidationError';  
+  }  
+}
+```
+
+### Typescript Best Practices
+
+#### Enable strict mode
+```ts
+// tsconfig.json
+{
+  "compilerOptions": {
+    /* Enable all strict type-checking options */
+    "strict": true,
+    /* Additional recommended settings */
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+#### Enable strick checks
+```ts
+{  
+  "compilerOptions": {  
+    /* Additional strict checks */  
+    "noImplicitAny": true,  
+    "strictNullChecks": true,  
+    "strictFunctionTypes": true,  
+    "strictBindCallApply": true,  
+    "strictPropertyInitialization": true,  
+    "noImplicitThis": true,  
+    "alwaysStrict": true  
+  }  
+}
+```
+#### Use type inference
+Deixe que o Typescript descubra qual o tipo correto, quando é óbvio
+```ts
+// Bad: Redundant type annotation  
+const name: string = 'John';  
+  
+// Good: Let TypeScript infer the type  
+const name = 'John';  
+  
+// Bad: Redundant return type  
+function add(a: number, b: number): number {  
+  return a + b;  
+}  
+  
+// Good: Let TypeScript infer return type  
+function add(a: number, b: number) {  
+  return a + b;  
+}
+```
+#### Avoid `any` type
+```ts
+// Bad: Loses type safety  
+function logValue(value: any) {  
+  console.log(value.toUpperCase()); // No error until runtime  
+}  
+  
+// Better: Use generic type parameter  
+function logValue<T>(value: T) {  
+  console.log(String(value)); // Safer, but still not ideal  
+}  
+  
+// Best: Be specific about expected types  
+function logString(value: string) {  
+  console.log(value.toUpperCase()); // Type-safe  
+}  
+  
+// When you need to accept any value but still be type-safe  
+function logUnknown(value: unknown) {  
+  if (typeof value === 'string') {  
+    console.log(value.toUpperCase());  
+  } else {  
+    console.log(String(value));  
+  }  
+}
+```
+#### File naming conventions
+```ts
+// Good  
+user.service.ts // Service classes  
+user.model.ts // Type definitions  
+user.controller.ts // Controllers  
+user.component.ts // Components  
+user.utils.ts // Utility functions  
+user.test.ts // Test files  
+  
+// Bad  
+UserService.ts // Avoid PascalCase for file names  
+user_service.ts // Avoid snake_case  
+userService.ts // Avoid camelCase for file names
+```
+
+#### Avoid callback hell
+Nested async/await calls
+```ts
+// Bad: Nested async/await (callback hell)  
+async function processUser(userId: string) {  
+  const user = await getUser(userId);  
+  if (user) {  
+    const orders = await getOrders(user.id);  
+    if (orders.length > 0) {  
+      const latestOrder = orders[0];  
+      const items = await getOrderItems(latestOrder.id);  
+      return { user, latestOrder, items };  
+    }  
+  }  
+  return null;  
+}  
+  
+// Better: Flatten the async/await chain  
+async function processUser(userId: string) {  
+  const user = await getUser(userId);  
+  if (!user) return null;  
+  
+  const orders = await getOrders(user.id);  
+  if (orders.length === 0) return { user, latestOrder: null, items: [] };  
+  
+  const latestOrder = orders[0];  
+  const items = await getOrderItems(latestOrder.id);  
+  
+  return { user, latestOrder, items };  
+}  
+  
+// Best: Use Promise.all for independent async operations  
+async function processUser(userId: string) {  
+  const [user, orders] = await Promise.all([  
+    getUser(userId),  
+    getOrders(userId)  
+  ]);  
+  
+  if (!user) return null;  
+  if (orders.length === 0) return { user, latestOrder: null, items: [] };  
+  
+  const latestOrder = orders[0];  
+  const items = await getOrderItems(latestOrder.id);  
+  
+  return { user, latestOrder, items };  
+}
+```
+#### type-only imports and exports
+```ts
+// Bad: Imports both type and value  
+import { User, fetchUser } from './api';  
+  
+// Good: Separate type and value imports  
+import type { User } from './api';  
+import { fetchUser } from './api';  
+  
+// Even better: Use type-only imports when possible  
+import type { User, UserSettings } from './types';  
+  
+// Type-only export  
+export type { User };  
+  
+// Runtime export  
+export { fetchUser };  
+  
+// In tsconfig.json, enable "isolatedModules": true  
+// to ensure type-only imports are properly handled
+```
+
+#### Use const Assertions
+```ts
+// Without const assertion (wider type)  
+const colors = ['red', 'green', 'blue'];  
+// Type: string[]  
+  
+// With const assertion (narrower, more precise type)  
+const colors = ['red', 'green', 'blue'] as const;  
+// Type: readonly ["red", "green", "blue"]  
+  
+// Extract union type from const array  
+type Color = typeof colors[number]; // "red" | "green" | "blue"  
+  
+// Objects with const assertions  
+const config = {  
+  apiUrl: 'https://api.example.com',  
+  timeout: 5000,  
+  features: ['auth', 'notifications'],  
+} as const;  
+  
+// Type is:  
+// {  
+// readonly apiUrl: "https://api.example.com";  
+// readonly timeout: 5000;  
+// readonly features: readonly ["auth", "notifications"];  
+// }
+```
