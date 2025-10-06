@@ -66,7 +66,8 @@ Pode se usar `type assertion` com a keyword `as` que desativa as verificações 
 
 **`readonly`**: não pode-ser alterado depois de criado.
 
-
+**`tuple`**:  é uma matriz pré-definida, na ordem dos parâmetros e quantidade.
+`let ourTuple: [number, boolean, string];` aceita nessa ordem apenas.
 
 
 

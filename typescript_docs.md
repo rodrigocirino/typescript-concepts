@@ -181,6 +181,15 @@ return a + b;
 console.log(add("5", 3)); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
 ```
 
+Com arrays ts pode inferir seu tipo na inicialização, baseado em seus valores
+```ts
+const numbers = [1, 2, 3]; // inferred to type number[]  
+numbers.push(4); // no error  
+// comment line below out to see the successful assignment  
+numbers.push("2"); // Error: Argument of type 'string' is not assignable to parameter of type 'number'.  
+let head: number = numbers[0]; // no error
+```
+
 
 ### TypeScript Special Types
 
@@ -262,7 +271,6 @@ const valor: unknown = () => console.log('Função chamada!');
 (valor as Function)();
 ```
 
-<br>
 
 **`never`** - tipo de valores que nunca ocorrem.
 
@@ -316,23 +324,12 @@ Deve habilitar no tsconfig.json
 }
 ```
 
-### TypeScript Arrays
-
 The **`readonly`** keyword can prevent arrays from being changed.
 ```typescript
 const names: readonly string[] = ["Dylan"];
 names.push("Jack"); // prog.ts(2,7): error TS2339: Property 'push' does not exist on type 'readonly string[]'.
 
 // console.log(names); //[ 'Dylan' ]
-```
-
-Typescript pode inferir seu tipo na inicialização, baseado em seus valores
-```ts
-const numbers = [1, 2, 3]; // inferred to type number[]  
-numbers.push(4); // no error  
-// comment line below out to see the successful assignment  
-numbers.push("2"); // Error: Argument of type 'string' is not assignable to parameter of type 'number'.  
-let head: number = numbers[0]; // no error
 ```
 
 ### TypeScript Tuples
