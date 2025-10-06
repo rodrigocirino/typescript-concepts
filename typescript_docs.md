@@ -75,24 +75,53 @@ let age: number = 30;
 let sentence: string = `Hello, my name is ${fullName} and I'll be ${age + 1} next year.`;
 ```
 
-**BigInt (ES2020+)**\
-Represents whole numbers larger than 253 - 1.\
-Use the `n` suffix to create a bigint.
+**BigInt (ES2020+)** [mozilla BigInt](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+
+Em JavaScript, ele é criado usando um "n" no final do número (ex: `10n`) ou a função `BigInt()`.\
+Quando testado com `typeof` , um `BigInt` vai devolver 'bigint':\
+Representa números maior que 2^53
+
 ```ts
 const bigNumber: bigint = 9007199254740991n;  
-const hugeNumber = BigInt(9007199254740991); // Alternative syntax
+
+const outroNumeroGrande = BigInt(12345678901234567890); // with number
+const numeroDeString = BigInt("12345678901234567890"); // with string
 ```
 
-**Symbol**\
-Creates unique identifiers.\
-Useful for creating unique property keys and constants.
+**`Symbol`** [official doc Symbols](https://www.typescriptlang.org/docs/handbook/symbols.html)
+- tipo primitivo e imutável que cria um identificador único, nunca igual a outro, mesmo que tenha a mesma descrição.
+- Símbolos são usados como chaves para propriedades de objetos, evitando conflitos de nome.
+- Podem ser usados em tipos de união e para a criação de enums "imutáveis".
+
 ```ts
-const uniqueKey: symbol = Symbol('description');  
-const obj = {  
-  [uniqueKey]: 'This is a unique property'  
-};  
-console.log(obj[uniqueKey]); // "This is a unique property"
+const meuSymbol = Symbol(); // Símbolo sem descrição
+const outroSymbol = Symbol('uma descrição'); // Símbolo com descrição (apenas para depuração)
 ```
+
+**Imutabilidade e Unicidade**: Cada símbolo é único e imutável.
+```ts
+    const s1 = Symbol();
+    const s2 = Symbol();
+    console.log(s1 === s2); // false
+```
+
+```ts
+// Idéia basica
+const meuObjeto = {
+	[Symbol('id')]: 123
+};
+
+const sym = Symbol();
+let obj = {
+	[sym]: "value",
+};
+console.log(obj[sym]); // "value"
+```
+
+**Para que servem os Symbols?**\
+Símbolos são usados para criar propriedades "privadas" que não podem ser acessadas por reflexão padrão, como `Object.keys()` ou `JSON.stringify()`, e não interferem com as propriedades já existentes em um objeto.
+
+`unique symbol` is a `subtype` of `symbol`: Usado internamente na construção da linguagem e do transpilador.
 
 ### TypeScript Explicit Types and Inference
 
@@ -147,6 +176,8 @@ return a + b;
   
 console.log(add("5", 3)); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
 ```
+
+`built-in symbols`. Classe tem funções pré-definidas como `Symbols.match`, `Symbols.iterator`, `Symbols.replace`, entre várias outras.
 
 ### TypeScript Special Types
 
