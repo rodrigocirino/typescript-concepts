@@ -186,17 +186,20 @@ console.log(add("5", 3)); // Error: Argument of type 'string' is not assignabl
 
 **`any`** - diz ao compilar para pular a verificação de tipo de uma variável. Evite pois ignora alguns recursos de segurança de tipo do Typescript.
 
-Utilize quando o conteúdo é dinâmico onde o tipo é desconhecido.
+Diz pule a verificação de tipo, ignorando recursos de segurança. Pode se usar quando o recurso é dinâmico, desconhecido e será `re-tipado` posteriormente.
+
 ```typescript
 let v: any = true;
-v = "string"; // no error if use "any" type
-console.log(Math.round(v)); // error if not use "any"
+v = "any type" as string; // ok no error
+v = 1.234; // ok re-assing, no error if use "any" type
+console.log(Math.round(v)); // ok no error // shows 1
+
+//Incluindo o any, ele mostra apenas o resuldo "Nan" sem apresentar qualquer erro,
+// quando fazer Math.round em cima de uma string
 
 // Removendo o any any ele vai mostrar este erro ao rodar ou compilar o arquivo
 prog.ts(3,1): error TS2322: Type 'string' is not assignable to type 'boolean'.
 prog.ts(8,24): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'number'.
-
-//Incluindo o any, ele mostra apenas o resuldo "Nan" sem apresentar qualquer erro
 ```
 
 **`unknown`** - contraparte segura para `any`

@@ -41,7 +41,9 @@ Typescript infere o tipo com base no valor de inicialização **`type inference`
 
 **`explicit with types`**: Indicado quando o tipo não é obvio indicar a tipagem.
 
+`special types`: Aqueles que não são primitivos como string, number.
 
+`any`: diz pule a verificação de tipo, ignorando recursos de segurança. Pode se usar quando o recurso é dinâmico, desconhecido e será `re-tipado` posteriormente.
 
 
 
