@@ -43,7 +43,46 @@ Typescript infere o tipo com base no valor de inicialização **`type inference`
 
 `special types`: Aqueles que não são primitivos como string, number.
 
-`any`: diz pule a verificação de tipo, ignorando recursos de segurança. Pode se usar quando o recurso é dinâmico, desconhecido e será `re-tipado` posteriormente.
+**`any`**: diz pule a verificação de tipo, ignorando recursos de segurança. Pode se usar quando o recurso é dinâmico, desconhecido e será `re-tipado` posteriormente.
+
+`"strict": true`  habilita o `noImplicitAny`: Compilar não inclui mais automaticamente any, em propriedades não tipadas, passando a responsabilidade ao dev.\
+`"noImplicitAny": true.`  Isso fará com que o compilador do TypeScript emita um erro sempre que não conseguir inferir um tipo e precisar usar `any` implicitamente.
+
+**`unknown`**: idem `any`, mas não desabilita a verificação de tipo.\
+Aqui por marcar com este tipo entende que o tipo retornado não é confiável, e deve ser verificado com `typeof` na maioria das ocasiões.\
+Pode se usar `type assertion` com a keyword `as` que desativa as verificações e permite realizar operações.
+
+**`never`**: valores que nunca ocorrem, como uma função que lança um erro `throws`.
+
+**`? ou undefined`**: variável não declarada
+
+**`null`**: nenhum valor ou objeto, valor nulo.
+
+ `strictNullChecks`: Obriga a verificar este tipos antes de usar.
+
+**`?? (undefined or null)`** : `const value = input ?? 'default` - nullish coalescence.
+
+**`(?.) optional chaining`**:  `const street = user?.address?.street`
+
+**`readonly`**: não pode-ser alterado depois de criado.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

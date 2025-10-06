@@ -202,14 +202,29 @@ prog.ts(3,1): error TS2322: Type 'string' is not assignable to type 'boolean'.
 prog.ts(8,24): error TS2345: Argument of type 'boolean' is not assignable to parameter of type 'number'.
 ```
 
-**`unknown`** - contraparte segura para `any`
+`"strict": true`  habilita o `noImplicitAny`: compilador obriga a `tipar`, e não vai incluir um any automaticamente para você.\
+`"noImplicitAny": true.`  Isso fará com que o compilador do TypeScript emita um erro sempre que não conseguir inferir um tipo e precisar usar `any` implicitamente.
 
-"isso pode ser qualquer coisa, então você deve realizar algum tipo de verificação antes de usá-lo"
+<br>
 
-Principais diferenças entre **`unknown` e `any`:**
-- Deve se verificar o tipo antes do uso de `unknown`.
-- Necessário fazer asserção de tipo antes de acessar propriedades `unknown`.
-- Você não pode chamar ou construir valores do tipo `unknown`
+**`unknown`** - introduzido como uma alternativa segura para `any`.
+
+**"Eu aceito esta entrada, mas este tipo não é confiável, recomendo verificar seu tipo antes de usar, `narrowing` (estreitamento) do tipo."**
+
+Deve se verificar o tipo antes do uso de `unknown`, evitando erros em tempo de execução.
+
+Você não pode chamar ou construir valores do tipo `unknown` sem antes verificar antecipadamente.
+```ts
+const valor: unknown = algumaFuncao();
+
+// Erro: 'valor' is of type 'unknown'.
+// valor(); 
+
+if (typeof valor === 'function') {
+  // Agora TypeScript sabe que 'valor' é uma função.
+  valor(); 
+}
+```
 
 ```typescript
 let w: unknown = 1; // one integer
@@ -239,6 +254,15 @@ Quando usar `unknown`:
 - Quando você deseja garantir a segurança do tipo e ainda permitir flexibilidade
 - Ao migrar de JavaScript para TypeScript de forma segura
 
+`type assertion`: **`as`** permite ignorar as verificações, anulando a segurança de tipo
+```ts
+const valor: unknown = () => console.log('Função chamada!');
+
+// Usando 'as' para afirmar o tipo.
+(valor as Function)();
+```
+
+<br>
 
 **`never`** - tipo de valores que nunca ocorrem.
 
@@ -259,7 +283,7 @@ function throwError(message: string): never {
 
 **Pontos-chave sobre `undefined` e `null`:**
 - `undefined`significa que uma variável foi declarada, mas não recebeu um valor
-- `null`é uma atribuição explícita que não representa nenhum valor ou objeto
+- `null`é uma atribuição explícita que não representa nenhum valor ou objeto, valor nulo.
 - Com `strictNullChecks` habilitado, você deve manipular explicitamente esses tipos
 
 **`? (undefined)`** -  Parâmetros e propriedades opcionais
