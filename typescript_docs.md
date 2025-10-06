@@ -123,6 +123,9 @@ Símbolos são usados para criar propriedades "privadas" que não podem ser aces
 
 `unique symbol` is a `subtype` of `symbol`: Usado internamente na construção da linguagem e do transpilador.
 
+`built-in symbols`. Classe tem funções pré-definidas como `Symbols.match`, `Symbols.iterator`, `Symbols.replace`, entre várias outras.
+
+<br>
 ### TypeScript Explicit Types and Inference
 
 Function with **Explicit Types**
@@ -177,7 +180,6 @@ return a + b;
 console.log(add("5", 3)); // Error: Argument of type 'string' is not assignable to parameter of type 'number'
 ```
 
-`built-in symbols`. Classe tem funções pré-definidas como `Symbols.match`, `Symbols.iterator`, `Symbols.replace`, entre várias outras.
 
 ### TypeScript Special Types
 

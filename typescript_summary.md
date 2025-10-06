@@ -37,6 +37,12 @@ const meuObjeto = {
 };
 ```
 
+Typescript infere o tipo com base no valor de inicialização **`type inference`**  e recusa reatribuir outros tipos posteriormente
+
+**`explicit with types`**: Indicado quando o tipo não é obvio indicar a tipagem.
+
+
+
 
 
 
