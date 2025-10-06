@@ -126,6 +126,7 @@ Símbolos são usados para criar propriedades "privadas" que não podem ser aces
 `built-in symbols`. Classe tem funções pré-definidas como `Symbols.match`, `Symbols.iterator`, `Symbols.replace`, entre várias outras.
 
 <br>
+
 ### TypeScript Explicit Types and Inference
 
 Function with **Explicit Types**
