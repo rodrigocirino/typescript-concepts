@@ -69,11 +69,37 @@ Pode se usar `type assertion` com a keyword `as` que desativa as verificações 
 **`tuple`**:  é uma matriz pré-definida, na ordem dos parâmetros e quantidade.
 `let ourTuple: [number, boolean, string];` aceita nessa ordem apenas.
 
+Desestruturando **objetos**, adicionando valore padrão e incluindo alias.\
+`let {firstName, lastName: name, country = "US"} = person;`\
+`[firstName, lastName] = [lastName, firstName];`
 
+**Arrays** pode acessar por índices, skipping values e por ordem
+```ts
+const fruits = ["Bananas", "Oranges", "Apples", "Mangos"];  
+let [var_banana, var_orange] = fruits;
+let [var_banana,,,var_mangos] = fruits;
+let {[0]:var_bananas ,[2]:var_apples} = fruits;
 
+let name = "W3Schools";  
+let [a1, a2, a3, a4, a5] = name; // chars
+```
 
+**`...rest`**: o restante dos valores numa desestruturação.
 
+Utilize `const` para criar objetos, isso permite instanciar novos objetos, mas evita alterar o objeto inicial.
 
+Diferença entre let e const
+- `let`  declara variáveis que podem ter seu valor atualizado,
+- `const ` declara constantes que não podem ter seu valor redefinido após a atribuição inicial.
+- let e const têm escopo de bloco
+- `var` tem escopo de função (ou global), o que pode levar a comportamentos inesperados e erros. 
+- As convenções modernas recomendam evitar var e preferir let e const. 
+
+Objetos podem ser acessados de duas formas
+```ts
+objectName.propertyName
+objectName["propertyName"]
+```
 
 
 

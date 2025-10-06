@@ -444,10 +444,9 @@ let lastName = "Doe";
 
 Objects are collections of **key-value pairs**, where each key (known as **property names**) has a value, inside curly braces { }:
 
-You should declare objects with the `const` keyword.\
-Isso não torna o objeto imutável. `const` ainda permite que modifique  suas propriedades e valores.
+You should declare objects with the `const` keyword. Pode criar novos objetos mas não alterá-los na base estrutural do mesmo.
 
-Pode usar `Object()`, mas não é necessário explicita-lo.
+Pode usar `Object()`, mas não é necessário explicitá-lo.
 ```ts
 // Create an Object  
 const person = new Object({  
@@ -461,7 +460,8 @@ const person = new Object({
 });
 
 // Create an Object  
-const person = {};
+person = {}; // 
+// prog.ts(13,1): error TS2588: Cannot assign to 'person' because it is a constant.
 ```
 You can access object properties in two ways:
 ```ts
@@ -479,6 +479,15 @@ objectName["propertyName"]
 //In the constructor function, `this` has no value, but will become when object is created.
 //Não incluir o this gera um `undefined`, ele é obrig.
 ```
+
+#### Diferença entre `let` e `const` em JS
+
+A diferença principal é que
+- let declara variáveis que podem ter o seu valor alterado (reatribuídas)
+- const declara constantes que não podem ser reatribuídas após a sua inicialização. 
+- let e const têm **escopo de bloco**, o que significa que elas são acessíveis apenas dentro do bloco de código onde foram declaradas
+- `var` tem **escopo de função** (ou global), o que pode levar a comportamentos inesperados e erros. As convenções modernas recomendam evitar var e preferir let e const. 
+
 
 #### Typescript Object Types
 
