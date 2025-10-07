@@ -15,25 +15,38 @@ Opção para não ter que usar o terminal e ficar realizando operações com `np
 	- Coloque algum código javascript ou typescript nesse arquivo `index.ts`
 - Rode o comando criar o arquivo `tsconfig.json`
 ```bash
+cd app
 mkdir -p src dist
-npx tsc --init --rootDir src --outDir dist --sourceMap true
+npx tsc --init --rootDir src --outDir dist
 ```
 - Altere as configurações do `tsconfig.json`
 ```ts
 // tsconfig.json
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "src"
-  },
-  "include": ["src/**/*"],
-  "exclude" : ["src/**/*.spec.ts"]
+    "rootDir": "src",
+    "outDir": "dist"
+    // --- CONFIGURAÇÕES OPCIONAIS ---
+    // "module": "nodenext",
+    // "target": "esnext",
+    // "types": ["node"],
+    // "sourceMap": true,
+    // "declaration": true,
+    // "declarationMap": true,
+    // "esModuleInterop": true,
+    // "noUncheckedIndexedAccess": true,
+    // "exactOptionalPropertyTypes": true,
+    // "strict": true,
+    // "verbatimModuleSyntax": true,
+    // "isolatedModules": true,
+    // "noUncheckedSideEffectImports": true,
+    // "moduleDetection": "force",
+    // "skipLibCheck": true
+  }
+  //"include": ["src/**/*"],
+  //"exclude": ["src/**/*.spec.ts"]
 }
+
 ```
 - Instale as dependências no projeto
 ```bash
@@ -49,35 +62,36 @@ npm list --global --depth=0
 - Altere os runners do `package.json`
 ```js
 {
-  "name": "test",
+  "name": "app",
   "version": "1.0.0",
   "description": "",
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
-    "compile-run": "ts-node src/index.ts",
     "start": "npm run build && node dist/index.js",
     "start:dev": "nodemon --exec ts-node src/index.ts --watch src --ext .ts",
     "start:debug": "nodemon --exec ts-node-dev --inspect=9229 --exit-child --respawn src/index.ts"
+    "simple-run": "ts-node src/index.ts",
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "devDependencies": {
+    "@types/node": "^24.7.0",
     "nodemon": "^3.1.10",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
-
 ```
 - Teste rodando
 ```
 npm run start
 ```
-- Configure um `launch.json` no VSCode
+- Configure um `launch.json` no `VSCode`
 	- Primeiro descubra onde esta instalado o `node` ou `ts-node`
 		- `which node ts-node`
 	- Seu runner pode reclamar que o Node.js não esta configurado no PATH, pode adicioná-lo as variáveis de ambiente
@@ -86,18 +100,38 @@ npm run start
 	
 ```js
 {
-"version": "0.2.0",
-	"configurations":
-	[{
-		"name": "nodemon integrated",
-		"console": "integratedTerminal",
-		"type": "node",
-		"request": "launch",
-		"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon", //nodemon devDepencies in package.json!
-		"runtimeArgs": ["--exec", "ts-node"],
-		"args": ["src/index.ts", "--watch src", " --ext .ts"],
-		"skipFiles": ["<node_internals>/**", "node_modules/**"]
-	}]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ts-node integrated",
+      "console": "integratedTerminal",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node",
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "nodemon integrated",
+      "console": "integratedTerminal",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+      "runtimeArgs": ["--exec", "ts-node"],
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "NPM launch",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
 }
 ```
 
