@@ -1,5 +1,9 @@
 # Typescript Summary
 
+[Tutorial TypeScript no Visual Studio Code](https://code.visualstudio.com/docs/typescript/typescript-tutorial)
+
+[How to run ts files with VSCode and Node.js](https://github.com/rodrigocirino/nodejs-template)
+
 ### Introdução
 
 **O que é TypeScript?**\

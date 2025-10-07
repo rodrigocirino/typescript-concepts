@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "NODEJS attach",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "localRoot": "${workspaceFolder}",
+      "restart": true,
+      "skipFiles": [
+        "<eval>/**",
+        "<node_internals>/**",
+        "!**/node_modules/**",
+        "**/$KNOWN_TOOLS$/**",
+        "${workspaceFolder}/node_modules/**/*.js"
+      ]
+    },
+    {
+      "name": "nodemon runner",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["--exec", "ts-node"],
+      "args": ["index.ts", "--watch src", " --ext .ts"],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "Debug current JS/TS File",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+      "args": ["${relativeFile}"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "outputCapture": "std",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    }
+  ]
+}

@@ -4,7 +4,107 @@ Revisão baseada na documentações do site:
 - [Handbook do site oficial](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
+
+### Running Typescript on VScode
+
+Opção para não ter que usar o terminal e ficar realizando operações com `npx tsc`, pode usar o `ts-node` no `VSCode`
+
+**Configurações mínimas**
+- Crie uma pasta com o nome `app`, ou outro nome.
+- Crie uma subpasta `src` e dentro um arquivo `index.ts` *(src por boas práticas)*
+	- Coloque algum código javascript ou typescript nesse arquivo `index.ts`
+- Rode o comando criar o arquivo `tsconfig.json`
+```bash
+mkdir -p src dist
+npx tsc --init --rootDir src --outDir dist --sourceMap true
+```
+- Altere as configurações do `tsconfig.json`
+```ts
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "exclude" : ["src/**/*.spec.ts"]
+}
+```
+- Instale as dependências no projeto
+```bash
+npm init -y
+# dev
+npm install -D typescript
+npm install -D nodemon
+npm install -D @types/node
+npm install -D ts-node ts-node-dev
+npm install -D rimraf
+npm list --global --depth=0
+```
+- Altere os runners do `package.json`
+```js
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "compile-run": "ts-node src/index.ts",
+    "start": "npm run build && node dist/index.js",
+    "start:dev": "nodemon --exec ts-node src/index.ts --watch src --ext .ts",
+    "start:debug": "nodemon --exec ts-node-dev --inspect=9229 --exit-child --respawn src/index.ts"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "ts-node-dev": "^2.0.0"
+  }
+}
+
+```
+- Teste rodando
+```
+npm run start
+```
+- Configure um `launch.json` no VSCode
+	- Primeiro descubra onde esta instalado o `node` ou `ts-node`
+		- `which node ts-node`
+	- Seu runner pode reclamar que o Node.js não esta configurado no PATH, pode adicioná-lo as variáveis de ambiente
+		- `PATH="/home/pc/.nvm/versions/node/v22.13.1/bin:$PATH"`
+		- Ou usar os módulos que foram instalados com as `devDependencies`.
+	
+```js
+{
+"version": "0.2.0",
+	"configurations":
+	[{
+		"name": "nodemon integrated",
+		"console": "integratedTerminal",
+		"type": "node",
+		"request": "launch",
+		"runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon", //nodemon devDepencies in package.json!
+		"runtimeArgs": ["--exec", "ts-node"],
+		"args": ["src/index.ts", "--watch src", " --ext .ts"],
+		"skipFiles": ["<node_internals>/**", "node_modules/**"]
+	}]
+}
+```
+
+<br>
+
 ---
+
 ### Typescript Introduction 
 
 What is TypeScript?\
