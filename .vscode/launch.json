@@ -2,42 +2,36 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "NODEJS attach",
-      "type": "node",
-      "request": "attach",
-      "port": 9229,
-      "localRoot": "${workspaceFolder}",
-      "restart": true,
-      "skipFiles": [
-        "<eval>/**",
-        "<node_internals>/**",
-        "!**/node_modules/**",
-        "**/$KNOWN_TOOLS$/**",
-        "${workspaceFolder}/node_modules/**/*.js"
-      ]
-    },
-    {
-      "name": "nodemon runner",
+      "name": "ts-node integrated",
+      "console": "integratedTerminal",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "nodemon",
+      "cwd": "${workspaceFolder}/app",
+      "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/ts-node",
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "nodemon integrated",
+      "console": "integratedTerminal",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/app",
+      "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/nodemon",
       "runtimeArgs": ["--exec", "ts-node"],
-      "args": ["index.ts", "--watch src", " --ext .ts"],
-      "cwd": "${workspaceRoot}",
-      "internalConsoleOptions": "openOnSessionStart",
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     {
-      "name": "Debug current JS/TS File",
-      "type": "node",
+      "name": "NPM launch",
+      "type": "node-terminal",
       "request": "launch",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
-      "args": ["${relativeFile}"],
-      "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env",
-      "outputCapture": "std",
-      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+      "cwd": "${workspaceFolder}/app",
+      "command": "npm run start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }

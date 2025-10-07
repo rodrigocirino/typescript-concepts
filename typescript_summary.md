@@ -105,6 +105,14 @@ objectName.propertyName
 objectName["propertyName"]
 ```
 
+**Assinaturas de índice (index signatures)** em TypeScript servem para definir **tipos de objetos cujas chaves NÃO são conhecidas antecipadamente**, mas seguem um padrão.\
+**Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`**
+
+
+```
+
+```
+
 
 
 

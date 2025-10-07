@@ -637,11 +637,36 @@ car.mileage = 2000;
 
 **Index Signatures**
 
-Assinaturas de índice podem ser usadas para objetos sem uma lista definida de propriedades.
+**Assinaturas de índice (index signatures)** em TypeScript servem para definir **tipos de objetos cujas chaves NÃO são conhecidas antecipadamente**, mas seguem um padrão.
 
-Index signatures like this one can also be expressed with utility types like **`Record<string, number>`**. [🔗 See below](#)
+**Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`**  [🔗 See below](#)
+
+O tipo Record<string, number> faz a mesma coisa, é apenas uma **forma utilitária** de declarar o mesmo padrão (mais conciso e idiomático).
+
+**Ambos servem para representar dicionários (maps) de chave/valor,** úteis quando não há lista fixa de propriedades — por exemplo, um objeto que guarda configurações dinâmicas, contadores, cache etc.
+
+Com assinaturas de índice
 ```ts
-const nameAgeMap: { [index: string]: number } = {};
+type Pontuacao = {
+  [chave: string]: number;
+};
+const pontos: Pontuacao = {
+  alice: 10,
+  bob: 15,
+  carol: 20
+  // ativo: true // erro: boolean não é number
+};
+```
+Com Record
+```ts
+type Pontuacao = Record<string, number>;
+```
+
+Usando a forma literal de escrever uma assinatura de índice direto na declaração da variável, sem precisar criar um type ou interface.
+```ts
+// Ele aceita qualquer chave do tipo string
+// e tb qualquer valor number
+const nameAgeMap: { [meu_indice: string]: number } = {};
 
 nameAgeMap.Jack = 25; // ok
 nameAgeMap.Doe = 50; // ok
@@ -651,6 +676,13 @@ nameAgeMap.Doe = 50; // ok
 
 console.log(nameAgeMap); //{ Jack: 25, Doe: 50 }
 ```
+
+
+```
+
+```
+
+
 
 ### TypeScript Enums
 
