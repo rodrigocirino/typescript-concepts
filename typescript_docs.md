@@ -735,6 +735,24 @@ const map = new Map(Object.entries(obj));    // Object -> Map
 // Essa conversão é útil quando você quer guardar o `Map` em JSON e depois restaurar.
 ```
 
+**Resumo:** 
+```ts
+// Forma literal
+const filmes: { [x:type]:y } = {}
+const filmes: { [estilo:string]: string } = {}
+filmes['romance'] = "Uma linha mulher"
+
+// Com Type + literal
+type Filme = { [estilo:string]: string };
+const filmes: Filme = { acao: "Exterminador do Futuro"}
+
+// Com type + Record
+type Filme = Record<string, string>;
+const filmes: Filme = { suspense: "O ultimo Passageiro"}
+
+// Somente Record
+const filmes: Record<string, number> = { 'infantil': "Gato Galatico" };
+```
 
 
 ### TypeScript Enums
