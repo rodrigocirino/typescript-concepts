@@ -106,23 +106,25 @@ objectName["propertyName"]
 ```
 
 **Assinaturas de índice (index signatures)** em TypeScript servem para definir **tipos de objetos cujas chaves NÃO são conhecidas antecipadamente**, mas seguem um padrão.\
-**Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`**
 
+**`Record<string, number>`** é um tipo utilitário faz a mesma coisa, porém mais conciso e idiomático.
 
+Ambos servem para representar dicionários (chave/valor), quando um objeto guarda algo dinâmico por exemplo categorias, filtros, contadores, caches, etc.
+
+```ts
+// Forma literal
+const filmes: { [x:type]:y } = {}
+const filmes: { [estilo:string]: string } = {}
+filmes['romance'] = "Uma linha mulher"
+
+// Com Type + literal
+type Filme = { [estilo:string]: string };
+const filmes: Filme = { acao: "Exterminador do Futuro"}
+
+// Com type + Record
+type Filme = Record<string, string>;
+const filmes: Filme = { suspense: "O ultimo Passageiro"}
+
+// Somente Record
+const filmes: Record<string, number> = { 'infantil': "Gato Galatico" };
 ```
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-

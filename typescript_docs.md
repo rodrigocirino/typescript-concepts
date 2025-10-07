@@ -644,7 +644,7 @@ car.mileage = 2000;
 
 **Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`** .
 
-O tipo Record<string, number> faz a mesma coisa, é apenas uma **forma utilitária** de declarar o mesmo padrão **(mais conciso e idiomático).**
+O tipo `Record<string, number>` faz a mesma coisa, é apenas uma **forma utilitária** de declarar o mesmo padrão **(mais conciso e idiomático).**
 
 **Ambos servem para representar dicionários (maps) de chave/valor,** úteis quando não há lista fixa de propriedades — por exemplo, um objeto que guarda configurações dinâmicas, contadores, cache etc.
 
