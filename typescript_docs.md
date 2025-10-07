@@ -107,6 +107,7 @@ npm run start
       "console": "integratedTerminal",
       "type": "node",
       "request": "launch",
+      "cwd": "${workspaceFolder}/app", // if my_prog/app/src/index.ts
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/ts-node",
       "args": ["src/index.ts", "--watch src", " --ext .ts"],
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
@@ -116,6 +117,7 @@ npm run start
       "console": "integratedTerminal",
       "type": "node",
       "request": "launch",
+      "cwd": "${workspaceFolder}/app",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
       "runtimeArgs": ["--exec", "ts-node"],
       "args": ["src/index.ts", "--watch src", " --ext .ts"],
@@ -125,6 +127,7 @@ npm run start
       "name": "NPM launch",
       "type": "node-terminal",
       "request": "launch",
+      "cwd": "${workspaceFolder}/app",
       "command": "npm run start",
       "presentation": {
         "reveal": "always",
@@ -635,13 +638,13 @@ car.mileage = 2000;
 // Error: Property 'mileage' is missing in type '{ type: string; }' but required in type '{ type: string; mileage: number; }'.  
 ```
 
-**Index Signatures**
+#### Index Signatures
 
 **Assinaturas de índice (index signatures)** em TypeScript servem para definir **tipos de objetos cujas chaves NÃO são conhecidas antecipadamente**, mas seguem um padrão.
 
-**Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`**  [🔗 See below](#)
+**Index signatures** podem ser expressas em **utility types** como **`Record<string, number>`** .
 
-O tipo Record<string, number> faz a mesma coisa, é apenas uma **forma utilitária** de declarar o mesmo padrão (mais conciso e idiomático).
+O tipo Record<string, number> faz a mesma coisa, é apenas uma **forma utilitária** de declarar o mesmo padrão **(mais conciso e idiomático).**
 
 **Ambos servem para representar dicionários (maps) de chave/valor,** úteis quando não há lista fixa de propriedades — por exemplo, um objeto que guarda configurações dinâmicas, contadores, cache etc.
 
@@ -662,24 +665,74 @@ Com Record
 type Pontuacao = Record<string, number>;
 ```
 
-Usando a forma literal de escrever uma assinatura de índice direto na declaração da variável, sem precisar criar um type ou interface.
+Usando a forma literal de escrever uma assinatura de índice direto na declaração da variável, **sem precisar criar um type ou interface.** Essa forma é útil quando o tipo é usado **uma única vez**. Se você for reutilizar o mesmo formato em vários lugares, o ideal é declarar um tipo separado.
 ```ts
 // Ele aceita qualquer chave do tipo string
 // e tb qualquer valor number
 const nameAgeMap: { [meu_indice: string]: number } = {};
-
 nameAgeMap.Jack = 25; // ok
 nameAgeMap.Doe = 50; // ok
-
-//prog.ts(6,1): error TS2322: Type 'string' is not assignable to type 'number'.
-//nameAgeMap.Mark = "Hundred";
-
 console.log(nameAgeMap); //{ Jack: 25, Doe: 50 }
+
+// Using Type
+type NameAgeMap = { [index: string]: number };
+const map1: NameAgeMap = {};
+const map2: NameAgeMap = {};
 ```
 
+Outros exemplos:
+```ts
+const precos: { [produto: string]: number } = {};
+precos["banana"] = 4.5;
+precos["laranja"] = 3.8;
 
+const contador: { [palavra: string]: number } = {};
+contador["typescript"] = 1;
+contador["javascript"] = 3;
 ```
 
+Comportamento com chaves `number`\
+em JavaScript, **todas as chaves de objetos são convertidas para string** internamente.\
+Por isso, no TypeScript, a assinatura `[key: number]` é **quase idêntica** a `[key: string]`.\
+A diferença é mais **semântica** — você está dizendo: _“minhas chaves são números lógicos, mesmo que internamente virem strings.”_
+```ts
+// A chave deve ser um número. O valor deve ser uma string.
+const idToNameMap: { [id: number]: string } = {};
+
+idToNameMap[1] = "Rodrigo";
+idToNameMap[2] = "Ana";
+
+//Então `idToNameMap[1]` e `idToNameMap["1"]` são exatamente a mesma coisa.
+console.log(Object.keys(idToNameMap)); // ["1", "2"]
+
+
+```
+Agora, se você quiser realmente **usar números como índices sem conversão para string**, deve usar um **array** ou um **Map**:
+
+**Vantagens de `Map`:**
+- As chaves **realmente são números** (sem conversão). (Record são string)
+- Mantém **ordem de inserção** sempre. (Record preserva mas não garante!)
+- Permite **qualquer tipo de chave** (inclusive objetos, funções, etc.). 
+- Métodos utilitários (`.set`, `.get`, `.has`, `.delete`, `.clear`) mais robustos
+- Desvantagem levemente mais pesado que um objeto puro (internamente é uma estrutura hash completa).
+```ts
+// arrays
+const nomes = ["Rodrigo", "Ana"]; // índice numérico real
+console.log(nomes[0]); // "Rodrigo"
+
+// Map
+// `Map` As chaves **realmente são números** , sem conversão implícita.
+const mapa = new Map<number, string>();
+mapa.set(1, "Rodrigo");
+mapa.set(2, "Ana");
+
+```
+ 
+ Para converter entre os dois formatos basta fazer:
+```ts
+const obj = Object.fromEntries(idToNameMap); // Map -> Object
+const map = new Map(Object.entries(obj));    // Object -> Map
+// Essa conversão é útil quando você quer guardar o `Map` em JSON e depois restaurar.
 ```
 
 
