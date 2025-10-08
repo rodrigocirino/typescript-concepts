@@ -4,7 +4,7 @@ Revisão baseada na documentações do site:
 - [Handbook do site oficial](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
-## Running Typescript on VScode
+## Running Typescript on VSCode
 
 Opção para não ter que usar o terminal e ficar realizando operações com `npx tsc`, pode usar o `ts-node` no `VSCode`
 
