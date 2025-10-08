@@ -5,7 +5,7 @@ Revisão baseada na documentações do site:
 - [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
 
-### Running Typescript on VScode
+## Running Typescript on VScode
 
 Opção para não ter que usar o terminal e ficar realizando operações com `npx tsc`, pode usar o `ts-node` no `VSCode`
 
@@ -142,58 +142,8 @@ npm run start
 
 ---
 
-### Typescript Introduction 
 
-What is TypeScript?\
-TypeScript is a syntactic superset of JavaScript which adds **static typing**.
-
-Why should I use TypeScript?
-- Pode ser dificil entender qual tipo de dado esta sendo passado.
-- typescript permite consulta a documentação direta no código, com check syntax.
-- habilidade maior que reportar erros
-- ts faz a checagem de tipo em tempo de compilação, not while running the code.
-
-TypeScript is transpiled into JavaScript using a compiler.
-
-Installing the compiler\
-`npm install typescript --save-dev`
-
-Access the compiler\
-`npx tsc`
-
-Configuring the compiler\
-this creates a `tsconfig.json` file\
-`npx tsc --init`
-
-Simple example of config
-```js
-{  
-  "include": ["src"],  
-  "compilerOptions": {  
-    "outDir": "./build"  
-  }  
-}
-```
-
-First typescript program
-```ts
-function greet(name: string): string {  
-  return `Hello, ${name}!`;  
-}  
-  
-const message: string = greet("World");  
-console.log(message);
-```
-```sh
-# compile
-npx tsc hello.ts
-# generates a hello.js
-# run js
-node hello.js
-```
-
-
-### Javascript Basics 🪓
+## Javascript Basics 🪓
 
 **A JavaScript variable can hold 8 types of data**
 
@@ -402,6 +352,55 @@ for (let i = 1; i < 10; i++) {
 
 
 
+### Typescript Introduction 
+
+What is TypeScript?\
+TypeScript is a syntactic superset of JavaScript which adds **static typing**.
+
+Why should I use TypeScript?
+- Pode ser dificil entender qual tipo de dado esta sendo passado.
+- typescript permite consulta a documentação direta no código, com check syntax.
+- habilidade maior que reportar erros
+- ts faz a checagem de tipo em tempo de compilação, not while running the code.
+
+TypeScript is transpiled into JavaScript using a compiler.
+
+Installing the compiler\
+`npm install typescript --save-dev`
+
+Access the compiler\
+`npx tsc`
+
+Configuring the compiler\
+this creates a `tsconfig.json` file\
+`npx tsc --init`
+
+Simple example of config
+```js
+{  
+  "include": ["src"],  
+  "compilerOptions": {  
+    "outDir": "./build"  
+  }  
+}
+```
+
+First typescript program
+```ts
+function greet(name: string): string {  
+  return `Hello, ${name}!`;  
+}  
+  
+const message: string = greet("World");  
+console.log(message);
+```
+```sh
+# compile
+npx tsc hello.ts
+# generates a hello.js
+# run js
+node hello.js
+```
 
 ### TS Simple Types
 
