@@ -4,22 +4,23 @@ Revisão baseada na documentações do site:
 - [Handbook do site oficial](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
-
 ## Running Typescript on VScode
 
 Opção para não ter que usar o terminal e ficar realizando operações com `npx tsc`, pode usar o `ts-node` no `VSCode`
 
 **Configurações mínimas**
 - Crie uma pasta com o nome `app`, ou outro nome.
-- Crie uma subpasta `src` e dentro um arquivo `index.ts` *(src por boas práticas)*
+- Crie uma subpasta `src` e dentro um arquivo `index.ts` 
 	- Coloque algum código javascript ou typescript nesse arquivo `index.ts`
-- Rode o comando criar o arquivo `tsconfig.json`
+- Rode o comando para criar o arquivo `tsconfig.json`
 ```bash
+mkdir -p app/src app/dist
 cd app
-mkdir -p src dist
+echo "console.log('Hello World at $(date)')"  >> src/index.ts;
 npx tsc --init --rootDir src --outDir dist
+ts-node src/index.ts
 ```
-- Altere as configurações do `tsconfig.json`
+- Verifique as configurações do `tsconfig.json`
 ```ts
 // tsconfig.json
 {
@@ -48,7 +49,7 @@ npx tsc --init --rootDir src --outDir dist
 }
 
 ```
-- Instale as dependências no projeto
+- Instale as dependências de desenvolvimento no projeto
 ```bash
 npm init -y
 # dev
@@ -59,7 +60,7 @@ npm install -D ts-node ts-node-dev
 npm install -D rimraf
 npm list --global --depth=0
 ```
-- Altere os runners do `package.json`
+- Inclua novos `script runners` do `package.json`
 ```js
 {
   "name": "app",
@@ -87,16 +88,16 @@ npm list --global --depth=0
   }
 }
 ```
-- Teste rodando
+- Teste os runner iniciando
 ```
 npm run start
 ```
-- Configure um `launch.json` no `VSCode`
+- Para `VSCode` é necessário criar um `.vscode/launch.json` 
 	- Primeiro descubra onde esta instalado o `node` ou `ts-node`
-		- `which node ts-node`
-	- Seu runner pode reclamar que o Node.js não esta configurado no PATH, pode adicioná-lo as variáveis de ambiente
+		- `which npm node ts-node`
+	- Seu runner pode reclamar que o Node.js não esta configurado no PATH, adicione, ou use as libs dentro dos `node_modules` do próprio projeto.
 		- `PATH="/home/pc/.nvm/versions/node/v22.13.1/bin:$PATH"`
-		- Ou usar os módulos que foram instalados com as `devDependencies`.
+		- Ou utilize os módulos internos do projeto `node_modules/bin/npm. 
 	
 ```js
 {
@@ -141,214 +142,6 @@ npm run start
 <br>
 
 ---
-
-
-## Javascript Basics 🪓
-
-**A JavaScript variable can hold 8 types of data**
-
-| Type      | Description                                   |
-| --------- | --------------------------------------------- |
-| String    | A text of characters enclosed in quotes       |
-| Number    | A number representing a mathematical value    |
-| Bigint    | A number representing a large integer         |
-| Boolean   | A data type representing true or false        |
-| Object    | A collection of key-value pairs of data       |
-| Undefined | A primitive variable with no assigned value   |
-| Null      | A primitive value representing object absence |
-| Symbol    | A unique and primitive identifier             |
-
-**JavaScript Arithmetic Operators**
-
-| Operator | Description                  |
-| -------- | ---------------------------- |
-| +        | Addition                     |
-| -        | Subtraction                  |
-| *        | Multiplication               |
-| **       | Exponentiation               |
-| /        | Division                     |
-| %        | Modulus (Division Remainder) |
-| ++       | Increment                    |
-| --       | Decrement                    |
- **JavaScript Assignment Operators**
-
-| Operator | Example | Same As    |                                               |
-| -------- | ------- | ---------- | --------------------------------------------- |
-| =        | x = y   | x = y      | assigns a value to a variable                 |
-| +=       | x += y  | x = x + y  | add strings                                   |
-| -=       | x -= y  | x = x - y  | subtracts a value from a variable             |
-| *=       | x *= y  | x = x * y  | multiplies a variable                         |
-| /=       | x /= y  | x = x / y  | divides a variable                            |
-| %=       | x %= y  | x = x % y  | assigns a remainder to a variable             |
-| **=      | x **= y | x = x ** y | raises a variable to the power of the operand |
-**JavaScript Comparison Operators**
-
-| Operator | Description                       | Example |
-| -------- | --------------------------------- | ------- |
-| ==       | equal to                          | x == 5  |
-| ===      | equal value and equal type        | x === 5 |
-| !=       | not equal                         | x != 5  |
-| !==      | not equal value or not equal type | x !== 5 |
-| >        | greater than                      | x > 5   |
-| <        | less than                         | x < 5   |
-| >=       | greater than or equal to          | x >= 5  |
-| <=       | less than or equal to             | x <= 5  |
-**JavaScript Bitwise Operators**
-
-| Operator | Name                  | Description                                                                                                                  |
-| -------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| &        | AND                   | Define cada bit como 1 se **ambos** os bits forem 1                                                                          |
-| \|       | OR                    | Define cada bit como 1 se **um dos** dois bits for 1                                                                         |
-| ^        | XOR                   | Define cada bit como 1 se **apenas um dos** dois bits for 1                                                                  |
-| ~        | NOT                   | **Inverte** todos os bits                                                                                                    |
-| <<       | Zero fill left shift  | Desloca para a **esquerda** **empurrando zeros** da direita e deixando os bits mais à esquerda caírem                        |
-| >>       | Signed right shift    | Desloca para a **direita** **empurrando cópias** do bit mais à esquerda da esquerda e deixando os bits mais à direita caírem |
-| >>>      | Zero fill right shift | Desloca para a **direita**, **empurrando zeros** da esquerda para a direita e deixando os bits mais à direita caírem         |
-
-**JavaScript Logical Operators**
-
-| Operator | Description |
-| -------- | ----------- |
-| &&       | logical and |
-| \|\|     | logical or  |
-| !        | logical not |
-**Logical Assignment Operators**
-
-| Operator | Example      | Result |                                                                        |
-| -------- | ------------ | ------ | ---------------------------------------------------------------------- |
-| &&=      | true &&= 10  | x = 10 | If the first value is true, the second value is assigned.              |
-| \|\|=    | false \|= 10 | x = 10 | If the first value is false, the second value is assigned.             |
-| ??=      | null ??= 10  | x = 10 | If the first value is undefined or null, the second value is assigned. |
-
-```ts
-// boolean
-let isActive: boolean = true;  
-let hasPermission = false; // TypeScript infers 'boolean' type
-
-// JavaScript Numbers are Always Double! With 64-bit Precision Floating Point
-// number
-let decimal: number = 6;  
-let hex: number = 0xf00d;       // Hexadecimal  
-let binary: number = 0b1010;     // Binary  
-let octal: number = 0o744;      // Octal  
-let float: number = 3.14;      // Floating point
-let y = 123e5;    // 12300000
-let z = 123e-5;   // 0.00123
-
-// string
-let car = "";    // The value is "", the typeof is "string"
-let color: string = "blue";  
-let fullName: string = 'John Doe';  
-let age: number = 30;  
-let sentence: string = `Hello, my name is ${fullName} and I'll be ${age + 1} next year.`;
-let text1 = "What a very ";  
-text1 += "nice day"; // What a very nice day
-let x = 5 + 5;  // 10 (number) 
-let y = "5" + 5; // 55 (string)
-let z = "Hello" + 5; // Hello5 (string)
-```
-
-**Everything With a "Value" is True**
-```js
-100 is true  
-3.14 is true  
--15 is true  
-true is true  
-"Hello" is true
-"false" is true
-(7 + 1 + 3.14) is true
-
-// Everything Without a "Value" is False
-0 is false  
-"" is false  
-undefined is false  
-null is false  
-NaN is false  
-false is false
-Boolean("") is false
-// Comparing two JavaScript objects **always** returns **false**.
-```
-
-
-
-**`switch`, `case`, `default`**
-
-**expression**: Switch usa comparação estrita `(===)`. Os valores devem ser do mesmo tipo para corresponder. Uma comparação estrita só pode ser verdadeira se ambos os operandos forem do mesmo tipo. Ou seja aceita todos os tipos primitivos.
-```ts
-let expression = "0";  
-switch (expression) {  
-  case 0:  
-    text = "Off";  
-    break;  
-  case 1:  
-    text = "On";  
-    break;  
-  default:  
-    text = "No value found";  
-}
-```
-
-**Loops**
-
-| Description | Example                 |
-| ----------- | ----------------------- |
-| for loop    | for (i = 0; i < 5; i++) |
-| while loop  | while (i < 10)          |
-| do while    | do {} while (i < 10)    |
-| for in loop | for (x in person)       |
-| for of loop | for (x of cars)         |
-```ts
-let i = 5;  
-// both inside loop i until 10.
-for (i = 0; i < 10; i++) {}
-// After for here i = 10, because change the global i
-for (let i = 0; i < 10; i++) {}
-// After for here i = 5, mantain value, because not change, create a new inside loop.
-
-//You can omit **exp 1** if the value is set before the loop starts:
-for (; i < 10; i++) {} // ok
-
-//All exp can be ommited, exp3 can be omitted (if you increment the value inside the loop):
-for (; i < len; ) { i++; } // ok 
-```
-
-`do while`
-- O comando `do while` é executado pelo menos uma vez, mesmo que a condição seja falsa desde o início.
-- Não se esqueça de incrementar a variável usada na condição, caso contrário o loop nunca terminará!
-
-`break` in loops or a switch statement
-```ts
-for (let i = 0; i < 10; i++) {  
-  if (i === 3) { break; }  
-  text += "The number is " + i + "<br>";  
-}
-
-// Labeled Break
-let text = "";  
-loop1: for (let j = 1; j < 5; j++) {  
-  loop2: for (let i = 1; i < 5; i++) {  
-    if (i === 3) { 
-	    break loop1;
-	}  
-    text += i;  
-   }  
-}
-```
-
-`continue` - **skips the current iteration** in a loop.
-```ts
-for (let i = 1; i < 10; i++) {  
-  if (i === 3) { continue; }  
-  text += "The number is " + i + "<br>";  
-}
-
-// can be used labeled like break! "continue labelname"
-```
-
-
-
-
-
 
 
 
@@ -402,7 +195,7 @@ npx tsc hello.ts
 node hello.js
 ```
 
-### TS Simple Types
+### TypeScript Simple Types
 
 **BigInt (ES2020+)** [mozilla BigInt](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
 
