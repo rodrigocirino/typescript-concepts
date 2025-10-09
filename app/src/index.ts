@@ -1,20 +1,10 @@
-interface Shape {
-  getArea: () => number;
+const person = {
+  getName: (x) => x.firstName + " " + x.lastName
+  
+}
+const televisao = {
+  firstName:"Silvio",
+  lastName: "Santos"
 }
 
-class Rectangle implements Shape {
-  public constructor(
-    protected readonly width: number,
-    protected readonly height: number
-  ) {}
-
-  public getArea(): number {
-    return this.width * this.height;
-  }
-}
-
-class Square extends Rectangle {
-  public constructor(width: number) {
-    super(width, width);
-  } // getArea gets inherited from Rectangle
-}
+console.log(person.getName(televisao)); // Silvio Santos

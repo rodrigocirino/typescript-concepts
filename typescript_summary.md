@@ -167,7 +167,7 @@ console.log(oscar); //  { filme: "Cidade de Deus", nota: 10 }
 
 ```
 
-união
+Union (| - Or) com interseção (& - And, Both) de Tipos
 ```ts
 // union
 type Publico = { tipo: string; };
@@ -179,4 +179,112 @@ const notaConjunta: AvaliacaoConjunta = {
 };
 console.log(notaConjunta); // { filme: 'Cidade de Deus', nota: 10, tipo: '21 anos' }
 ```
+
+**Diferença entre `interface` e `type`:**
+- **permite extensão futura com `extends` - contrato extensível**
+- interfaces podem-se **fundir ao ser redeclará-la** (merging) - contexto que evoluem
+	- type se redeclarar ele dá erro `"Err. Duplicate identifier Pessoa"`
+- interfaces só com objetos, types tb com funções, tuplas e types aliases (customizados)
+
+**Herança:** As duas formas produzem o mesmo resultado, mas `interface` usa a palavra-chave `extends`, enquanto `type` faz a interseção manual (`&`).
+
+**merging de interfaces** - **`extends`** Quando você declara `interface Pessoa` duas vezes, o TypeScript **não substitui** a anterior — ele **funde** as definições, mesmo tendo criado Funcionário antes ele altera também a definição deste.\
+Isso é diferente de `type`, que é **imutável** — se você tentasse o mesmo com `type Pessoa`, daria erro.
+
+`&` - todas as propriedades disponíveis a todos
+`|` - pode ser uma ou outra propriedade, conforme o objeto.
+
+Lembrando ambos pode ser extensíveis, porém interface deve usar extends, types deve usar merging com `& or |`.
+
+`...rest` : num objeto pegar o restante dos parâmetros
+
+`(x:tipo) => tipo` - arrow functions forma inline para definir funções
+
+`as` não converte o valor de fato, por isso 4 não se torna "4", evite erros ao utilizar.\
+`console.log(4 as string); // erro 4 não é o mesmo que 'quatro' ou "4"`
+
+3 tipos de visibilidade de membros de uma classe
+- private: dentro da classe
+- public: qualquer local externo
+- protected: interno e classes que herdem atributos `extends`
+
+`this` - refers to what?
+- sozinho `return this` - ao objeto global
+- numa função, tb ao objeto global
+- numa função com `strict mode`, this é `undefined`
+- num objeto, this se refere ao objeto
+- num evento, a quem o chamou.
+
+Ative a configuração `noImplicitOverride`, para forçar a declaração de `override`.
+
+`abstract class` - classes que servem de base e não obrigam a implementar todos os métodos.\
+Não pode implementar diretamente é (em java usaria new), tem que extender para usar
+
+
+**Built-in functions**
+
+`call` - chamar um método nomeado, armazenado num objeto `person.getName.call(x)`
+
+`apply` - igual call mas passa um `array` como argumentos, a assinatura muda.
+
+`bind` - idem mas a assinatura da função(), não os valores (pode-se acessar a assinatura para ver o valor)\
+muito usado em `callbacks` , quando por exemplo colocamos o método no `setTimeout` para definir para onde o gatilho deve disparar após x segundos.
+
+**Generics**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

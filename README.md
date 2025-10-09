@@ -872,7 +872,7 @@ const f: Funcionario = { nome: "Ana", cargo:"Professor", idade: 30 }; // ok
 console.log(f); // ok
 ```
 
-`type` não permite essa operação, é necessário um `merging & ou |`
+`type` não permite essa operação, é necessário um `merging com & ou |`
 
 `type` **não pode ser “estendido” diretamente** com `extends` como as `interfaces`, mas você pode **obter o mesmo efeito** usando **interseção (`&`)**.
 ```ts
@@ -912,9 +912,7 @@ Aqui `extends` significa “**T deve pelo menos ter** `{ id: number }`”,   nã
 #### Extending Interfaces
 
 Estender uma interface significa criar uma nova interface com as **mesmas propriedades da original, além de algo novo**.
-
-**Types and Interface, both can be extended!**, but interfaces support declaration merging.
-- **Recommendation:** Use `interface` for objects, `type` for everything else.
+Lembrando interface deve usar extends, types deve usar merging com `& or |`.
 ```ts
 interface Rectangle {
   height: number,
@@ -931,9 +929,6 @@ const coloredRectangle: ColoredRectangle = {
   color: "red"
 };
 ```
-
-### TypeScript Union Types
-#### Union | Or
 
 **Necessário checar o tipo antecipadamente ao usar `|`**.\
 Este código não compila, o compilador vai relatar um erro se tentar acessar na marra sem verificar o tipo antecipadamente.
@@ -1003,7 +998,7 @@ console.log(NegaFuncao(10)); // -10
 #### Casting with `as`
 `as` permite mudar o tipo da variável ao usá-la.
 
- 'as' não converte o valor de fato, por isso 4 não se torna "4", evite erros ao utilizar.
+ **`as`** não converte o valor de fato, por isso 4 não se torna "4", evite erros ao utilizar.
 ```ts
 let x: unknown = 'hello'; // unknown type
 console.log((x as string).length); // redefine para string antes de usar!
@@ -1131,9 +1126,10 @@ class Rectangle extends Polygon {
 <br>
 
 
-### Javascript métodos pré-definidos 🪓  [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
+### Javascript Built-in methods 🪓  [built-in functions](https://www.w3schools.com/js/js_function_call.asp)
 
-#### call (invoke a method)
+Métodos abaixo servem para serem usando em `named functions`, funções que são armazenadas em constante de objeto.
+#### `call` (parâmetros separados)
 call permite usar um objeto que pertence a outro objeto
 ```ts
 const person = {
@@ -1147,8 +1143,21 @@ const televisao = {
 }
 
 // passa o objeto `televisao`, para a funcao dentro de person.
+// se usar uma funcao nomeada não há como chamar de outra forma que não com `call`
 person.namedFunction.call(televisao); // Silvio Santos
 ```
+sem `call` usando `arrow functions`
+```ts
+const person = {
+	getName: (x) => x.firstName + " " + x.lastName
+}
+const televisao = {
+	firstName:"Silvio",
+	lastName: "Santos"
+}
+console.log(person.getName(televisao)); // Silvio Santos
+```
+
 With parameters
 ```javascript
 const person = {
@@ -1164,7 +1173,7 @@ const person1 = {
 person.fullName.call(person1, "Oslo", "Norway"); // John Doe from Oslo in Norway.
 ```
 
-##### apply (array parameters)
+##### `apply` (parâmetros em array)
 O método apply() é muito útil se você quiser usar um array em vez de uma lista de argumentos.
 
 Difference between call and apply.\
@@ -1186,7 +1195,7 @@ Math.max.apply(null, [1,2,3]); // Will also return 3
 ```
 No modo estrito do JavaScript, se o primeiro argumento do método `apply()` "null" não for um objeto, ele se torna o proprietário (objeto) da função invocada. No modo "não estrito", ele se torna o objeto global.
 
-##### bind (pegar emprestado)
+##### `bind` (retorna a função não valores) muito usado em `callbacks`
 
 ```javascript
 const person = {  
