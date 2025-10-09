@@ -128,3 +128,55 @@ const filmes: Filme = { suspense: "O ultimo Passageiro"}
 // Somente Record
 const filmes: Record<string, number> = { 'infantil': "Gato Galatico" };
 ```
+
+Em javascript a chave sempre é convertido para `string`, se quiser manter números use `arrays` ou `Map`.
+
+Vantagens de usar **`Map`**
+- chaves são números sem conversão
+- garante a ordem de inserção
+- permite qualquer tipo de chave, inclusive funções, objetos e tipos customizados.
+- desvantagem é levemente pesado que um objeto puro. (internamente é um hash complexo)
+
+**`enum`** - chaves sempre string, valores string ou numérico.
+```ts
+enum StatusCodes {  
+  NotFound = 404,  
+  Success = 200,  
+  Accepted = 202,  
+  BadRequest = 400  
+}
+console.log(StatusCodes.NotFound); // 404
+```
+
+Type aliases, tipos customizados e interfaces.
+
+Permitem realizar operações com objetos como união, intersecção e extender a tipos não primitivos
+```ts
+type Filme = string;
+type Nota = number;
+type Avaliacao = {
+	filme: Filme,
+	nota: Nota
+}
+const nota: Nota = 10;
+const oscar: Avaliacao = {
+	filme: "Cidade de Deus",
+	nota: nota
+}
+console.log(oscar); //  { filme: "Cidade de Deus", nota: 10 }
+
+```
+
+união
+```ts
+// union
+type Publico = { tipo: string; };
+type AvaliacaoConjunta = Especialistas & Publico; // union
+const notaConjunta: AvaliacaoConjunta = {
+	filme: "Cidade de Deus",
+	nota: 10,
+	tipo: "21 anos",
+};
+console.log(notaConjunta); // { filme: 'Cidade de Deus', nota: 10, tipo: '21 anos' }
+```
+

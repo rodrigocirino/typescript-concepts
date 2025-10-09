@@ -816,43 +816,98 @@ const car: Car = {
 console.log(car); // { year: 2001, type: 'Toyota', model: 'Corolla' }
 ```
 
-##### Union com interseção de Tipos
+##### Union (| - Or) com interseção (& - And, Both) de Tipos
 Limita o tipo a configuração específica declarada.
 ```ts
-type Animal = { name: string }; // { name: "galinha"}
-type Bear = Animal & { honey: boolean };
+type Animal = { name: string };
+type Bear = Animal & { honey: boolean }; // intersection
 const bear: Bear = { name: "Puffy", honey: false };  
    
-type Status = "success" | "error";  
+type Status = "success" | "error";  // union
 let response: Status = "success";
 ```
 
 #### Interfaces
 Idem type, except, interfaces **only** apply to `objects` types!
-```ts
-// Try creating a new interface using it below
-interface Rectangle {
-  height: number,
-  width: number
-};
-const rectangle: Rectangle = {
-  height: 20,
-  width: 10
-};
-console.log(rectangle); // { height: 20, width: 10 }
 
-// error string is not object types
-// interface Status = "success" | "error";
-// prog.ts(16,18): error TS1005: '{' expected.
+**Diferença entre `interface` e `type`:**
+- **permite extensão futura com `extends` - contrato extensível**
+- interfaces podem-se **fundir ao ser redeclará-la** (merging) - contexto que evoluem
+	- type se redeclarar ele dá erro `"Err. Duplicate identifier Pessoa"`
+- interfaces só com objetos, types tb com funções, tuplas e types aliases (customizados)
+
+**Quando escolher**
+- **Interface** → se você quer um tipo de objeto que possa ser **estendido** (ex: classes, bibliotecas, APIs públicas).  
+    → Ideal para _modelos de dados_ e _contratos de classes_.   
+- **Type** → se você quer **flexibilidade**, **composição**, ou tipos **complexos** (unions, intersections, generics compostos).  
+    → Ideal para _tipos utilitários_ e _combinações avançadas_.
+-  A equipe do TypeScript já afirmou oficialmente: “Use `interface` por padrão para objetos e APIs públicas; use `type` para composições avançadas.”
+
+**Herança:** As duas formas produzem o mesmo resultado, mas `interface` usa a palavra-chave `extends`, enquanto `type` faz a interseção manual (`&`).
+```ts
+interface A { x: number }
+interface B extends A { y: number }
+
+type C = A & { y: number }
 ```
 
-##### Merging interfaces, **adding new atributes**.
+**`extends`**
+Quando você declara `interface Pessoa` duas vezes, o TypeScript **não substitui** a anterior — ele **funde** as definições, mesmo tendo criado Funcionário antes ele altera também a definição deste.\
+Isso é diferente de `type`, que é **imutável** — se você tentasse o mesmo com `type Pessoa`, daria erro.
 ```ts
-interface Animal { name: string; } // ok
-interface Animal { age: number; } // ok other line
-const dog: Animal = { name: "Fido", age: 5 }; // using
-console.log(dog) // { name: 'Fido', age: 5 }
+interface Pessoa {
+	nome: string;
+}
+
+interface Funcionario extends Pessoa {
+	cargo: string;
+}
+
+interface Pessoa {
+	idade: number; // merging: altera tanto Pessoa como Funcionario
+}  
+
+const p: Pessoa = { nome: "Ana", idade: 30 }; // ok
+const f: Funcionario = { nome: "Ana", cargo:"Professor", idade: 30 }; // ok
+console.log(f); // ok
 ```
+
+`type` não permite essa operação, é necessário um `merging & ou |`
+
+`type` **não pode ser “estendido” diretamente** com `extends` como as `interfaces`, mas você pode **obter o mesmo efeito** usando **interseção (`&`)**.
+```ts
+type Pessoa = { nome: string };
+// ❌ Erro: Duplicate identifier 'Pessoa'
+type Pessoa = { idade: number };
+
+// ✅ Ok. Mas NÃO vai alterar Funcionario criado anteriormente!
+type NewPessoa = Pessoa & { idade: number }
+// Redefinindo Funcionario novamente com intersection.
+const f: Funcionario & NewPessoa = { nome: "Ana", cargo:"Professor", idade: 30 }; // ok
+```
+
+Código final com `type`
+Correto é usar `& - interseção`. Queremos um objeto com todas as propriedades, ao invés de `| - union, or` pode ser um ou outro, cria uma incerteza de qual objeto se refere.
+```ts
+type Pessoa = {
+	nome: string;
+}
+type Funcionario = Pessoa & {
+	cargo: string;
+}
+type NewPessoa = Pessoa & { idade: number }
+const p: NewPessoa = { nome: "Ana", idade: 30 }; // ok
+const f: Funcionario & NewPessoa = { nome: "Ana", cargo:"Professor", idade: 30 }; // ok
+console.log(f); // ok
+```
+
+Mas há um contexto onde `extends` **funciona com `type`**:  em **tipos genéricos**, para **impor restrição**, não para herdar.
+```ts
+type Identificavel<T extends { id: number }> = T & { criadoEm: Date };
+type Usuario = Identificavel<{ nome: string }>;
+// equivale a { id: number; nome: string; criadoEm: Date }
+```
+Aqui `extends` significa “**T deve pelo menos ter** `{ id: number }`”,   não “T herda de”.
 
 #### Extending Interfaces
 
