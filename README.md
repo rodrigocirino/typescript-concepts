@@ -1259,7 +1259,7 @@ Old JavaScript code will often contain closures, but modern JavaScript will not 
 
 ### Typescript Basic Generics
 
-Os genéricos permitem a criação de 'variáveis ​​de tipo' que podem ser usadas para criar classes, funções e aliases de tipo que não precisam definir explicitamente os tipos que usam.\
+Os genéricos permitem a criação de *'variáveis ​​de tipo'* que podem ser usadas para criar classes, funções e aliases de tipo que não precisam definir explicitamente os tipos que usam.\
 Os genéricos facilitam a escrita de código reutilizável.
 
 Functions
