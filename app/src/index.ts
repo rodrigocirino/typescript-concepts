@@ -1,12 +1,20 @@
-type Pessoa = {
-  nome: string;
+interface Shape {
+  getArea: () => number;
 }
-type Funcionario = Pessoa & {
-  nome: string
-  cargo: string;
-}
-type NewPessoa = Pessoa &  { idade: number }
 
-const p: NewPessoa = { nome: "Ana", idade: 30 }; // ok
-const f: Funcionario & NewPessoa = { nome: "Ana", cargo:"Professor", idade: 30 }; // ok
-console.log(f); // ok
+class Rectangle implements Shape {
+  public constructor(
+    protected readonly width: number,
+    protected readonly height: number
+  ) {}
+
+  public getArea(): number {
+    return this.width * this.height;
+  }
+}
+
+class Square extends Rectangle {
+  public constructor(width: number) {
+    super(width, width);
+  } // getArea gets inherited from Rectangle
+}

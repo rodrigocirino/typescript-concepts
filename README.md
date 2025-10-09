@@ -968,17 +968,24 @@ function pow(value: number, exponent: number = 10) {
 ```
 Named parameters `{name:value}`
 ```ts
+// parameters nomeados
 function divide(
 	{ dividend, divisor }: { dividend: number, divisor: number } // {name:value}
 ) {
   return dividend / divisor;
 }
 console.log(divide({dividend: 10, divisor: 2})); // 5
+
+// padrão com valores
+function divide(dividend: number,divisor: number) {
+	return dividend / divisor;
+}
+console.log(divide(10, 2)); // 5
 ```
 Rest parameters: "O restante dos valores"
 ```ts
-function add(a: number, b: number, ...rest: number[]) {
-  return a + b + rest.reduce((p, c) => p + c, 0);
+function add(a: number, b: number, ...o_restante: number[]) {
+  return a + b + o_restante.reduce((p, c) => p + c, 0);
 }
 console.log(add(10,10,10,10,10)); // 50
 ```
@@ -995,6 +1002,8 @@ console.log(NegaFuncao(10)); // -10
 ### Typescript Casting
 #### Casting with `as`
 `as` permite mudar o tipo da variável ao usá-la.
+
+ 'as' não converte o valor de fato, por isso 4 não se torna "4", evite erros ao utilizar.
 ```ts
 let x: unknown = 'hello'; // unknown type
 console.log((x as string).length); // redefine para string antes de usar!
@@ -1018,12 +1027,12 @@ prog.ts(1,13): error TS2352: Conversion of type 'number' to type 'string' may be
 ### Typescript Classes
 #### Members visibility
 There are three main visibility modifiers in TypeScript.
-- `public` - (default) allows access to the class member from anywhere
-- `private` - only allows access to the class member from within the class
-- `protected` - allows access to the class member from itself and any classes that inherit it, which is covered in the inheritance section below
+- `public` (padrão) acesso de qualquer lugar
+- `private` - acesso somente de dentro da classe
+- `protected` - acesso por ele mesmo e por quaisquer classes que o herdem `extends`
 
 #### `this` refers to what? [js this](https://www.w3schools.com/js/js_this.asp)
-Perguntinha de entrevista mal intencionada ou de teste de quadro negro.
+😤 Perguntinha de entrevista mal intencionada ou de teste de quadro negro.
 
 The `this` keyword refers to **different objects** depending on how it is used:
 
@@ -1048,49 +1057,35 @@ const person = {
 // Display data from the object:
 document.getElementById("demo").innerHTML = person.myFunction().id; // 5566
 ```
-
-#### Inheritance (implements)
-```typescript
-interface Shape {  
-  getArea: () => number;  
-}  
-  
-class Rectangle implements Shape {  // can implements multiple interfaces
-  public constructor(protected readonly width: number, protected readonly height: number) {}  
-  
-  public getArea(): number {  
-    return this.width * this.height;  
-  }  
-}
-```
-
 #### Inheritance (extends)
 ```typescript
-interface Shape {  
-  getArea: () => number;  
-}  
-  
-class Rectangle implements Shape {  
-  public constructor(protected readonly width: number, protected readonly height: number) {}  
-  
-  public getArea(): number {  
-    return this.width * this.height;  
-  }  
-}  
-  
-class Square extends Rectangle {  
-  public constructor(width: number) {  
-    super(width, width);  
-  }    
-  // getArea gets inherited from Rectangle  
+interface Shape {
+  getArea: () => number;
+}
+
+class Rectangle implements Shape {
+  public constructor(
+    protected readonly width: number, // protected - classes que herdar `extends` tem acesso
+    protected readonly height: number
+  ) {}
+
+  public getArea(): number {
+    return this.width * this.height;
+  }
+}
+
+class Square extends Rectangle {
+  public constructor(width: number) {
+    super(width, width);
+  } // getArea gets inherited from Rectangle
 }
 ```
 
 #### Override keyword
 
-By default the `override` keyword is **optional** when overriding a method, and only helps to prevent accidentally overriding a method that does not exist.
+Assim como em Java, `override` keyword é **opcional**, ajuda quando o método original é removido, gerando erro nos métodos sobrescritos. 
 
-Use the setting `noImplicitOverride` to force it to be used when overriding.
+Ative a configuração `noImplicitOverride`, para forçar a declaração de 'overriding'.
 
 ```typescript
 class Rectangle implements Shape {  
@@ -1109,7 +1104,7 @@ class Square extends Rectangle {
 ```
 
 #### Abstract classes (extends)
-Classes servem de base e não obrigam a implementar todos os métodos assim como interfaces.
+**Classes servem de base** e não obrigam a implementar todos os métodos.
 
 Classes abstratas não podem ser instanciadas diretamente, pois não têm todos os seus membros implementados.
 
@@ -1133,7 +1128,7 @@ class Rectangle extends Polygon {
 }
 ```
 
-<br />
+<br>
 
 
 ### Javascript métodos pré-definidos 🪓  [js built-in functions](https://www.w3schools.com/js/js_function_call.asp)
