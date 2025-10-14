@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ts-node integrated",
+      "console": "integratedTerminal",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/app",
+      "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/ts-node",
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "nodemon integrated",
+      "console": "integratedTerminal",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/app",
+      "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/nodemon",
+      "runtimeArgs": ["--exec", "ts-node"],
+      "args": ["src/index.ts", "--watch src", " --ext .ts"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "NPM launch",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/app",
+      "command": "npm run start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
