@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020", // gera JS moderno e eficiente
     "module": "ESNext", // deixa o bundler otimizar melhor
+    "moduleResolution": "bundler", // padrão moderno de resolução de módulos
     "rootDir": "src",
     "outDir": "dist",
     "strict": true, // ativa o modo estrito
@@ -11,9 +12,8 @@
     "noUnusedLocals": true, // erro se declarar variável não usada
     "noUnusedParameters": true, // idem para parâmetros
     "noImplicitReturns": true, // exige return em todos os caminhos da função
-    "noFallthroughCasesInSwitch": true,  // impede cair em outro case sem `break`
+    "noFallthroughCasesInSwitch": true // impede cair em outro case sem `break`
 
-    //"moduleResolution": "classic",    // padrão moderno de resolução de módulos
     // "declaration": true,
     // "declarationMap": true,
     // "noUncheckedIndexedAccess": true,

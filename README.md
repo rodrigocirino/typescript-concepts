@@ -1921,35 +1921,61 @@ node --enable-source-maps dist/server.js
 ### Typescript Tools
 #### ESLint
 ```bash
-# Install ESLint with TypeScript support  
-npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+# Automatic Set Up
+npm init @eslint/config@latest
+
+# Manual Set Up
+npm install --save-dev eslint@latest @eslint/js@latest
 ```
-Configuration
-```ts
-// .eslintrc.json  
-{  
-  "root": true,  
-  "parser": "@typescript-eslint/parser",  
-  "plugins": ["@typescript-eslint"],  
-  "extends": [  
-    "eslint:recommended",  
-    "plugin:@typescript-eslint/recommended",  
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"  
-  ],  
-  "parserOptions": {  
-    "project": "./tsconfig.json",  
-    "ecmaVersion": 2020,  
-    "sourceType": "module"  
-  },  
-  "rules": {  
-    "@typescript-eslint/explicit-function-return-type": "warn",  
-    "@typescript-eslint/no-explicit-any": "warn",  
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]  
-  }  
-}
+[Eslint Configuration File](https://eslint.org/docs/latest/use/getting-started)
+```js
+// eslint.config.js
+import { defineConfig } from "eslint/config";
+import js from "@eslint/js";
+
+export default defineConfig([
+  // Global ignores for files that should not be linted at all
+  {
+    ignores: ["dist/", "node_modules/", "build/"],
+  },
+
+  // Base configuration for all JavaScript files
+  {
+    files: ["**/*.js", "**/*.mjs", "**/*.cjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        // Define global variables here, e.g., for browser environments
+        window: "readonly",
+        document: "readonly",
+      },
+    },
+    plugins: {
+      js, // Include the default ESLint JavaScript plugin
+    },
+    extends: [
+      js.configs.recommended, // Extend the recommended rules from @eslint/js
+    ],
+    rules: {
+      // Custom rules or overrides
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "no-console": "warn",
+      semi: ["error", "always"],
+    },
+  },
+
+  // Specific configuration for test files
+  {
+    files: ["tests/**/*.js"],
+    rules: {
+      "no-console": "off", // Allow console logs in test files
+      "no-undef": "off", // Allow undefined variables for testing frameworks
+    },
+  },
+]);
 ```
 
-**NPM Scripts** - Add scripts to run linting and a type-only check.\
 Use `lint:fix` to auto-fix simple issues.
 ```ts
 // package.json  
@@ -1963,9 +1989,11 @@ Use `lint:fix` to auto-fix simple issues.
 ```
 #### Prettier
 ```bash
-# Install Prettier and related packages  
-npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
+npm install --save-dev --save-exact prettier
+npm i -D eslint-config-prettier
+# npm install --save-dev stylelint-prettier
 ```
+
 ```bash
 // .prettierrc  
 {  
@@ -1986,14 +2014,22 @@ dist
 .vscode
 ```
 
-**Integrate with ESLint**\
-Extend `plugin:prettier/recommended` so formatting problems are reported as ESLint issues.
+[Integrate with ESLint](https://github.com/prettier/eslint-config-prettier?tab=readme-ov-file#eslintconfigjs-flat-config-plugin-caveat)
 ```ts
 npm install --save-dev eslint-config-prettier eslint-plugin-prettier  
-// In your .eslintrc.js or .eslintrc.json, add:  
-{  
-  "extends": ["plugin:prettier/recommended"]  
-}
+// eslint.config.js
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+
+export default defineConfig([
+	...
+    plugins: {
+      js, // Include the default ESLint JavaScript plugin
+      typescriptEslint,
+    },
+    ...
+  eslintConfigPrettier,
+]);  
 ```
 
 The optional `baseUrl` and `paths` help with absolute imports like `@/components/Button`.
