@@ -339,3 +339,20 @@ let b: string | null = null;
 console.log(b.length);  // erro: 'b' pode ser null
 console.log(b!.length); // compila, mas pode quebrar em runtime
 ```
+
+
+
+**`.d.ts`**
+
+(Declaration Files) são usados para **declarar tipos**, **sem gerar JavaScript** na saída.\
+Eles servem para **descrever a forma do código**, não implementá-lo.
+
+- `.ts` → contém código + tipos (gera JS).    
+- `.d.ts` → contém **somente tipos** (não gera JS).
+
+`include` localizado no `tsconfig.json` , será o local onde todos os arquivos poderão ser vistos e incluídos para usar definições e usos de tipos.
+
+Serve para criar tipos globais, separar o tipo da implementação, descrever como será a forma do código e não a implementação.
+
+Recomendação da doc oficial: *"Keep your type definitions in .d.ts files"*
+
