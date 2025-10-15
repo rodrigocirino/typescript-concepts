@@ -26,7 +26,8 @@ ts-node src/index.ts
 {
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": true,
     // --- CONFIGURAÇÕES OPCIONAIS ---
     // "module": "nodenext",
     // "target": "esnext",
@@ -36,8 +37,7 @@ ts-node src/index.ts
     // "declarationMap": true,
     // "esModuleInterop": true,
     // "noUncheckedIndexedAccess": true,
-    // "exactOptionalPropertyTypes": true,
-    // "strict": true,
+    // "exactOptionalPropertyTypes": true,    
     // "verbatimModuleSyntax": true,
     // "isolatedModules": true,
     // "noUncheckedSideEffectImports": true,
@@ -1647,11 +1647,16 @@ console.log(a ?? "null or undefined"); // my value
 #### `!` - **operador de asserção não nula** (_non-null assertion operator_).
  
  > 📍 Ps: Ative a props `strictNullChecks` no `tsconfig.json` para usar este operador.
+ > `strict: true, strictNullChecks: true`
 
 Modo de desativar a verificação se é *null or undefined*.
 Quando receber um valor nulo, ainda vai gerar um erro, porém somente no momento da execução, não na compilação.
 
-
+```ts
+let b: string | null = null;
+console.log(b!.length); // é null mas compila, quebra na hora da execução
+console.log(b.length); // é null e não compila
+```
 ```ts
 function getValue(): string | undefined | null {
   if (Math.random() > 0.5) return "hello";
@@ -1681,6 +1686,72 @@ function processEntity(e?: Entity) {
 }
 ```
 **Obs:**  Tive bastante dificuldade em testar localmente, porque para compilar necessário iniciar com valores válidos e inválidos ao mesmo tempo.
+
+### Typescript Declaration Files `.d.ts`
+
+**`.d.ts`**
+
+(Declaration Files) são usados para **declarar tipos**, **sem gerar JavaScript** na saída.\
+Eles servem para **descrever a forma do código**, não implementá-lo.
+
+- `.ts` → contém código + tipos (gera JS).    
+- `.d.ts` → contém **somente tipos** (não gera JS).
+
+```ts
+// src/types/util.d.ts
+declare function soma(a: number, b: number): number;
+
+// src/main.ts
+soma(2, 3); // ✅ TypeScript sabe o tipo por causa do .d.ts
+```
+
+📦 Exemplo com módulos
+```ts
+// src/types/meuModulo.d.ts
+declare module "meu-modulo" {
+  export function conectar(url: string): void;
+  export const versao: string;
+}
+
+// outro arquivo.ts
+import { conectar, versao } from "meu-modulo";
+conectar("https://api.local");
+```
+
+💡 Exemplo com namespaces/globais
+```ts
+// global.d.ts
+declare global {
+  interface Window {
+    appVersion: string;
+  }
+}
+
+// outro arquivo.ts
+window.appVersion = "1.0.0";
+```
+
+🧠 Uso típico no dia a dia
+1. *Tipar* bibliotecas JavaScript antigas (sem TS).
+2. Criar tipos globais reutilizáveis (`types.d.ts`, `env.d.ts`).
+3. Adicionar declarações para valores injetados (ex: variáveis de ambiente, loaders de *bundlers*).
+4. Separar **tipos públicos** da implementação interna (em *libs*).
+
+**🧱 Estrutura para garantir que a declaração será vista pelos arquivos.**
+
+Nesse caso, o arquivo `src/types/util.d.ts` **é automaticamente incluído no runtime** porque está dentro do diretório listado em `"include"`, e pode ser usado por `main.ts`
+```ts
+project/
+├─ src/
+│  ├─ main.ts
+│  └─ types/
+│     └─ util.d.ts
+└─ tsconfig.json
+```
+Se você cria um projeto Node com código em *src/* e tipos extras em *src/types/*, basta garantir:\
+Que o `.d.ts` está dentro de algo listado no *"include"*, ou que `typeRoots: []` aponta para essa pasta.
+
+
 
 ### TypeScript 5.x Updates
 
