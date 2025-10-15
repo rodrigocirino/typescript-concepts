@@ -9,8 +9,11 @@
 **O que é TypeScript?**\
 É um `superset` do Javascript que adiciona novas funcionalidades como tipos estáticos.
 
+**`npx tsc`**  - `TypeScript Compiler` : comando que chama o compilador padrão do TS.
+
 **Diferença entre transpilar e compilar?**
 - Typescript é `transpilado` para Javascript
+- Porém o próprio Ts chama seu transpilador de `Typescript Compiler - tsc`, logo não esta incorreto chamar de compilador.
 - Enquanto o compilador traduz para uma linguagem de baixo nível (linguagem de máquina), o transpilador traduz para outra linguagem de alto nível, perde em desempenho, mas aumenta a compatibilidade entre versões.
 - transpilar NÃO gera um executável sendo necessário ser processado num ambiente de execução externo, não gera um `.exe` pronto.
 
@@ -21,8 +24,6 @@
 - Blindar o código de alterações fora do padrão do projeto, ajudando na manutenção.
 
 **`tsconfig.json`**: Arquivo mais importante onde colocamos as propriedades que indicaram como nosso transpilador vai atuar.
-
-**`npx tsc`**  - `TypeScript Compiler` : comando que chama o compilador padrão do TS.
 
 `node a.js` : Node.js normalmente o servidor que usamos para rodar os programas em JS. Outra forma é embedar num script HTML.
 
@@ -232,7 +233,7 @@ muito usado em `callbacks` , quando por exemplo colocamos o método no `setTimeo
 
 **Generics**
 
-
+Generics em TypeScript permitem criar **códigos reutilizáveis e tipados de forma flexível** — ou seja, você escreve uma função, classe ou tipo que **se adapta ao tipo de dado recebido**, mantendo a segurança de tipos.
 
 
 

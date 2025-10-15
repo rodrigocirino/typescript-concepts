@@ -1259,8 +1259,22 @@ Old JavaScript code will often contain closures, but modern JavaScript will not 
 
 ### Typescript Basic Generics
 
-Os genéricos permitem a criação de *'variáveis ​​de tipo'* que podem ser usadas para criar classes, funções e aliases de tipo que não precisam definir explicitamente os tipos que usam.\
-Os genéricos facilitam a escrita de código reutilizável.
+Generics em TypeScript permitem criar **códigos reutilizáveis e tipados de forma flexível** — ou seja, você escreve uma função, classe ou tipo que **se adapta ao tipo de dado recebido**, mantendo a segurança de tipos.
+
+**Quando usar:**\
+Quando você quer **reutilizar código** que trabalha com **vários tipos**, mas **mantendo o tipo original** em cada uso (listas, APIs, utilitários, etc.).
+
+Cria **“variáveis de tipo”**: você não diz _qual_ tipo será usado, apenas que _haverá um tipo_. \
+**`<T>` é o _parâmetro genérico_.** O TypeScript infere o tipo com base no valor passado.
+```ts
+function identidade<T>(valor: T): T {
+  return valor;
+}
+
+const a = identidade(10);     // T é number
+const b = identidade("texto"); // T é string
+```
+
 
 Functions
 ```typescript
