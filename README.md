@@ -1289,9 +1289,9 @@ Classes
 // tipo T será definido em tempo de execução.
 // opcionalmente atribui = string como valor padrão
 class NamedValue<T = string> {
-  private _value: T | undefined;
+  private _value: T | undefined; // this.value
 
-  constructor(private name: string) {}
+  constructor(private name: string) {} // cria acesso nesta classe com this.name
 
   public setValue(value: T) {
     this._value = value;
@@ -1306,30 +1306,38 @@ class NamedValue<T = string> {
   }
 }
       
+// cria uma chave nomeada e valor
 const value = new NamedValue<number>('myNumber');
-
 value.setValue(10);
-
 console.log(value.toString()); // myNumber: 10
+
+const text = new NamedValue<string>('myText')
+text.setValue("Good");// não tem retorno
+console.log(text.toString()); // myText: Good
+
 ```
 Type Aliases
 ```ts
 // tipo indefinido na declaração
-type Wrapped<T> = { value: T };  
+type Wrapped<T> = { props: T };
 
 // Obrigatório dizer o tipo na implementação.
-const wrappedValue: Wrapped<number> = { value: 10 };
+const wrappedValue: Wrapped<number> = {props:10};
+
+console.log(wrappedValue); // { props: 10 }
 ```
 Extends (permit multiple types)
 ```ts
-function createLoggedPair<S extends string | number, T extends string | number>(v1: S, v2: T): [S, T] {
-  console.log(`creating pair: v1='${v1}', v2='${v2}'`);
-  return [v1, v2];
+// accepts string OR| number
+function createLoggedPair
+  <S extends string | number, T extends string | number>
+  (v1: S, v2: T): [S, T] {
+    return [v1, v2];
 }
 
-console.log(createLoggedPair("one", 1)) // ok ['one', 1]
-console.log(createLoggedPair("one", "one")) // ok ['one', 'one']
-console.log(createLoggedPair(1, 1)) // ok [1, 1]
+console.log(createLoggedPair("one", 1)) // ['one', 1]
+console.log(createLoggedPair("one", "one")) // ['one', 'one']
+console.log(createLoggedPair(1, 1)) // [1, 1]
 // console.log(createLoggedPair(1, true)) // error: 'boolean' is not assignable to parameter of type 'string | number'.
 ```
 
@@ -1337,7 +1345,9 @@ console.log(createLoggedPair(1, 1)) // ok [1, 1]
 
 Tipos utilitários servem para alterar o retorno de um objeto.
 
-Alteram o retorno quando: 
+> 🪏 Outra cilada em entrevistas, pergunta um dos tipos utilitários sem contexto nenhum.
+
+**Alteram o retorno quando:** 
 - `Partial`: Tornando todas opcionais `?`
 - `Required`: Tornando todas obrigatórios `ignorando ?`
 - `Record`: Retorna o tipo no formato `chave:valor` *(usado em objetos)*
@@ -1518,20 +1528,9 @@ let person = {
 
 printPersonProperty(person, "name"); // name: "Max"
 ```
-Veja que é extremamente útil quando queremos criar algo genérico exemplo
-```ts
-let output = {
-  error: 402,
-  message: "....."
-};
 
-// printa o retorno de loggs que pode ser uma analise profunda do error do output.
-loggs(output, "error"); 
-// ou seja acesse a função loggs (tem tratativas do erro)
-// passe o objeto com erros do output
-// retorne o campo erro deste objeto imenso.
-
-```
+Assim como o `extends` é usado em *generics* para limitar a apenas os tipos declarados\
+**`keyof` diz somente os tipos do objeto referenciado**
 
 #### `keyof` with index signatures
 Aqui a chave não é explícita, vai existir somente na inicialização, diferente de "name" e "age" que foram definidos anteriormente e foram unidas por `union` usando `keyof`.
@@ -1578,14 +1577,20 @@ interface ApiResponse {
   timestamp: number;  
 }  
   
-// Conditional mapped type: Converta number para string.
+// Conditional mapped type:  OQUE É NUMBER CONVERTA PARA STRING, ou seja tudo string, exceto unknown que não se altera
 type FormattedResponse<T> = {  
   [P in keyof T]: T[P] extends number ? string : T[P];  
-};  
+}; 
   
 // Usage  
 type FormattedApiResponse = FormattedResponse<ApiResponse>;  
-// Equivalent to: { data: unknown; status: string; message: string; timestamp: string; }
+// Equivalent to:
+{
+	data: unknown; // não se altera
+	status: string; // number to string
+	message: string;
+	timestamp: string; // number to string
+}
 ```
 
 ### Typescript Null or Undefined
@@ -1623,17 +1628,29 @@ printYardSize(home); // Prints 'No yard'
 
 #### Nulish Coalescing
 ```ts
-function printMileage(mileage: number | null | undefined) {
-  console.log(`Mileage: ${mileage ?? 'Not Available'}`);
-}
-            
+console.log(`Mileage: ${mileage ?? 'Not Available'}`);
 printMileage(null); // Prints 'Mileage: Not Available'
 printMileage(undefined); // Prints 'Mileage: Not Available'
 printMileage(0); // Prints 'Mileage: 0'
+
+console.log(0 ?? "null or undefined"); // Error Right operand of ?? is unreachable because the left operand is never nullish.
+```
+```ts
+var a: unknown;
+console.log(a ?? "undefined"); // undefined
+a = null;
+console.log(a ?? "null"); // null
+a = "my value";
+console.log(a ?? "null or undefined"); // my value
 ```
 
-#### Null Assertion
-O sistema de inferência do TypeScript não é perfeito. Há momentos em que faz sentido **ignorar a possibilidade** de um valor ser nulo ou indefinido.
+#### `!` - **operador de asserção não nula** (_non-null assertion operator_).
+ 
+ > 📍 Ps: Ative a props `strictNullChecks` no `tsconfig.json` para usar este operador.
+
+Modo de desativar a verificação se é *null or undefined*.
+Quando receber um valor nulo, ainda vai gerar um erro, porém somente no momento da execução, não na compilação.
+
 
 ```ts
 function getValue(): string | undefined | null {

@@ -1,10 +1,3 @@
-const person = {
-  getName: (x) => x.firstName + " " + x.lastName
-  
-}
-const televisao = {
-  firstName:"Silvio",
-  lastName: "Santos"
-}
-
-console.log(person.getName(televisao)); // Silvio Santos
+let b: string | null = null;
+console.log(b!.length);  // erro: 'b' pode ser null
+console.log(b.length); // compila, mas pode quebrar em runtime

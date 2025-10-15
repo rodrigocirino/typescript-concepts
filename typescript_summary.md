@@ -233,7 +233,109 @@ muito usado em `callbacks` , quando por exemplo colocamos o método no `setTimeo
 
 **Generics**
 
-Generics em TypeScript permitem criar **códigos reutilizáveis e tipados de forma flexível** — ou seja, você escreve uma função, classe ou tipo que **se adapta ao tipo de dado recebido**, mantendo a segurança de tipos.
+Generics em TypeScript permitem criar **códigos reutilizáveis e tipados de forma flexível**.
 
+Se adapta ao tipo de dado recebido (função identidade), útil para reuso de código, que pode receber vários tipos.
 
+`<T>` é o parâmetro genérico. O TypeScript infere o tipo com base no valor passado.\
+ **tipo `<T>` será definido em tempo de execução.**
 
+```ts
+function identidade<T>(valor: T): T {
+  return valor;
+}
+
+function createPair<S, T>(v1: S, v2: T): [S, T] | void {
+  return [v1, v2];
+}
+
+// default é string, mas redefina como number
+class NamedValue<T = string> {
+  private _value: T | undefined;
+  constructor(private name: string) {} 
+...c
+const value = new NamedValue<number>('myNumber'); // set constructor
+
+// tipo indefinido na declaração
+type Wrapped<T> = { value: T };
+
+// extends - LIMITA APENAS AOS TIPOS string | number, boolean não é permitido.
+function createLoggedPair
+  <S extends string | number, T extends string | number>
+  (v1: S, v2: T): [S, T] {
+    return [v1, v2];
+}
+
+```
+
+**Tipos utilitários**: Alteram o retorno chaves, valores e tipos num objeto.
+
+> 🪏 Outra cilada em entrevistas, pergunta um dos tipos utilitários sem contexto nenhum.
+
+- `Parcial`: Altera **todas as propriedades** de um objeto para que **sejam opcionais**.
+- `Required`: **Oposto de** `Partial`. Torna obrigatório até os atributos marcados com `?`
+- `Record`: `Record<string, number>` Atalho para definir os tipos específicos tanto para chave quanto para valor, o mesmo que `{ [key: string]: number }`
+- `Omit`: remove as chaves declaradas
+- `Exclude`: remove os tipos declarados (numa união de vários tipos)
+- `Pick`: pega apenas as chaves declaras
+- `ReturnType`:  retorna o/os tipos de retorno (função geralmente)
+- `Parameters`: retorna tipos dos parâmetros (função geralmente)
+- `Readonly`: torna o objeto inalterável, mas instanciável.
+
+**`keyof`**: extrai o tipo da chave.
+
+Assim como o `extends` é usado em *generics* para limitar a apenas os tipos declarados\
+**`keyof` diz somente os tipos do objeto referenciado**
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+function printPersonProperty(person: Person, property: keyof Person) {...}
+
+interface ApiResponse {  
+  data: unknown;  
+  status: number;  
+  message: string;  
+  timestamp: number;  
+}  
+type FormattedResponse<T> = {  
+  [P in keyof T]: T[P] extends number ? string : T[P];  
+};
+```
+
+`strictNullChecks` - pode default ele não é habilitado, habilite para checagem de pontos nulos ou indefinidos no código.
+
+`?` - usamos para evitar erros em pontos nulos ou indefinidos, *optional chaining*.
+
+`nulish coalescing ??`  -  se for undefined ou null exibe o valor senão o valor a direita
+```ts
+console.log(`Mileage: ${mileage ?? 'Not Available'}`);
+printMileage(null); // Prints 'Mileage: Not Available'
+printMileage(undefined); // Prints 'Mileage: Not Available'
+printMileage(0); // Prints 'Mileage: 0'
+
+console.log(0 ?? "null or undefined"); // Error Right operand of ?? is unreachable because the left operand is never nullish.
+```
+```ts
+var a: unknown;
+console.log(a ?? "undefined"); // undefined
+a = null;
+console.log(a ?? "null"); // null
+a = "my value";
+console.log(a ?? "null or undefined"); // my value
+```
+
+`!` -  **operador de asserção não nula** (_non-null assertion operator_).
+
+O TypeScript **não reclama**, porque `b!` força o compilador a ignorar o risco de `b` ser `null`.  
+
+Mas em tempo de execução, o **JavaScript real não liga pra isso** — ele vai tentar acessar `.length` de `null` e lançar erro (`TypeError: Cannot read properties of null`).
+
+Obs: se declara como `any`, O tipo `any` **desliga completamente o sistema de tipos**.\
+Por isso o compilador **não valida nada** — nem se `b` é `null`, nem se `.length` existe.
+```ts
+let b: string | null = null;
+console.log(b.length);  // erro: 'b' pode ser null
+console.log(b!.length); // compila, mas pode quebrar em runtime
+```
