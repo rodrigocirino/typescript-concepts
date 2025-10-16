@@ -661,7 +661,7 @@ const config = {
 
 
 
-**🪏**  **Callback hell 😈 **, outra perguntinha maldita sempre presente.
+**🪏**  **Callback hell 😈**, outra perguntinha maldita sempre presente.
 
 Inicia com um código aninhando demais, ao colocar o retorno de uma função dentro do retorno de outra função (neste ponto não há await, ou promises.)
 
