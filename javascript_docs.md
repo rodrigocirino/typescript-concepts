@@ -83,48 +83,48 @@ Revisão baseada na documentações do site:
 
 ```ts
 // boolean
-let isActive: boolean = true;  
+let isActive: boolean = true;
 let hasPermission = false; // TypeScript infers 'boolean' type
 
 // JavaScript Numbers are Always Double! With 64-bit Precision Floating Point
 // number
-let decimal: number = 6;  
-let hex: number = 0xf00d;       // Hexadecimal  
-let binary: number = 0b1010;     // Binary  
-let octal: number = 0o744;      // Octal  
+let decimal: number = 6;
+let hex: number = 0xf00d;       // Hexadecimal
+let binary: number = 0b1010;     // Binary
+let octal: number = 0o744;      // Octal
 let float: number = 3.14;      // Floating point
 let y = 123e5;    // 12300000
 let z = 123e-5;   // 0.00123
 
 // string
 let car = "";    // The value is "", the typeof is "string"
-let color: string = "blue";  
-let fullName: string = 'John Doe';  
-let age: number = 30;  
+let color: string = "blue";
+let fullName: string = 'John Doe';
+let age: number = 30;
 let sentence: string = `Hello, my name is ${fullName} and I'll be ${age + 1} next year.`;
-let text1 = "What a very ";  
+let text1 = "What a very ";
 text1 += "nice day"; // What a very nice day
-let x = 5 + 5;  // 10 (number) 
+let x = 5 + 5;  // 10 (number)
 let y = "5" + 5; // 55 (string)
 let z = "Hello" + 5; // Hello5 (string)
 ```
 
 **Everything With a "Value" is True**
 ```js
-100 is true  
-3.14 is true  
--15 is true  
-true is true  
+100 is true
+3.14 is true
+-15 is true
+true is true
 "Hello" is true
 "false" is true
 (7 + 1 + 3.14) is true
 
 // Everything Without a "Value" is False
-0 is false  
-"" is false  
-undefined is false  
-null is false  
-NaN is false  
+0 is false
+"" is false
+undefined is false
+null is false
+NaN is false
 false is false
 Boolean("") is false
 // Comparing two JavaScript objects **always** returns **false**.
@@ -136,16 +136,16 @@ Boolean("") is false
 
 **expression**: Switch usa comparação estrita `(===)`. Os valores devem ser do mesmo tipo para corresponder. Uma comparação estrita só pode ser verdadeira se ambos os operandos forem do mesmo tipo. Ou seja aceita todos os tipos primitivos.
 ```ts
-let expression = "0";  
-switch (expression) {  
-  case 0:  
-    text = "Off";  
-    break;  
-  case 1:  
-    text = "On";  
-    break;  
-  default:  
-    text = "No value found";  
+let expression = "0";
+switch (expression) {
+  case 0:
+    text = "Off";
+    break;
+  case 1:
+    text = "On";
+    break;
+  default:
+    text = "No value found";
 }
 ```
 
@@ -161,7 +161,7 @@ switch (expression) {
 | forEach()       | y.forEach(x=>x)         |                            |
 |                 |                         |                            |
 ```ts
-let i = 5;  
+let i = 5;
 // both inside loop i until 10.
 for (i = 0; i < 10; i++) {}
 // After for here i = 10, because change the global i
@@ -172,7 +172,7 @@ for (let i = 0; i < 10; i++) {}
 for (; i < 10; i++) {} // ok
 
 //All exp can be ommited, exp3 can be omitted (if you increment the value inside the loop):
-for (; i < len; ) { i++; } // ok 
+for (; i < len; ) { i++; } // ok
 ```
 
 ```js
@@ -196,28 +196,28 @@ for (const fruta of meuArray) {
 
 `break` in loops or a switch statement
 ```ts
-for (let i = 0; i < 10; i++) {  
-  if (i === 3) { break; }  
-  text += "The number is " + i + "<br>";  
+for (let i = 0; i < 10; i++) {
+  if (i === 3) { break; }
+  text += "The number is " + i + "<br>";
 }
 
 // Labeled Break
-let text = "";  
-loop1: for (let j = 1; j < 5; j++) {  
-  loop2: for (let i = 1; i < 5; i++) {  
+let text = "";
+loop1: for (let j = 1; j < 5; j++) {
+  loop2: for (let i = 1; i < 5; i++) {
     if (i === 3) { 
 	    break loop1;
-	}  
-    text += i;  
-   }  
+	}
+    text += i;
+   }
 }
 ```
 
 `continue` - **skips the current iteration** in a loop.
 ```ts
-for (let i = 1; i < 10; i++) {  
-  if (i === 3) { continue; }  
-  text += "The number is " + i + "<br>";  
+for (let i = 1; i < 10; i++) {
+  if (i === 3) { continue; }
+  text += "The number is " + i + "<br>";
 }
 
 // can be used labeled like break! "continue labelname"
@@ -226,14 +226,14 @@ for (let i = 1; i < 10; i++) {
 ### Arrays
 
 The Difference Between Arrays and Objects
-- In JavaScript, arrays use numbered indexes.  
+- In JavaScript, arrays use numbered indexes.
 - In JavaScript, objects use named indexes.
 
 The `at()` method returns the same as `[]`.
 
 `join`
 ```js
-const fruits = ["Banana", "Orange", "Apple", "Mango"];  
+const fruits = ["Banana", "Orange", "Apple", "Mango"];
 fruits.join(" * "); // Banana * Orange * Apple * Mango
 ```
 
@@ -322,25 +322,25 @@ union(), difference(), intersection(), isDisjointFrom(), isDisjointFrom(), isSub
 
 `typeof`
 ```js
-typeof "John"          // Returns "string"  
-typeof ("John"+"Doe")  // Returns "string"  
-typeof 3.14            // Returns "number"  
-typeof (33 + 66)       // Returns "number"  
-typeof NaN             // Returns "number"  
-typeof 1234n           // Returns "bigint"  
-typeof true            // Returns "boolean"  
-typeof false           // Returns "boolean"  
-typeof {name:'John'}   // Returns "object"  
-typeof [1,2,3,4]       // Returns "object"  
-typeof {}              // Returns "object"  
-typeof []              // Returns "object"  
-typeof new Object()    // Returns "object"  
-typeof new Array()     // Returns "object"  
-typeof new Date()      // Returns "object"  
-typeof new Set()       // Returns "object"  
-typeof new Map()       // Returns "object"  
-typeof function () {}  // Returns "function"  
-typeof x               // Returns "undefined"  
+typeof "John"          // Returns "string"
+typeof ("John"+"Doe")  // Returns "string"
+typeof 3.14            // Returns "number"
+typeof (33 + 66)       // Returns "number"
+typeof NaN             // Returns "number"
+typeof 1234n           // Returns "bigint"
+typeof true            // Returns "boolean"
+typeof false           // Returns "boolean"
+typeof {name:'John'}   // Returns "object"
+typeof [1,2,3,4]       // Returns "object"
+typeof {}              // Returns "object"
+typeof []              // Returns "object"
+typeof new Object()    // Returns "object"
+typeof new Array()     // Returns "object"
+typeof new Date()      // Returns "object"
+typeof new Set()       // Returns "object"
+typeof new Map()       // Returns "object"
+typeof function () {}  // Returns "function"
+typeof x               // Returns "undefined"
 typeof null            // Returns "object"
 ```
 
@@ -353,12 +353,12 @@ JavaScript Declarations are Hoisted (içado, elencado, promovido posteriormente)
 With strict mode, you can not, for example, use undeclared variables.\
 Strict mode is declared by adding "use strict"; to the beginning of a script or a function.
 ```js
-x = 3.14;       // Hoisting, This will not cause an error.  
-myFunction();  
-  
-function myFunction() {  
+x = 3.14;       // Hoisting, This will not cause an error.
+myFunction();
+
+function myFunction() {
   "use strict";  // <------------ strict:true
-  y = 3.14;   // This will cause an error (fix with let or const) 
+  y = 3.14;   // This will cause an error (fix with let or const)
 }
 ```
 
@@ -390,7 +390,7 @@ Cada parâmetro de um loop é reavaliado novamente a cada iteração
 // Bad
 for (let i = 0; i < arr.length; i++) {}
 //Good
-let l = arr.length;  
+let l = arr.length;
 for (let i = 0; i < l; i++) {}
 // The better code accesses the length property outside the loop and makes the loop run faster.
 ```
@@ -399,17 +399,17 @@ Avoid using the `with` keyword. It has a negative effect on speed and performanc
 
 `I Promise a Result !` - Eu prometo um resultado
 ```js
-let myPromise = new Promise(function(myResolve, myReject) {  
-// "Producing Code" (May take some time)  
-  
-  myResolve(); // when successful  
-  myReject();  // when error  
-});  
-  
-// "Consuming Code" (Must wait for a fulfilled Promise)  
-myPromise.then(  
-  function(value) { /* code if successful */ },  
-  function(error) { /* code if some error */ }  
+let myPromise = new Promise(function(myResolve, myReject) {
+// "Producing Code" (May take some time)
+
+  myResolve(); // when successful
+  myReject();  // when error
+});
+
+// "Consuming Code" (Must wait for a fulfilled Promise)
+myPromise.then(
+  function(value) { /* code if successful */ },
+  function(error) { /* code if some error */ }
 );
 ```
 
@@ -425,19 +425,19 @@ The Promise object supports two properties: **state** and **result**, and 3 s
 **`await`** makes a function **wait** for a Promise
 
 ```js
-async function myFunction() {  
-  return "Hello";  
+async function myFunction() {
+  return "Hello";
 }
 
 //Is the same as:
-function myFunction() {  
-  return Promise.resolve("Hello");  
+function myFunction() {
+  return Promise.resolve("Hello");
 }
 
 // Here is how to use the Promise:
-myFunction().then(  
-  function(value) { /* code if successful */ },  
-  function(error) { /* code if some error */ }  
+myFunction().then(
+  function(value) { /* code if successful */ },
+  function(error) { /* code if some error */ }
 );
 ```
 
@@ -448,17 +448,17 @@ The `await` keyword **makes the function pause the execution** and wait for a 
 **`export default`**
 ```js
 // export each
-export const name = "Jesse";  
+export const name = "Jesse";
 export const age = 40;
 
 // export obj
 export {name, age};
 
 // export all
-const message = () => {  
-	const name = "Jesse";  
-	const age = 40;  
-	return name + ' is ' + age + 'years old.';  
+const message = () => {
+	const name = "Jesse";
+	const age = 40;
+	return name + ' is ' + age + 'years old.';
 };
 export default message;
 

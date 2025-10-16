@@ -80,12 +80,12 @@ Desestruturando **objetos**, adicionando valore padrão e incluindo alias.\
 
 **Arrays** pode acessar por índices, skipping values e por ordem
 ```ts
-const fruits = ["Bananas", "Oranges", "Apples", "Mangos"];  
+const fruits = ["Bananas", "Oranges", "Apples", "Mangos"];
 let [var_banana, var_orange] = fruits;
 let [var_banana,,,var_mangos] = fruits;
 let {[0]:var_bananas ,[2]:var_apples} = fruits;
 
-let name = "W3Schools";  
+let name = "W3Schools";
 let [a1, a2, a3, a4, a5] = name; // chars
 ```
 
@@ -97,8 +97,8 @@ Diferença entre let e const
 - `let`  declara variáveis que podem ter seu valor atualizado,
 - `const ` declara constantes que não podem ter seu valor redefinido após a atribuição inicial.
 - let e const têm escopo de bloco
-- `var` tem escopo de função (ou global), o que pode levar a comportamentos inesperados e erros. 
-- As convenções modernas recomendam evitar var e preferir let e const. 
+- `var` tem escopo de função (ou global), o que pode levar a comportamentos inesperados e erros.
+- As convenções modernas recomendam evitar var e preferir let e const.
 
 Objetos podem ser acessados de duas formas
 ```ts
@@ -109,6 +109,9 @@ objectName["propertyName"]
 **Assinaturas de índice (index signatures)** em TypeScript servem para definir **tipos de objetos cujas chaves NÃO são conhecidas antecipadamente**, mas seguem um padrão.\
 
 **`Record<string, number>`** é um tipo utilitário faz a mesma coisa, porém mais conciso e idiomático.
+
+Use an index signature for **flexible/dynamic keys** and when mixing with other properties.  
+Use `Record<K, T>` for **concise simple** mappings.\
 
 Ambos servem para representar dicionários (chave/valor), quando um objeto guarda algo dinâmico por exemplo categorias, filtros, contadores, caches, etc.
 
@@ -130,7 +133,7 @@ const filmes: Filme = { suspense: "O ultimo Passageiro"}
 const filmes: Record<string, number> = { 'infantil': "Gato Galatico" };
 ```
 
-Em javascript a chave sempre é convertido para `string`, se quiser manter números use `arrays` ou `Map`.
+> 📍 Em javascript a chave sempre é convertido para `string`, se quiser manter números use `arrays` ou `Map`.
 
 Vantagens de usar **`Map`**
 - chaves são números sem conversão
@@ -140,11 +143,11 @@ Vantagens de usar **`Map`**
 
 **`enum`** - chaves sempre string, valores string ou numérico.
 ```ts
-enum StatusCodes {  
-  NotFound = 404,  
-  Success = 200,  
-  Accepted = 202,  
-  BadRequest = 400  
+enum StatusCodes {
+  NotFound = 404,
+  Success = 200,
+  Accepted = 202,
+  BadRequest = 400
 }
 console.log(StatusCodes.NotFound); // 404
 ```
@@ -252,7 +255,7 @@ function createPair<S, T>(v1: S, v2: T): [S, T] | void {
 // default é string, mas redefina como number
 class NamedValue<T = string> {
   private _value: T | undefined;
-  constructor(private name: string) {} 
+  constructor(private name: string) {}
 ...c
 const value = new NamedValue<number>('myNumber'); // set constructor
 
@@ -304,14 +307,14 @@ interface Person {
 }
 function printPersonProperty(person: Person, property: keyof Person) {...}
 
-interface ApiResponse {  
-  data: unknown;  
-  status: number;  
-  message: string;  
-  timestamp: number;  
-}  
-type FormattedResponse<T> = {  
-  [P in keyof T]: T[P] extends number ? string : T[P];  
+interface ApiResponse {
+  data: unknown;
+  status: number;
+  message: string;
+  timestamp: number;
+}
+type FormattedResponse<T> = {
+  [P in keyof T]: T[P] extends number ? string : T[P];
 };
 ```
 
@@ -345,7 +348,7 @@ console.log(a ?? "null or undefined"); // my value
 
 `!` -  **operador de asserção não nula** (_non-null assertion operator_).
 
-O TypeScript **não reclama**, porque `b!` força o compilador a ignorar o risco de `b` ser `null`.  
+O TypeScript **não reclama**, porque `b!` força o compilador a ignorar o risco de `b` ser `null`.
 
 Mas em tempo de execução, o **JavaScript real não liga pra isso** — ele vai tentar acessar `.length` de `null` e lançar erro (`TypeError: Cannot read properties of null`).
 
@@ -364,7 +367,7 @@ console.log(b!.length); // compila, mas pode quebrar em runtime
 (Declaration Files) são usados para **declarar tipos**, **sem gerar JavaScript** na saída.\
 Eles servem para **descrever a forma do código**, não implementá-lo.
 
-- `.ts` → contém código + tipos (gera JS).    
+- `.ts` → contém código + tipos (gera JS).
 - `.d.ts` → contém **somente tipos** (não gera JS).
 
 `include` localizado no `tsconfig.json` , será o local onde todos os arquivos poderão ser vistos e incluídos para usar definições e usos de tipos.
@@ -395,6 +398,7 @@ Chamado **Inferring Within Conditional Types**, por aparecer em expressões coal
 - Inferir, deduzir, induzir, retorno futuro será o mesmo tipo
 - `infer` declara uma variável temporária de tipo `R`
 - Guarde em `R` o tipo de retorno de uma função.
+- Conhecido com extração de tipo
 - Documentação oficial indica usar inferências de tipos, por infer funcionar de forma diferentes em contextos complexos, facilitando o entendimento.
 
 ```ts
@@ -408,7 +412,7 @@ type C = Elemento<boolean>;   // never (não é array)
 type Elemento<T> = T extends string ? true : false;
 ```
 
-Template string on type definitions
+Template string, adicionado na versão 4.1+ on type definitions
 ```ts
 // Style pattern with unions
 type Color = "red" | "green" | "blue";
@@ -419,6 +423,119 @@ const examples: Style[] = ["red-small", "green-medium", "blue-large"];
 console.log(JSON.stringify(examples));
 ```
 
+**Types with Types Recursively**
+
+Pode-se definir um tipo e já usá-lo na mesma definição.
+
+```ts
+// Nested comments
+type Comments = {
+  id: number;
+  replies?: Comments[]; // recursive access, itself
+  createdAt: Date;
+};
+// exemplo de uso
+const commentary = {
+  id: 1,
+  createdAt: new Date()
+}
+const a:Comments = {
+  id: 0,
+  replies: [commentary],
+  createdAt: new Date()
+}
+console.log(a);
+/*{
+  id: 0,
+  replies: [ { id: 1, createdAt: 2025-10-16T18:47:45.945Z } ],
+  createdAt: 2025-10-16T18:47:45.945Z
+}*/
+```
+
+**Type Guards**
+
+Modo de dizer que existem ferramentas na linguagem para validar se o tipo esta dentro do permitido.
+
+Type Guards: `is, typeof, instanceof, in, asserts, custom types, etc...`
+
+**`instanceof`** verifica se um objeto é uma instância de uma classe específica ou função construtora.\
+Como quando podemos chamar usando duas classes e queremos qual delas esta sendo usada.
+```ts
+class A {}
+class B {}
+function F(param: A | B) {
+  if (param instanceof A) {
+	  // call polimorfic function of A
+  }
+}
+```
+
+**`is`** : no retorno de função torna-se um boolean já que não se pode usar ==
+```ts
+// assumo que param é string, se for number tem que ser undefined
+function A(param: string | number): param is string {
+  return (param as number) == undefined;
+}
+```
+
+**`in`** - a propriedade pertence ao objeto `"value" in Object`.
+
+**`asserts`** - utilizada em assertion functions, no retorno da função.
+
+`asserts value is string` - assuma que o valor é string, exceto se a função gerar um erro (óbvio).\
+diferença é que aqui ele altera o fluxo de controle, assumindo o tipo a partir dali em todo o código, não apenas no uso.
+
+**`namespaces`**  anteriormente conhecido como módulos internos.
+
+use comentários de referência
+```ts
+// ----- on **main.ts** file ----- //
+/// <reference path="validators.ts" />
+```
+
+use `new` para iniciar um namespace, assim como em classes.
+use `export` dentro das namespaces para exports `inner namespaces`.
+```ts
+namespace VeryLongNamespace {
+  export namespace DeeplyNested {
+    export namespace Components {
+      export class Button {
+        display(): void {
+          console.log("Button displayed");
+        }}}}}
+
+// With namespace alias
+import Components = VeryLongNamespace.DeeplyNested.Components;
+const button2 = new Components.Button();
+button2.display();
+```
+
+**modules vs namespaces**
+
+ - prefira módulos
+ - módulos usa arquivos bem nomeados para organizar
+ - módulos carregados nativamente
+ - todos os arquivos são módulos
+ - namespace incentiva global, módulos evita global
+ - namespace melhor em bibliotecas legadas
+
+`declare namespace` - adicionar mais detalhes ao mesmo namespace em locais diferentes.\
+typescript faz um union igual em interface.
+
+
+First line of Interface can be used to limit types of interface
+```ts
+interface ConflictingTypes {
+  [key: string]: number;
+  name: string; // Error: Property 'name' of type 'string' is not assignable to 'string' index type 'number'.
+}
+
+interface FixedTypes {
+  [key: string]: number | string;
+  name: string; // OK
+  age: number; // OK
+}
+```
 
 
 

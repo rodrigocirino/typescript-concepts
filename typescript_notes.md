@@ -43,21 +43,21 @@ Pode usar **tsc-watch** para compilar automaticamente
 
 ### [TsConfig Reference](https://www.typescriptlang.org/tsconfig/)
 Regras tipificação de erros com Typescript, incluir no `tsconfig.json`
-- **`noImplicitAny` [false]**: Impede que variáveis, parâmetros ou retornos sejam inferidos como `any` implicitamente, exigindo tipos explícitos.    
-- **`noEmitOnError` [false]**: Evita a geração de arquivos `.js` quando houver erros de compilação.    
-- **`strictNullChecks` [false]**: Força o tratamento explícito de `null` e `undefined`, prevenindo exceções inesperadas.    
-- **`noUnusedLocals` [false]**: Sinaliza variáveis locais declaradas mas não utilizadas.    
-- **`strictPropertyInitialization` [false]**: Exige que todas as propriedades não opcionais da classe sejam inicializadas corretamente.    
+- **`noImplicitAny` [false]**: Impede que variáveis, parâmetros ou retornos sejam inferidos como `any` implicitamente, exigindo tipos explícitos.
+- **`noEmitOnError` [false]**: Evita a geração de arquivos `.js` quando houver erros de compilação.
+- **`strictNullChecks` [false]**: Força o tratamento explícito de `null` e `undefined`, prevenindo exceções inesperadas.
+- **`noUnusedLocals` [false]**: Sinaliza variáveis locais declaradas mas não utilizadas.
+- **`strictPropertyInitialization` [false]**: Exige que todas as propriedades não opcionais da classe sejam inicializadas corretamente.
 - **`strict` [false]**: Habilita um conjunto de verificações rigorosas (inclui as anteriores, entre outras).
-- **`noUnusedParameters` [false]**: Sinaliza parâmetros que nunca são usados em funções ou métodos.    
-- **`noFallthroughCasesInSwitch` [false]**: Previne que um `case` em `switch` caia no próximo sem `break`.    
-- **`forceConsistentCasingInFileNames` [false]**: Garante consistência de maiúsculas/minúsculas nos nomes de arquivos importados.    
-- **`noImplicitReturns` [false]**: Exige que todas as rotas de uma função retornem explicitamente um valor ou `void`.    
-- **`esModuleInterop` [false]**: Melhora a compatibilidade com módulos `CommonJS` usando importações padrão.    
-- **`allowSyntheticDefaultImports` [false]**: Permite importações padrão mesmo quando o módulo não as define, útil com `bundlers`.    
-- **`resolveJsonModule` [false]**: Permite importar arquivos `.json` como se fossem módulos `Typescript`.    
-- **`skipLibCheck` [false]**: Pula verificação de tipos nos arquivos `.d.ts` de bibliotecas, melhorando o tempo de build.    
-- **`useUnknownInCatchVariables` [false]**: Faz com que variáveis `catch` sejam do tipo `unknown`, exigindo verificação antes do uso.    
+- **`noUnusedParameters` [false]**: Sinaliza parâmetros que nunca são usados em funções ou métodos.
+- **`noFallthroughCasesInSwitch` [false]**: Previne que um `case` em `switch` caia no próximo sem `break`.
+- **`forceConsistentCasingInFileNames` [false]**: Garante consistência de maiúsculas/minúsculas nos nomes de arquivos importados.
+- **`noImplicitReturns` [false]**: Exige que todas as rotas de uma função retornem explicitamente um valor ou `void`.
+- **`esModuleInterop` [false]**: Melhora a compatibilidade com módulos `CommonJS` usando importações padrão.
+- **`allowSyntheticDefaultImports` [false]**: Permite importações padrão mesmo quando o módulo não as define, útil com `bundlers`.
+- **`resolveJsonModule` [false]**: Permite importar arquivos `.json` como se fossem módulos `Typescript`.
+- **`skipLibCheck` [false]**: Pula verificação de tipos nos arquivos `.d.ts` de bibliotecas, melhorando o tempo de build.
+- **`useUnknownInCatchVariables` [false]**: Faz com que variáveis `catch` sejam do tipo `unknown`, exigindo verificação antes do uso.
 - **`exactOptionalPropertyTypes` [false]**: Diferencia propriedades opcionais que podem ser omitidas de propriedades que podem ser `undefined`.
 
 [httpie CLI](https://httpie.io/docs/cli/url-shortcuts-for-localhost)
@@ -221,17 +221,17 @@ AppDataSource.initialize()
 ```
 
 **`npm install save or save-dev?`**
-`--save` instala dependências **para produção** (vão em `dependencies`).  
+`--save` instala dependências **para produção** (vão em `dependencies`).
 `--save-dev` instala dependências **só para desenvolvimento** (vão em `devDependencies`).
 Obs: Em produção normalmente se usa `npm ci --only=production` ou `npm install --production` para instalar só as `dependencies`.
 
 Relembrando:
 O código configura um datasource para o TypeORM em uma aplicação Node.js. Aqui está o que faz em relação  a `entities`, `type` e `database`:
 
-- **`entities`**: define as entidades que serão mapeadas para tabelas no banco de dados. No exemplo, apenas a entidade `PetEntity` está definida para ser usada.    
-- `type`: define o tipo de banco de dados, que é "sqlite" neste caso, indicando que um banco de dados SQLite será usado.    
-- `database`: especifica o caminho para o arquivo do banco de dados SQLite que será criado/usado, localizado em "./src/config/database.sqlite".    
-- **`synchronize`**: quando definido como `true`, permite que o TypeORM crie automaticamente as tabelas do banco de dados com base nas entidades definidas. É útil durante o desenvolvimento, mas deve ser desativado em produção para evitar perda de dados acidentais.    
+- **`entities`**: define as entidades que serão mapeadas para tabelas no banco de dados. No exemplo, apenas a entidade `PetEntity` está definida para ser usada.
+- `type`: define o tipo de banco de dados, que é "sqlite" neste caso, indicando que um banco de dados SQLite será usado.
+- `database`: especifica o caminho para o arquivo do banco de dados SQLite que será criado/usado, localizado em "./src/config/database.sqlite".
+- **`synchronize`**: quando definido como `true`, permite que o TypeORM crie automaticamente as tabelas do banco de dados com base nas entidades definidas. É útil durante o desenvolvimento, mas deve ser desativado em produção para evitar perda de dados acidentais.
 - `logging`: quando definido como `false`, desativa a saída de log do TypeORM, impedindo que mensagens de log sejam impressas no console, o que serve para manter o ambiente de produção mais limpo e seguro.
 
 Comum criarmos um arquitetura de repositório, onde uma interface define os dados e separa o acesso do banco de dados que podem ser alterados on premisse, da lógica de negócios
@@ -277,7 +277,7 @@ function pegarDados() {
 
 pegarDados().then((resultado) => console.log(resultado));
 ```
-Resumo: callback é passado como argumento; Promise retorna um objeto que você encadeia com `.then()` (ou usa `async/await`).  
+Resumo: callback é passado como argumento; Promise retorna um objeto que você encadeia com `.then()` (ou usa `async/await`).
 
 Complementando com **async/await** o mesmo exemplo fica assim:
 ```javascript
@@ -324,7 +324,7 @@ Já dentro de classes ou métodos assíncronos, as arrow functions são úteis p
 ```javascript
 class Pessoa {
   nome = "Rodrigo";
-  
+
   falarDepois() {
     setTimeout(() => {
       console.log(this.nome); // Arrow herda o this da instância
@@ -337,8 +337,8 @@ p.falarDepois(); // Rodrigo depois de 1s
 ```
 Se tivesse usado `function()` normal no `setTimeout`, teria perdido o `this` e dado `undefined`.
 
-Então:  
-– Função normal → `this` depende de quem chama.  
+Então:
+– Função normal → `this` depende de quem chama.
 – Arrow function → `this` fixo ao escopo léxico onde foi criada.
 
 <br>
@@ -428,7 +428,7 @@ const cor: CoresExcluidas = "azul"; // "azul" é o único valor permitido
 `nullable` torna o campo opcional para o TypeORM.
 ```typescript
 @Column({ nullable: true })
-foto?: string; 
+foto?: string;
 @Column({ nullable: true })
 endereco?: string; // ? indique opcional
 //campos obrigatórios devem ficar antes de opcionais (com e sem ?)
@@ -442,14 +442,14 @@ endereco?: string; // ? indique opcional
 `eager: boolean` (default: `false`) - If set to true, the relation will always be loaded with the main entity when using `find*` methods or `QueryBuilder` on this entity
 
 ```typescript
-@ManyToMany((type) => Category, (category) => category.questions, {  
+@ManyToMany((type) => Category, (category) => category.questions, {
 	eager: true,  // <-------EAGER
-})  
-@JoinTable()  
+})
+@JoinTable()
 categories: Category[]  // Category é outra tabela complexa.
 
-const questionRepository = cdataSource.getRepository(Question)  
-  
+const questionRepository = cdataSource.getRepository(Question)
+
 // FIND RETORNA AUTOMATICAMENTE QUESTIONS JUNTAMENTE COM CATEGORIES, OU SEJA INCLUI SEM ESPECIFICAR.
 const questions = await questionRepository.find()
 ```
@@ -473,27 +473,27 @@ if (!(porte in EnumPorte)) {
 `keyof` retorne as chaves de um objeto, útil quando quer acessar de forma dinâmica através de suas chaves o objeto.
 
 ```typescript
-interface Person {  
-  name: string;  
-  age: number;  
-}  
+interface Person {
+  name: string;
+  age: number;
+}
 // `keyof Person` cria uma união das chaves.
-function printPersonProperty(person: Person, property: keyof Person) {  
-  console.log(`Printing person property ${property}: "${person[property]}"`);  
-}  
-let person = {  
-  name: "Max",  
-  age: 27  
-};  
+function printPersonProperty(person: Person, property: keyof Person) {
+  console.log(`Printing person property ${property}: "${person[property]}"`);
+}
+let person = {
+  name: "Max",
+  age: 27
+};
 printPersonProperty(person, "name"); // Busca a chave `name` e retorna o valor correspondente.
 // Veja que é muito útil ao criar funções genéricas
 ```
 
 ```typescript
-type StringMap = { [key: string]: unknown };  
-// `keyof StringMap` resolves to `string` here  
-function createStringPair(property: keyof StringMap, value: string): StringMap {  
-  return { [property]: value };  
+type StringMap = { [key: string]: unknown };
+// `keyof StringMap` resolves to `string` here
+function createStringPair(property: keyof StringMap, value: string): StringMap {
+  return { [property]: value };
 }
 ```
 
