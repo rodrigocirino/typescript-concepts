@@ -267,6 +267,17 @@ function createLoggedPair
 }
 
 ```
+**extends com conditional types.**
+```ts
+// Conditional types (runtime illustration)
+type IsString<T> = T extends string ? true : false;
+type ArrayElement<T> = T extends (infer V)[] ? V : never;
+
+const b: IsString<boolean> = false;
+const s: IsString<string> = true;
+const a : ArrayElement<string[]> = "array";
+```
+
 
 **Tipos utilitários**: Alteram o retorno chaves, valores e tipos num objeto.
 
@@ -303,6 +314,12 @@ type FormattedResponse<T> = {
   [P in keyof T]: T[P] extends number ? string : T[P];  
 };
 ```
+
+Diz converta todas as chaves recebidas de `T` e altere para `boolean`.
+```
+[K in keyof T]: boolean;
+```
+
 
 `strictNullChecks` - pode default ele não é habilitado, habilite para checagem de pontos nulos ou indefinidos no código.
 
@@ -366,6 +383,41 @@ Servem para **adicionar ou remover modificadores** (`readonly` e `?`) das propri
 
 Exemplo adicione `readonly` e removendo `?`\
 `type ReadonlyRequired<T> = {  +readonly [K in keyof T]-?: T[K]; };`
+
+`as` - Forçar um tipo desejado\
+Funções dinâmicas serão criadas no tipo informado por `keyof`\
+`[K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];`
+
+[**`infer`**](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types)
+
+Chamado **Inferring Within Conditional Types**, por aparecer em expressões coalescence `x?true:false`
+
+- Inferir, deduzir, induzir, retorno futuro será o mesmo tipo
+- `infer` declara uma variável temporária de tipo `R`
+- Guarde em `R` o tipo de retorno de uma função.
+- Documentação oficial indica usar inferências de tipos, por infer funcionar de forma diferentes em contextos complexos, facilitando o entendimento.
+
+```ts
+type Elemento<T> = T extends (infer U)[] ? U : never;
+
+type A = Elemento<string[]>;  // string
+type B = Elemento<number[]>;  // number
+type C = Elemento<boolean>;   // never (não é array)
+
+// o mesmo que, o ganho maior é no retorno de funções.
+type Elemento<T> = T extends string ? true : false;
+```
+
+Template string on type definitions
+```ts
+// Style pattern with unions
+type Color = "red" | "green" | "blue";
+type Size = "small" | "medium" | "large";
+type Style = `${Color}-${Size}`;
+
+const examples: Style[] = ["red-small", "green-medium", "blue-large"];
+console.log(JSON.stringify(examples));
+```
 
 
 

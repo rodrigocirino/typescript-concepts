@@ -4,7 +4,7 @@ Revisão baseada na documentações do site:
 - [Handbook do site oficial](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [w3schools.com Typescript Tutorial](https://www.w3schools.com/typescript/index.php)
 
-## Running Typescript on VSCode
+### Running Typescript on `VSCode`
 
 Opção para não ter que usar o terminal e ficar realizando operações com `npx tsc`, pode usar o `ts-node` no `VSCode`
 
@@ -2135,7 +2135,7 @@ Isso significa: para cada chave `K` em `T`, pegue o tipo da propriedade `T[K]`, 
 
 Isso significa: para cada chave `K` em `T`, pegue o tipo da propriedade `T[K]`, **adicionando `readonly` e removendo `?`** → todas as propriedades ficam **obrigatórias e somente leitura**.
 
-Detalhe: O `+` na frente (`+readonly` ou `+?`) é **opcional**, porque adicionar é o comportamento padrão da linguagem.
+Detalhe: O `+` na frente (`+readonly` ou `+?`) é **opcional**, porque **adicionar, incluir** já é o comportamento padrão da linguagem.
 
 #### Key Remapping
 
@@ -2169,23 +2169,33 @@ Tipos condicionais permitem que você defina tipos que dependem de uma condiçã
 ```ts
 // Conditional types (runtime illustration)
 type IsString<T> = T extends string ? true : false;
-type ArrayElement<T> = T extends (infer U)[] ? U : never;
+type ArrayElement<T> = T extends (infer V)[] ? V : never;
 
+const b: IsString<boolean> = false;
+const s: IsString<string> = true;
+type T1 = ArrayElement<string[]>;   // string
+type C = ArrayElement<(string | number)[]>; // string | number
+const a : ArrayElement<string[]> = "array";
+---
 const arr = [1, 2, 3];
 console.log(typeof arr[0]); // 'number'
-
-function isString(x: unknown): boolean {
+---
+function isString<T>(value: T): value is string {
+// or function isString(x: unknown): boolean {
   return typeof x === "string";
 }
 console.log(isString("hello")); // true
 console.log(isString(42));      // false
 ```
-#### infer keyword (inferir, deduzir,  induzir, concluir que)
-Captura uma parte de um tipo dentro de um tipo condicional introduzindo uma nova variável de tipo com `infer`.
 
-Muito comum vir numa expressão coalescence do tipo `x ? true : false`
 
-Ou seja, **`infer` é um jeito de declarar uma "variável temporária de tipo" dentro de um `extends` condicional.**
+[**`infer`**](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#inferring-within-conditional-types)
+
+Chamado **Inferring Within Conditional Types**, por aparecer em expressões coalescence `x?true:false`
+
+`infer` keyword (inferir, deduzir,  induzir, concluir que)
+
+Ou seja, **`infer` é um jeito de declarar uma "variável temporária de tipo" dentro de um `extends` condicional.** Maior ganho é com funções.
 
 `T` sendo uma função, guarde em `R` o tipo de retorno dela, caso contrário use `never`
 ```ts
@@ -2209,6 +2219,9 @@ type Elemento<T> = T extends (infer U)[] ? U : never;
 type A = Elemento<string[]>;  // string
 type B = Elemento<number[]>;  // number
 type C = Elemento<boolean>;   // never (não é array)
+
+// o mesmo que, o ganho maior é no retorno de funções.
+type Elemento<T> = T extends string ? true : false;
 ```
 Explicação:
 - Se `T` for um array (`(infer U)[]`), então guarde o tipo dos elementos em `U`.    

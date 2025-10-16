@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020", // gera JS moderno e eficiente
-    "module": "ESNext", // deixa o bundler otimizar melhor
-    "moduleResolution": "bundler", // padrão moderno de resolução de módulos
+    "module": "commonjs", // deixa o bundler otimizar melhor
     "rootDir": "src",
     "outDir": "dist",
     "strict": true, // ativa o modo estrito

@@ -20,3 +20,10 @@ npm start
 
 Importando o projeto no ***`VSCode`***
 - use o `.vscode/launch.json` presente neste projeto.
+
+
+Obs: dependendo se quiser ESM `require` ou `import/export` nativo pode usar
+```ts
+`"type": "module"` → precisa rodar com `node --loader ts-node/esm`
+`"type": "commonjs"` → pode rodar simples com `ts-node src/index.ts`
+```
