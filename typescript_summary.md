@@ -356,3 +356,22 @@ Serve para criar tipos globais, separar o tipo da implementação, descrever com
 
 Recomendação da doc oficial: *"Keep your type definitions in .d.ts files"*
 
+
+
+**Mapped Type Modifiers (tipos mapeados `+` e `-`)**
+
+Sinais **`+`** e **`-`** são chamados de **modificadores de mapeamento** no TypeScript.
+
+Servem para **adicionar ou remover modificadores** (`readonly` e `?`) das propriedades de um tipo.
+
+Exemplo adicione `readonly` e removendo `?`\
+`type ReadonlyRequired<T> = {  +readonly [K in keyof T]-?: T[K]; };`
+
+
+
+
+
+
+
+
+
