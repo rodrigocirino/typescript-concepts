@@ -7,33 +7,36 @@
     "strict": true, // ativa o modo estrito
     "sourceMap": true, // gera mapas para debugging
     "esModuleInterop": true, // simplifica import/export entre CommonJS e ESM
+    "skipLibCheck": true, // não verifica os arquivos .d.ts
     "forceConsistentCasingInFileNames": true, // previne bugs de case (útil no Linux)
     "noUnusedLocals": true, // erro se declarar variável não usada
     "noUnusedParameters": true, // idem para parâmetros
     "noImplicitReturns": true, // exige return em todos os caminhos da função
-    "noFallthroughCasesInSwitch": true // impede cair em outro case sem `break`
-
-    // "declaration": true,
-    // "declarationMap": true,
-    // "noUncheckedIndexedAccess": true,
-    // "exactOptionalPropertyTypes": true,
-    // "verbatimModuleSyntax": true,
-    // "isolatedModules": true,
-    // "noUncheckedSideEffectImports": true,
-    // "moduleDetection": "force",
-    // "skipLibCheck": true
+    "noFallthroughCasesInSwitch": true, // impede cair em outro case sem `break`
+    "experimentalDecorators": true, // permite decorators customizados
+    "isolatedModules": true,    // assegura que import type são carregados 
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "declaration": true,
+    "declarationMap": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force"
   },
   "include": ["src/**/*"], // inclua todo o src que pode conter arquivos de definicao .d.ts
   "exclude": ["src/**/*.spec.ts"] // exclui os testes de serem compilados
 }
 
-// strick: true já ativou
+// strick: true ativa automaticamente estas propriedades.
 /*{
   "noImplicitAny": true,          // proíbe inferir `any` automaticamente
   "strictNullChecks": true,       // força verificar null/undefined
   "strictBindCallApply": true,    // checa tipos em bind/call/apply
   "strictFunctionTypes": true,    // previne erros sutis com funções incompatíveis
   "noImplicitThis": true,         // evita `this` implícito e inseguro
-  "alwaysStrict": true            // força `"use strict"` no JS emitido
+  "alwaysStrict": true,            // força `"use strict"` no JS emitido
+  "strictPropertyInitialization": true,
 }
 */

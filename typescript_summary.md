@@ -538,6 +538,164 @@ interface FixedTypes {
 ```
 
 
+**Typescript Merging**\
+Em typescript para **unir** basta usar o mesmo nome e mesma categoria.\
+Podem ser usados em `class` and `interface`,  `enum`,  `functions`, `namespace`, `declare namespace`.
+
+```ts
+// Function overloads
+function processValue(value: string): string;
+function processValue(value: number): number;
+function processValue(value: boolean): boolean;
+
+// Implementation that handles all overloads
+function processValue(value: string | number | boolean): string | number | boolean {
+```
+
+
+**Promise Combination Methods**
+- `Promise.all()` - **Espera todas as promises** se resolverem
+- `Promise.allSettled()` - **Espera todas as respostas** com sucesso ou erro
+- `Promise.race()` - Retorna a primeira resposta bem sucedida
+- `Promise.any()` - Retorna a primeira resposta com sucesso ou erro
+
+
+**Generator  `function* + yield`**
+Esse `*` logo após o `function` indica que a função é um **generator function**.\
+Quando você combina com `async`, vira um **async generator function**.
+
+Yield quer dizer "colheita, produzir", somente pode ser usada numa função geradora com asterisco.
+
+Função que vai devolvendo valores, aos poucos ao declarar **`yield`, é como um retorno parcial**
+
+Se colocar `async` na função logicamente ela vai entrar uma promise, podendo usar `await`
+
+```ts
+function* contador() {
+  yield 1;
+  yield 2;
+}
+
+for (const valor of contador()) {
+  console.log(valor);
+}
+```
+
+**Typescript Decorators**:  Pode-se criar decorators a partir de classes, funções, propriedades, parâmetros.
+
+Performance overhead: Tenha cuidado com decoradores que adicionam sobrecarga significativa de tempo de execução em código de desempenho crítico.
+
+necessário ativar no `tsconfig.json` na diretiva `"experimentalDecorators": true`
+
+```ts
+class="code-comment">// A simple class decorator that logs class definition
+function logClass(constructor: Function) {
+  console.log(`Class ${constructor.name} was defined at ${new Date().toISOString()}`);
+}
+
+class="code-comment">// Applying the decorator
+@logClass
+class UserService {
+  getUsers() {
+    return ['Alice', 'Bob', 'Charlie'];
+  }
+}
+```
+
+
+🪏 Pegadinha o que ocorre quando ativa `strick: true` nas configurações do *TypeScript*?
+`"strict": true, // ativa o modo estrito`
+```ts
+{
+  "compilerOptions": {
+    /* Additional strict checks */
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true
+  }
+}
+```
+
+Em vez de usar `any` use `T` com generic types, se o valor é primitivo use `unknown`, mas nunca desative a verificação usando `any`
+
+
+**Convenção de nomes recomendada para TypeScript/JavaScript**:
+* **Arquivos** → sempre **kebab-case ou lowercase com ponto separando contextos** (`user.service.ts`)
+* **Classes/Tipos** → `PascalCase` (`UserService`, `User`)
+* **Variáveis/funções** → `camelCase` (`userService`, `getUser`)
+```ts
+// Good
+user.service.ts // Service classes
+user.model.ts // Type definitions
+user.controller.ts // Controllers
+user.component.ts // Components
+user.utils.ts // Utility functions
+user.test.ts // Test files
+
+class UserService
+function userService
+```
+
+**Use const assertions** para explicitar que são propriedades **readonly**\
+Toda vez que usamos const já estamos definindo que é readonly!
+```ts
+// Objects with const assertions
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000,
+  features: ['auth', 'notifications'],
+} as const;
+
+// Type is:
+// {
+// readonly apiUrl: "https://api.example.com";
+// readonly timeout: 5000;
+// readonly features: readonly ["auth", "notifications"];
+// }
+```
+
+
+
+
+**🪏**  **Callback hell 😈 **, outra perguntinha maldita sempre presente.
+
+Inicia com um código aninhando demais, ao colocar o retorno de uma função dentro do retorno de outra função (neste ponto não há await, ou promises.)
+
+1. **evite usar promises encadeadas**, onde o retorno de um `then` é usando no retorno da próxima
+	1. `then(v=>f(v)).then().catch();`
+	2. Isso causa um **promise hell**, não sendo a melhor escolha.
+2. **prefira usar async/await, melhor solução**
+```ts
+async function main(){
+	// sempre recomendado envolver com try/catch
+	const a = await hello(0);
+	const b = await hello(a);
+	const c = await hello(b);
+}
+```
+3. **excelente se puder usar `promises combinators`**, `all`, `allSetled`, `race`,`any`
+	1. **Utilize apenas se as tarefas podem rodar paralelamente**
+	2. `const [res1, res2] = await Promise.all([doSomething(), doSomethingElse()]);`
+
+**Promise hell é a segunda etapa,** é a forma que alguns corrigem um **callback hell** gerando outro **código também aninhado, em pirâmide**.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

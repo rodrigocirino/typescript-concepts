@@ -3094,7 +3094,7 @@ interface FixedTypes {
 
 ### Typescript Merging
 
-Em typescript para unir basta usar o mesmo nome e mesma categoria.
+Em typescript para **unir** basta usar o mesmo nome e mesma categoria.\
 Podem ser usados em `class` and `interface`,  `enum`,  `functions`, `namespace`, `declare namespace`.
 
 #### interfaces
@@ -3177,10 +3177,10 @@ console.log(`Total: $${cart.calculateTotal().toFixed(2)}`);
 ### Typescript Async
 
 **Promise Combination Methods**
-- `Promise.all()` - Waits for all promises to resolve
-- `Promise.race()` - Returns the first settled promise (primeira resposta bem sucedida)
-- `Promise.allSettled()` - Waits for all to settle (todas as respostas com sucesso ou erro)
-- `Promise.any()` - Returns the first fulfilled promise (primeira resposta com erro ou sucesso)
+- `Promise.all()` - Espera todas as promises se resolverem
+- `Promise.allSettled()` - Espera todas as respostas com sucesso ou erro
+- `Promise.race()` - Retorna a primeira resposta bem sucedida
+- `Promise.any()` - Retorna a primeira resposta com sucesso ou erro
 
 **Error Handling Strategies**
 - **Try/Catch Blocks**: For handling errors in async/await
@@ -3188,12 +3188,12 @@ console.log(`Total: $${cart.calculateTotal().toFixed(2)}`);
 - **Result Types**: Functional approach with success/failure
 - **Error Subclassing**: For domain-specific errors
 
-#### Generator  `function*`
-Esse `*` logo após o `function` indica que a função é um **generator function**.  \
+#### Generator  `function* + yield`
+Esse `*` logo após o `function` indica que a função é um **generator function**.\
 Quando você combina com `async`, vira um **async generator function**.
 
 **Diferença principal:**
-- Uma função normal retorna um valor único.
+- Uma função normal geralmente retorna um valor único.
 - Uma função `function*` (generator) retorna um **iterator**, que pode ir entregando valores aos poucos, usando a palavra-chave **`yield`**.
 - Uma função `async function*` retorna um **async iterator**, que pode entregar valores de forma assíncrona (útil quando os valores vêm de uma API, stream, ou precisam de `await`).
 
@@ -3360,7 +3360,7 @@ registerRoutes();
 // Registered GET /users/:id
 ```
 
-### Typescript JSDoc
+### Typescript `JSDoc`
 
 To enable TypeScript checking in JavaScript files, you need to:
 1. Create a `tsconfig.json` file.
@@ -3384,6 +3384,7 @@ function add(a, b) {
 ```ts
 // @ts-check
 
+// ----- OLD STYLE WITH TS-CHECK
 /**
 * @typedef {Object} User
 * @property {number} id - The user ID
@@ -3393,18 +3394,28 @@ function add(a, b) {
 * @property {() => string} getFullName - Method that returns full name
 */
 
+// -------- NEW STYLE WITH TYPESCRIPT MODE
+// JSDoc types may be moved to TypeScript types.ts(80004)
+interface User {
+  id: number;
+  username: string;
+  email?: string;
+  role: ('admin' | 'user' | 'guest');
+  getFullName: () => string;
+}
+
 /** @type {User} */
-const currentUser = {
-  id: 1,
-  username: 'johndoe',
-  role: 'admin',
-  getFullName() {
-    return 'John Doe';
-  }
+const currentUser = {
+  id: 1,
+  username: 'johndoe',
+  role: 'admin',
+  getFullName() {
+    return 'John Doe';
+  },
 };
 
 // TypeScript will provide autocomplete for User properties
-console.log(currentUser.role);
+console.log(currentUser.role); // admin
 ```
 
 **Best Practices**
@@ -3566,7 +3577,66 @@ userService.ts // Avoid camelCase for file names
 ```
 
 #### Avoid callback hell
-Nested async/await calls
+
+Callback hell é basicamente quando o código JavaScript fica **aninhado demais**, a ponto de virar uma pirâmide ou “escalada de dentes de serra”, dificultando **leitura, manutenção e tratamento de erros**.
+
+Como surge: Acontece quando você precisa executar várias operações assíncronas **uma depois da outra** usando **callbacks**.
+
+1 - Cenário clássico
+```ts
+// Exemplo clássico
+doSomething(arg1, (err, result1) => {
+  if (err) return console.error(err);
+  doSomethingElse(result1, (err, result2) => {
+    if (err) return console.error(err);
+    doThirdThing(result2, (err, result3) => {
+      if (err) return console.error(err);
+      console.log("Resultado final:", result3);
+    });
+  });
+});
+```
+2 - Melhoria com Promises (porém muito aninhando ainda)\
+Também chamado de **Promise Hell**, ou seja o um hell em segundo nível.
+```ts
+doSomething(arg1)
+  .then(result1 => doSomethingElse(result1))
+  .then(result2 => doThirdThing(result2))
+  .then(result3 => console.log("Resultado final:", result3))
+  .catch(err => console.error(err));
+```
+3 - Melhorias com async/await (fluxo imperativo)
+```ts
+function doSomething(param: number) { return ++param; }
+
+async function main() {
+  try {
+    const result1 = await doSomething(0);
+    const result2 = await doSomething(result1);
+    const result3 = await doSomething(result2);
+    console.log('Resultado final:', result3); // 3
+  } catch (err) {
+    console.error(err);
+  }
+}
+main();
+```
+4 - Modularization with `Promise combinators`\
+Útil quando as tarefas podem rodar paralelas.
+```ts
+const [res1, res2] = await Promise.all([doSomething(), doSomethingElse()]);
+```
+
+
+
+
+
+
+
+
+
+
+
 ```ts
 // Bad: Nested async/await (callback hell)
 async function processUser(userId: string) {
