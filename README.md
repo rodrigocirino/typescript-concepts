@@ -19,33 +19,38 @@ cd app
 echo "console.log('Hello World at $(date)')"  >> src/index.ts;
 npx tsc --init --rootDir src --outDir dist
 ts-node src/index.ts
+tsc && node dist/index.js // if tsconfig is well configured!
 ```
 - Verifique as configurações do `tsconfig.json`
 ```ts
 // tsconfig.json
 {
   "compilerOptions": {
+    "target": "ES2020", // gera JS moderno e eficiente
+    "module": "commonjs", // deixa o bundler otimizar melhor
     "rootDir": "src",
     "outDir": "dist",
-    "strict": true,
-    // --- CONFIGURAÇÕES OPCIONAIS ---
-    // "module": "nodenext",
-    // "target": "esnext",
-    // "types": ["node"],
-    // "sourceMap": true,
-    // "declaration": true,
-    // "declarationMap": true,
-    // "esModuleInterop": true,
+    // "strict": true, // ativa o modo estrito
+    // "esModuleInterop": true, // simplifica import/export entre CommonJS e ESM
+    // "skipLibCheck": true, // não verifica os arquivos .d.ts
+    // "forceConsistentCasingInFileNames": true, // previne bugs de case (útil no Linux)
+    // "noUnusedLocals": true, // erro se declarar variável não usada
+    // "noUnusedParameters": true, // idem para parâmetros
+    // "noImplicitReturns": true, // exige return em todos os caminhos da função
+    // "noFallthroughCasesInSwitch": true, // impede cair em outro case sem `break`
+    // "experimentalDecorators": true, // permite decorators customizados
+    //  "isolatedModules": true, // assegura que import type são carregados
+    // "emitDecoratorMetadata": true,
+    // "strictPropertyInitialization": false,
     // "noUncheckedIndexedAccess": true,
     // "exactOptionalPropertyTypes": true,
     // "verbatimModuleSyntax": true,
-    // "isolatedModules": true,
     // "noUncheckedSideEffectImports": true,
-    // "moduleDetection": "force",
-    // "skipLibCheck": true
-  }
-  //"include": ["src/**/*"],
-  //"exclude": ["src/**/*.spec.ts"]
+    // "moduleDetection": "force"
+    // "sourceMap": true, // gera mapas para debugging
+  },
+  // "include": ["src/**/*"], // inclua todo o src que pode conter arquivos de definicao .d.ts
+  // "exclude": ["src/**/*.spec.ts"] // exclui os testes de serem compilados
 }
 
 ```
