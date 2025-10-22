@@ -27,10 +27,10 @@ tsc && node dist/index.js // if tsconfig is well configured!
 {
   "compilerOptions": {
     "target": "ES2020", // gera JS moderno e eficiente
-    "module": "commonjs", // deixa o bundler otimizar melhor
+    "module": "commonjs", // nodejs aceita module or by default commonjs
     "rootDir": "src",
     "outDir": "dist",
-    // "strict": true, // ativa o modo estrito
+    "strict": true, // ativa o modo estrito
     // "esModuleInterop": true, // simplifica import/export entre CommonJS e ESM
     // "skipLibCheck": true, // não verifica os arquivos .d.ts
     // "forceConsistentCasingInFileNames": true, // previne bugs de case (útil no Linux)
