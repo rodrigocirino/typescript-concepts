@@ -18,8 +18,9 @@ mkdir -p app/src app/dist
 cd app
 echo "console.log('Hello World at $(date)')"  >> src/index.ts;
 npx tsc --init --rootDir src --outDir dist
-ts-node src/index.ts
 tsc && node dist/index.js // if tsconfig is well configured!
+npm install -g ts-node
+ts-node src/index.ts
 ```
 - Verifique as configurações do `tsconfig.json`
 ```ts
